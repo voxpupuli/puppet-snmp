@@ -33,8 +33,8 @@
 # Copyright (C) 2012 Mike Arnold, unless otherwise noted.
 #
 class snmp (
-  $ensure      = 'present',
-  $autoupgrade = false
+  $ensure       = 'present',
+  $autoupgrade  = false
 ) inherits snmp::params {
 
   case $ensure {

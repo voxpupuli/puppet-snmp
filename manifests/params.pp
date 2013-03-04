@@ -17,6 +17,7 @@ class snmp::params {
   $rw_network   = '127.0.0.1'
   $contact      = 'Unknown'
   $location     = 'Unknown'
+  $visible_oids = [ '.1.3.6.1.2.1.1', '.1.3.6.1.2.1.25.1.1', ]
 
 # These should not need to be changed.
   case $::operatingsystem {
