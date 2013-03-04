@@ -64,6 +64,10 @@
 #   Service has restart command.
 #   Default: true
 #
+# [*visible_oids*]
+#   String or array of strings describing OIDs to be exposed via snmpd.
+#   Default: [ '.1.3.6.1.2.1.1', '.1.3.6.1.2.1.25.1.1', ]
+#
 # === Actions:
 #
 # Installs the SNMP daemon package, service, and configuration.
@@ -100,7 +104,8 @@ class snmp::server (
   $service_name       = $snmp::params::service_name,
   $service_enable     = true,
   $service_hasstatus  = true,
-  $service_hasrestart = true
+  $service_hasrestart = true,
+  $visible_oids       = $snmp::params::visible_oids
 ) inherits snmp::params {
   include snmp
 
