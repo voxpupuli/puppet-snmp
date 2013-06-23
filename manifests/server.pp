@@ -93,8 +93,10 @@ class snmp::server (
   $rw_network         = $snmp::params::rw_network,
   $contact            = $snmp::params::contact,
   $location           = $snmp::params::location,
-  $ensure             = 'present',
-  $autoupgrade        = false,
+  $views              = $snmp::params::views,
+  $accesses           = $snmp::params::accesses,
+  $ensure             = $snmp::params::ensure,
+  $autoupgrade        = $snmp::params::safe_autoupgrade,
   $package_name       = $snmp::params::package_name,
   $service_ensure     = 'running',
   $service_name       = $snmp::params::service_name,
@@ -102,6 +104,12 @@ class snmp::server (
   $service_hasstatus  = true,
   $service_hasrestart = true
 ) inherits snmp::params {
+  # Validate our booleans
+  validate_bool($autoupgrade)
+  validate_bool($service_enable)
+  validate_bool($service_hasstatus)
+  validate_bool($service_hasrestart)
+
   include snmp
 
   case $ensure {
@@ -130,7 +138,7 @@ class snmp::server (
 
   file { 'snmpd.conf':
     ensure  => $file_ensure,
-    mode    => '0644',
+    mode    => $snmp::params::service_config_perms,
     owner   => 'root',
     group   => 'root',
     path    => $snmp::params::service_config,
