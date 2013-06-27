@@ -74,7 +74,7 @@ class snmp::params {
       $service_config      = '/etc/snmp/snmpd.conf'
       $service_config_perms= '0644'
       $service_name        = 'snmpd'
-      if ($::lsbmajdistrelease <= '5') and ($::operatingsystem != 'Fedora') {
+      if ($::operatingsystemrelease <= '5') and ($::operatingsystem != 'Fedora') {
         $sysconfig         = '/etc/sysconfig/snmpd.options'
         $var_net_snmp      = '/var/net-snmp'
         $varnetsnmp_perms  = '0700'
@@ -91,7 +91,7 @@ class snmp::params {
 
       $trap_service_config = '/etc/snmp/snmptrapd.conf'
       $trap_service_name   = 'snmptrapd'
-      if ($::lsbmajdistrelease <= '5') and ($::operatingsystem != 'Fedora') {
+      if ($::operatingsystemrelease <= '5') and ($::operatingsystem != 'Fedora') {
         $trap_sysconfig    = '/etc/sysconfig/snmptrapd.options'
       } else {
         $trap_sysconfig    = '/etc/sysconfig/snmptrapd'
