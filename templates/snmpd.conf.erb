@@ -22,7 +22,9 @@ agentaddress <%= @agentaddress.join(',') %>
 # ------------------------------------------------------------------------------
 # VACM Configuration
 #       sec.name       source        community
-com2sec notConfigUser  default       <%= @ro_community %>
+<% @ro_sources.each do |ro_source| -%>
+com2sec notConfigUser  <%= ro_source %>     <%= @ro_community %>
+<% end -%>
 
 #       groupName      securityModel securityName
 group   notConfigGroup v1            notConfigUser
