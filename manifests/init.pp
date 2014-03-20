@@ -281,7 +281,7 @@ class snmp (
       if $service_ensure in [ running, stopped ] {
         # Make sure that if $trap_service_ensure == 'running' that
         # $service_ensure_real == 'running' on Debian.
-        if ($::osfamily == 'Debian') and ($trap_service_ensure_real == 'running') {
+        if ($snmp::params::osfamily == 'Debian') and ($trap_service_ensure_real == 'running') {
           $service_ensure_real = $trap_service_ensure_real
           $service_enable_real = $trap_service_enable_real
         } else {
@@ -316,7 +316,7 @@ class snmp (
     $trapdrun = 'no'
   }
 
-  if $::osfamily != 'Debian' {
+  if $snmp::params::osfamily != 'Debian' {
     $snmptrapd_conf_notify = Service['snmptrapd']
   } else {
     $snmptrapd_conf_notify = Service['snmpd']
@@ -361,7 +361,7 @@ class snmp (
     owner   => 'root',
     group   => 'root',
     path    => $snmp::params::sysconfig,
-    content => template("snmp/snmpd.sysconfig-${::osfamily}.erb"),
+    content => template("snmp/snmpd.sysconfig-${snmp::params::osfamily}.erb"),
     require => Package['snmpd'],
     notify  => Service['snmpd'],
   }
@@ -377,14 +377,14 @@ class snmp (
     notify  => $snmptrapd_conf_notify,
   }
 
-  if $::osfamily == 'RedHat' {
+  if $snmp::params::osfamily == 'RedHat' {
     file { 'snmptrapd.sysconfig':
       ensure  => $file_ensure,
       mode    => '0644',
       owner   => 'root',
       group   => 'root',
       path    => $snmp::params::trap_sysconfig,
-      content => template("snmp/snmptrapd.sysconfig-${::osfamily}.erb"),
+      content => template("snmp/snmptrapd.sysconfig-${snmp::params::osfamily}.erb"),
       require => Package['snmpd'],
       notify  => Service['snmptrapd'],
     }
@@ -397,7 +397,7 @@ class snmp (
       hasrestart => $trap_service_hasrestart,
       require    => [ Package['snmpd'], File['var-net-snmp'], ],
     }
-  } elsif $::osfamily == 'Suse' {
+  } elsif $snmp::params::osfamily == 'Suse' {
     exec { 'install /etc/init.d/snmptrapd':
       command => '/usr/bin/install -o 0 -g 0 -m0755 -p /usr/share/doc/packages/net-snmp/rc.snmptrapd /etc/init.d/snmptrapd',
       creates => '/etc/init.d/snmptrapd',
