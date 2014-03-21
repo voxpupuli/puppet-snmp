@@ -215,7 +215,10 @@ class snmp::params {
     $safe_trap_service_hasrestart = $trap_service_hasrestart
   }
 
-  case $::osfamily {
+  if $::operatingsystem =~ /^(?i-mx:(SLES))$/ { $osfamily = 'Suse' }
+  else { $osfamily = $::osfamily }
+
+  case $osfamily {
     'RedHat': {
       $majdistrelease = regsubst($::operatingsystemrelease,'^(\d+)\.(\d+)','\1')
       case $::operatingsystem {
