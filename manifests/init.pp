@@ -355,15 +355,17 @@ class snmp (
     notify  => Service['snmpd'],
   }
 
-  file { 'snmpd.sysconfig':
-    ensure  => $file_ensure,
-    mode    => '0644',
-    owner   => 'root',
-    group   => 'root',
-    path    => $snmp::params::sysconfig,
-    content => template("snmp/snmpd.sysconfig-${::osfamily}.erb"),
-    require => Package['snmpd'],
-    notify  => Service['snmpd'],
+  unless $::operatingsystem == 'FreeBSD' {
+    file { 'snmpd.sysconfig':
+      ensure  => $file_ensure,
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      path    => $snmp::params::sysconfig,
+      content => template("snmp/snmpd.sysconfig-${::osfamily}.erb"),
+      require => Package['snmpd'],
+      notify  => Service['snmpd'],
+    }
   }
 
   file { 'snmptrapd.conf':
