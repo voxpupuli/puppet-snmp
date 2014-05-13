@@ -297,6 +297,7 @@ class snmp::params {
     'FreeBSD': {
       $package_name         = 'net-mgmt/net-snmp'
       $service_config       = '/usr/local/etc/snmp/snmpd.conf'
+      $service_config_dir   = '/usr/local/etc/snmp'
       $service_config_perms = '0600'
       $service_name         = 'snmpd'
       $snmpd_options        = 'd'
