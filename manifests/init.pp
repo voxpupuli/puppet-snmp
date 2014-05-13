@@ -429,7 +429,7 @@ class snmp (
         Exec['install /etc/init.d/snmptrapd'],
       ],
     }
-  } elseif $::osfamily == 'FreeBSD' {
+  } elsif $::osfamily == 'FreeBSD' {
     service { 'snmptrapd':
       ensure     => $trap_service_ensure_real,
       name       => $trap_service_name,
