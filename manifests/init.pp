@@ -379,17 +379,15 @@ class snmp (
     }
   }
 
-  if $trap_service_ensure == 'running' {
-    file { 'snmptrapd.conf':
-      ensure  => $file_ensure,
-      mode    => $snmp::params::service_config_perms,
-      owner   => 'root',
-      group   => 'root',
-      path    => $snmp::params::trap_service_config,
-      content => template('snmp/snmptrapd.conf.erb'),
-      require => Package['snmpd'],
-      notify  => $snmptrapd_conf_notify,
-    }
+  file { 'snmptrapd.conf':
+    ensure  => $file_ensure,
+    mode    => $snmp::params::service_config_perms,
+    owner   => 'root',
+    group   => 'root',
+    path    => $snmp::params::trap_service_config,
+    content => template('snmp/snmptrapd.conf.erb'),
+    require => Package['snmpd'],
+    notify  => $snmptrapd_conf_notify,
   }
 
   if $::osfamily == 'RedHat' {
