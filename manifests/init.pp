@@ -383,7 +383,7 @@ class snmp (
     ensure  => $file_ensure,
     mode    => $snmp::params::service_config_perms,
     owner   => 'root',
-    group   => 'root',
+    group   => $snmp::params::varnetsnmp_group,
     path    => $snmp::params::trap_service_config,
     content => template('snmp/snmptrapd.conf.erb'),
     require => Package['snmpd'],
