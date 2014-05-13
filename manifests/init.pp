@@ -460,3 +460,4 @@ class snmp (
       require    => [ Package['snmpd'], File['var-net-snmp'], ],
     }
   }
+}
