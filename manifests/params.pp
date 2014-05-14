@@ -295,24 +295,25 @@ class snmp::params {
       $snmptrapd_options    = ''
     }
     'FreeBSD': {
-      $package_name         = 'net-mgmt/net-snmp'
-      $service_config       = '/usr/local/etc/snmp/snmpd.conf'
-      $service_config_dir   = '/usr/local/etc/snmp'
-      $service_config_perms = '0600'
-      $service_name         = 'snmpd'
-      $snmpd_options        = 'd'
-      $sysconfig            = undef
-      $var_net_snmp         = '/var/net-snmp'
-      $varnetsnmp_perms     = '0700'
-      $varnetsnmp_owner     = 'root'
-      $varnetsnmp_group     = 'wheel'
+      $package_name             = 'net-mgmt/net-snmp'
+      $service_config           = '/usr/local/etc/snmp/snmpd.conf'
+      $service_config_dir       = '/usr/local/etc/snmp'
+      $service_config_dir_perms = '0755'
+      $service_config_perms     = '0600'
+      $service_name             = 'snmpd'
+      $snmpd_options            = 'd'
+      $sysconfig                = undef
+      $var_net_snmp             = '/var/net-snmp'
+      $varnetsnmp_perms         = '0700'
+      $varnetsnmp_owner         = 'root'
+      $varnetsnmp_group         = 'wheel'
 
-      $client_package_name  = undef
-      $client_config        = '/usr/local/etc/snmp/snmp.conf'
+      $client_package_name      = undef
+      $client_config            = '/usr/local/etc/snmp/snmp.conf'
 
-      $trap_service_config  = '/usr/local/etc/snmp/snmptrapd.conf'
-      $trap_service_name    = 'snmptrapd'
-      $snmptrapd_options    = ''
+      $trap_service_config      = '/usr/local/etc/snmp/snmptrapd.conf'
+      $trap_service_name        = 'snmptrapd'
+      $snmptrapd_options        = ''
     }
     default: {
       fail("Module ${::module} is not supported on ${::operatingsystem}")

@@ -347,7 +347,7 @@ class snmp (
   if $::operatingsystem == 'FreeBSD' {
     file { $snmp::params::service_config_dir:
       ensure  => 'directory',
-      mode    => $snmp::params::varnetsnmp_perms,
+      mode    => $snmp::params::service_config_dir_perms,
       owner   => $snmp::params::varnetsnmp_owner,
       group   => $snmp::params::varnetsnmp_group,
       path    => $snmp::params::service_config_dir,
