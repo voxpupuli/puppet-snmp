@@ -344,33 +344,46 @@ class snmp (
     require => Package['snmpd'],
   }
 
+  if $::operatingsystem == 'FreeBSD' {
+    file { $snmp::params::service_config_dir:
+      ensure  => 'directory',
+      mode    => $snmp::params::service_config_dir_perms,
+      owner   => $snmp::params::varnetsnmp_owner,
+      group   => $snmp::params::varnetsnmp_group,
+      path    => $snmp::params::service_config_dir,
+      require => Package['snmpd'],
+    }
+  }
+
   file { 'snmpd.conf':
     ensure  => $file_ensure,
     mode    => $snmp::params::service_config_perms,
     owner   => 'root',
-    group   => 'root',
+    group   => $snmp::params::varnetsnmp_group,
     path    => $snmp::params::service_config,
     content => template('snmp/snmpd.conf.erb'),
     require => Package['snmpd'],
     notify  => Service['snmpd'],
   }
 
-  file { 'snmpd.sysconfig':
-    ensure  => $file_ensure,
-    mode    => '0644',
-    owner   => 'root',
-    group   => 'root',
-    path    => $snmp::params::sysconfig,
-    content => template("snmp/snmpd.sysconfig-${::osfamily}.erb"),
-    require => Package['snmpd'],
-    notify  => Service['snmpd'],
+  unless $::operatingsystem == 'FreeBSD' {
+    file { 'snmpd.sysconfig':
+      ensure  => $file_ensure,
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      path    => $snmp::params::sysconfig,
+      content => template("snmp/snmpd.sysconfig-${::osfamily}.erb"),
+      require => Package['snmpd'],
+      notify  => Service['snmpd'],
+    }
   }
 
   file { 'snmptrapd.conf':
     ensure  => $file_ensure,
     mode    => $snmp::params::service_config_perms,
     owner   => 'root',
-    group   => 'root',
+    group   => $snmp::params::varnetsnmp_group,
     path    => $snmp::params::trap_service_config,
     content => template('snmp/snmptrapd.conf.erb'),
     require => Package['snmpd'],
@@ -416,14 +429,35 @@ class snmp (
         Exec['install /etc/init.d/snmptrapd'],
       ],
     }
-  }
 
-  service { 'snmpd':
-    ensure     => $service_ensure_real,
-    name       => $service_name,
-    enable     => $service_enable_real,
-    hasstatus  => $service_hasstatus,
-    hasrestart => $service_hasrestart,
-    require    => [ Package['snmpd'], File['var-net-snmp'], ],
+    service { 'snmpd':
+      ensure     => $service_ensure_real,
+      name       => $service_name,
+      enable     => $service_enable_real,
+      hasstatus  => $service_hasstatus,
+      hasrestart => $service_hasrestart,
+      require    => [ Package['snmpd'], File['var-net-snmp'], ],
+    }
+  } elsif $::osfamily == 'FreeBSD' {
+    service { 'snmptrapd':
+      ensure     => $trap_service_ensure_real,
+      name       => $trap_service_name,
+      enable     => $trap_service_enable_real,
+      hasstatus  => $trap_service_hasstatus,
+      hasrestart => $trap_service_hasrestart,
+      require    => [
+        Package['snmpd'],
+        File['var-net-snmp'],
+      ],
+    }
+
+    service { 'snmpd':
+      ensure     => $service_ensure_real,
+      name       => $service_name,
+      enable     => $service_enable_real,
+      hasstatus  => $service_hasstatus,
+      hasrestart => $service_hasrestart,
+      require    => [ Package['snmpd'], File['var-net-snmp'], ],
+    }
   }
 }
