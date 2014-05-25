@@ -23,6 +23,7 @@ OS Support:
 * RedHat family  - tested on CentOS 5.9 and CentOS 6.4
 * SuSE family    - tested on SLES 11 SP1
 * Debian family  - tested on Ubuntu 12.04.2 LTS, Debian 6.0.7, and Debian 7.0
+* FreeBSD family - tested on FreeBSD 9.2-RELEASE, FreeBSD 10.0-RELEASE
 
 Class documentation is available via puppetdoc.
 
@@ -72,6 +73,9 @@ To install a SNMP version 3 user for snmpd:
     snmp::snmpv3_user { 'myuser':
       authpass => '1234auth',
       privpass => '5678priv',
+    }
+    class { 'snmp':
+      snmpd_config => [ 'rouser myuser authPriv' ],
     }
 
 To install a SNMP version 3 user for snmptrapd:

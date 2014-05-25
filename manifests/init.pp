@@ -37,6 +37,19 @@
 #   Location of the SNMP system.
 #   Default: Unknown
 #
+# [*com2sec*]
+#   An array of VACM com2sec mappings.
+#   Must provide SECNAME, SOURCE and COMMUNITY.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
+#   Default: [ "notConfigUser default ${ro_community}" ]
+#
+# [*groups*]
+#   An array of VACM group mappings.
+#   Must provide GROUP, {v1|v2c|usm|tsm|ksm}, SECNAME.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
+#   Default: [ 'notConfigGroup v1  notConfigUser',
+#              'notConfigGroup v2c notConfigUser' ]
+#
 # [*services*]
 #   For a host system, a good value is 72 (application + end-to-end layers).
 #   Default: 72
@@ -215,6 +228,8 @@ class snmp (
   $contact                 = $snmp::params::contact,
   $location                = $snmp::params::location,
   $services                = $snmp::params::services,
+  $com2sec                 = $snmp::params::com2sec,
+  $groups                  = $snmp::params::groups,
   $views                   = $snmp::params::views,
   $accesses                = $snmp::params::accesses,
   $dlmod                   = $snmp::params::dlmod,
@@ -345,33 +360,45 @@ class snmp (
     require => Package['snmpd'],
   }
 
+  if $::osfamily == 'FreeBSD' {
+    file { $snmp::params::service_config_dir_path:
+      ensure  => 'directory',
+      mode    => $snmp::params::service_dir_perms,
+      owner   => $snmp::params::service_dir_owner,
+      group   => $snmp::params::service_dir_group,
+      require => Package['snmpd'],
+    }
+  }
+
   file { 'snmpd.conf':
     ensure  => $file_ensure,
     mode    => $snmp::params::service_config_perms,
     owner   => 'root',
-    group   => 'root',
+    group   => $snmp::params::service_config_dir_group,
     path    => $snmp::params::service_config,
     content => template('snmp/snmpd.conf.erb'),
     require => Package['snmpd'],
     notify  => Service['snmpd'],
   }
 
-  file { 'snmpd.sysconfig':
-    ensure  => $file_ensure,
-    mode    => '0644',
-    owner   => 'root',
-    group   => 'root',
-    path    => $snmp::params::sysconfig,
-    content => template("snmp/snmpd.sysconfig-${::osfamily}.erb"),
-    require => Package['snmpd'],
-    notify  => Service['snmpd'],
+  if $::osfamily != 'FreeBSD' {
+    file { 'snmpd.sysconfig':
+      ensure  => $file_ensure,
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      path    => $snmp::params::sysconfig,
+      content => template("snmp/snmpd.sysconfig-${::osfamily}.erb"),
+      require => Package['snmpd'],
+      notify  => Service['snmpd'],
+    }
   }
 
   file { 'snmptrapd.conf':
     ensure  => $file_ensure,
     mode    => $snmp::params::service_config_perms,
     owner   => 'root',
-    group   => 'root',
+    group   => $snmp::params::service_config_dir_group,
     path    => $snmp::params::trap_service_config,
     content => template('snmp/snmptrapd.conf.erb'),
     require => Package['snmpd'],
@@ -415,6 +442,18 @@ class snmp (
         Package['snmpd'],
         File['var-net-snmp'],
         Exec['install /etc/init.d/snmptrapd'],
+      ],
+    }
+  } elsif $::osfamily == 'FreeBSD' {
+    service { 'snmptrapd':
+      ensure     => $trap_service_ensure_real,
+      name       => $trap_service_name,
+      enable     => $trap_service_enable_real,
+      hasstatus  => $trap_service_hasstatus,
+      hasrestart => $trap_service_hasrestart,
+      require    => [
+        Package['snmpd'],
+        File['var-net-snmp'],
       ],
     }
   }
