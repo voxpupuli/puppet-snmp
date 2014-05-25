@@ -46,6 +46,13 @@ class snmp::params {
     default => $::snmp_rw_network,
   }
 
+  $ro_sources = $::snmp_ro_sources ? {
+    undef   => [
+      'default',
+    ],
+    default => $::snmp_ro_sources,
+  }
+
   $contact = $::snmp_contact ? {
     undef   => 'Unknown',
     default => $::snmp_contact,

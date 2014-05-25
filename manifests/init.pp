@@ -29,6 +29,11 @@
 #   Network that is allowed to RW query the daemon.
 #   Default: 127.0.0.1
 #
+# [*ro_sources*]
+#   VACM com2sec sources (hostnames, IPs, or IP ranges) allowed to RO query the daemon.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
+#   Default: [ 'default' ]
+#
 # [*contact*]
 #   Responsible person for the SNMP system.
 #   Default: Unknown
@@ -212,6 +217,7 @@ class snmp (
   $rw_community            = $snmp::params::rw_community,
   $ro_network              = $snmp::params::ro_network,
   $rw_network              = $snmp::params::rw_network,
+  $ro_sources              = $snmp::params::ro_sources,
   $contact                 = $snmp::params::contact,
   $location                = $snmp::params::location,
   $services                = $snmp::params::services,
@@ -254,6 +260,7 @@ class snmp (
   validate_array($trap_handlers)
   validate_array($trap_forwards)
   validate_array($snmp_config)
+  validate_array($ro_sources)
   validate_array($views)
   validate_array($accesses)
   validate_array($dlmod)
