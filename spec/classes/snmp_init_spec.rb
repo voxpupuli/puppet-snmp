@@ -52,7 +52,7 @@ describe 'snmp', :type => 'class' do
 
         it { should contain_file('snmpd.conf').with(
           :ensure  => 'present',
-          :mode    => '0644',
+          :mode    => '0640',
           :owner   => 'root',
           :group   => 'root',
           :path    => '/etc/snmp/snmpd.conf',
@@ -101,7 +101,7 @@ describe 'snmp', :type => 'class' do
 
         it { should contain_file('snmptrapd.conf').with(
           :ensure  => 'present',
-          :mode    => '0644',
+          :mode    => '0640',
           :owner   => 'root',
           :group   => 'root',
           :path    => '/etc/snmp/snmptrapd.conf',
