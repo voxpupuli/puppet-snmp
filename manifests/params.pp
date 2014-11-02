@@ -63,7 +63,7 @@ class snmp::params {
 
   $com2sec = $::snmp_com2sec ? {
     undef   => [
-      "notConfigUser  default       ${ro_community}",
+      "notConfigUser  default       public",
     ],
     default => $::snmp_com2sec,
   }
@@ -109,6 +109,11 @@ class snmp::params {
   $do_not_log_traps = $::snmp_do_not_log_traps ? {
     undef   => 'no',
     default => $::snmp_do_not_log_traps,
+  }
+
+  $do_not_log_tcpwrappers = $::snmp_do_not_log_tcpwrappers ? {
+    undef   => 'no',
+    default => $::snmp_do_not_log_tcpwrappers,
   }
 
   $trap_handlers = $::snmp_trap_handlers ? {

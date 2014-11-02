@@ -14,7 +14,7 @@
 #   Default: [ udp:127.0.0.1:162 ]
 #
 # [*ro_community*]
-#   Read-only (RO) community string.
+#   Read-only (RO) community string for snmptrap daemon.
 #   Default: public
 #
 # [*rw_community*]
@@ -41,11 +41,15 @@
 #   Name of the system (hostname).
 #   Default: ${::fqdn}
 #
+# [*services*]
+#   For a host system, a good value is 72 (application + end-to-end layers).
+#   Default: 72
+#
 # [*com2sec*]
 #   An array of VACM com2sec mappings.
 #   Must provide SECNAME, SOURCE and COMMUNITY.
 #   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
-#   Default: [ "notConfigUser default ${ro_community}" ]
+#   Default: [ "notConfigUser default public" ]
 #
 # [*groups*]
 #   An array of VACM group mappings.
@@ -53,10 +57,6 @@
 #   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
 #   Default: [ 'notConfigGroup v1  notConfigUser',
 #              'notConfigGroup v2c notConfigUser' ]
-#
-# [*services*]
-#   For a host system, a good value is 72 (application + end-to-end layers).
-#   Default: 72
 #
 # [*views*]
 #   An array of views that are available to query.
@@ -90,6 +90,11 @@
 #
 # [*do_not_log_traps*]
 #   Disable the logging of notifications altogether. (yes|no)
+#   Default: no
+#
+# [*do_not_log_tcpwrappers*]
+#   Disable the logging of tcpwrappers messages, e.g. "Connection from UDP: "
+#   messages in syslog. (yes|no)
 #   Default: no
 #
 # [*trap_handlers*]
@@ -199,7 +204,7 @@
 #
 #   # Configure and run the snmp daemon and install the client:
 #   class { 'snmp':
-#     ro_community  => 'SeCrEt',
+#     com2sec       => [ 'notConfigUser default PassW0rd' ],
 #     manage_client => true,
 #   }
 #
@@ -241,6 +246,7 @@ class snmp (
   $snmpd_config            = $snmp::params::snmpd_config,
   $disable_authorization   = $snmp::params::disable_authorization,
   $do_not_log_traps        = $snmp::params::do_not_log_traps,
+  $do_not_log_tcpwrappers  = $snmp::params::do_not_log_tcpwrappers,
   $trap_handlers           = $snmp::params::trap_handlers,
   $trap_forwards           = $snmp::params::trap_forwards,
   $snmptrapd_config        = $snmp::params::snmptrapd_config,
@@ -285,6 +291,7 @@ class snmp (
   $states = [ '^yes$', '^no$' ]
   validate_re($disable_authorization, $states, '$disable_authorization must be either yes or no.')
   validate_re($do_not_log_traps, $states, '$do_not_log_traps must be either yes or no.')
+  validate_re($do_not_log_tcpwrappers, $states, '$do_not_log_tcpwrappers must be either yes or no.')
 
   # Deprecated backwards-compatibility
   if $install_client != undef {
