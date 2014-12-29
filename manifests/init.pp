@@ -6,28 +6,44 @@
 #
 # [*agentaddress*]
 #   An array of addresses, on which snmpd will listen for queries.
-#   Default: [ udp:127.0.0.1:161 ]
+#   Default: [ udp:127.0.0.1:161, udp6:[::1]:161 ]
 #
 # [*snmptrapdaddr*]
 #   An array of addresses, on which snmptrapd will listen to receive incoming
 #   SNMP notifications.
-#   Default: [ udp:127.0.0.1:162 ]
+#   Default: [ udp:127.0.0.1:162, udp6:[::1]:162 ]
 #
 # [*ro_community*]
-#   Read-only (RO) community string.
+#   Read-only (RO) community string for snmptrap daemon.
+#   Default: public
+#
+# [*ro_community6*]
+#   Read-only (RO) community string for IPv6.
 #   Default: public
 #
 # [*rw_community*]
 #   Read-write (RW) community string.
 #   Default: none
 #
+# [*rw_community6*]
+#   Read-write (RW) community string for IPv6.
+#   Default: none
+#
 # [*ro_network*]
 #   Network that is allowed to RO query the daemon.
 #   Default: 127.0.0.1
 #
+# [*ro_network6*]
+#   Network that is allowed to RO query the daemon via IPv6.
+#   Default: ::1/128
+#
 # [*rw_network*]
 #   Network that is allowed to RW query the daemon.
 #   Default: 127.0.0.1
+#
+# [*rw_network6*]
+#   Network that is allowed to RW query the daemon via IPv6.
+#   Default: ::1/128
 #
 # [*contact*]
 #   Responsible person for the SNMP system.
@@ -41,8 +57,18 @@
 #   Name of the system (hostname).
 #   Default: ${::fqdn}
 #
+# [*services*]
+#   For a host system, a good value is 72 (application + end-to-end layers).
+#   Default: 72
+#
 # [*com2sec*]
 #   An array of VACM com2sec mappings.
+#   Must provide SECNAME, SOURCE and COMMUNITY.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
+#   Default: [ "notConfigUser default public" ]
+#
+# [*com2sec6*]
+#   An array of VACM com2sec6 mappings.
 #   Must provide SECNAME, SOURCE and COMMUNITY.
 #   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
 #   Default: [ "notConfigUser default ${ro_community}" ]
@@ -53,10 +79,6 @@
 #   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
 #   Default: [ 'notConfigGroup v1  notConfigUser',
 #              'notConfigGroup v2c notConfigUser' ]
-#
-# [*services*]
-#   For a host system, a good value is 72 (application + end-to-end layers).
-#   Default: 72
 #
 # [*views*]
 #   An array of views that are available to query.
@@ -90,6 +112,11 @@
 #
 # [*do_not_log_traps*]
 #   Disable the logging of notifications altogether. (yes|no)
+#   Default: no
+#
+# [*do_not_log_tcpwrappers*]
+#   Disable the logging of tcpwrappers messages, e.g. "Connection from UDP: "
+#   messages in syslog. (yes|no)
 #   Default: no
 #
 # [*trap_handlers*]
@@ -186,6 +213,11 @@
 #   Service has restart command.
 #   Default: true
 #
+# [*openmanage_enable*]
+#   Adds the smuxpeer directive to the snmpd.conf file to allow net-snmp to
+#   talk with Dell's OpenManage
+#   Default: false
+#
 # === Actions:
 #
 # Installs the Net-SNMP daemon package, service, and configuration.
@@ -199,7 +231,7 @@
 #
 #   # Configure and run the snmp daemon and install the client:
 #   class { 'snmp':
-#     ro_community  => 'SeCrEt',
+#     com2sec       => [ 'notConfigUser default PassW0rd' ],
 #     manage_client => true,
 #   }
 #
@@ -226,14 +258,19 @@ class snmp (
   $agentaddress            = $snmp::params::agentaddress,
   $snmptrapdaddr           = $snmp::params::snmptrapdaddr,
   $ro_community            = $snmp::params::ro_community,
+  $ro_community6           = $snmp::params::ro_community6,
   $rw_community            = $snmp::params::rw_community,
+  $rw_community6           = $snmp::params::rw_community6,
   $ro_network              = $snmp::params::ro_network,
+  $ro_network6             = $snmp::params::ro_network6,
   $rw_network              = $snmp::params::rw_network,
+  $rw_network6             = $snmp::params::rw_network6,
   $contact                 = $snmp::params::contact,
   $location                = $snmp::params::location,
   $sysname                 = $snmp::params::sysname,
   $services                = $snmp::params::services,
   $com2sec                 = $snmp::params::com2sec,
+  $com2sec6                = $snmp::params::com2sec6,
   $groups                  = $snmp::params::groups,
   $views                   = $snmp::params::views,
   $accesses                = $snmp::params::accesses,
@@ -241,6 +278,7 @@ class snmp (
   $snmpd_config            = $snmp::params::snmpd_config,
   $disable_authorization   = $snmp::params::disable_authorization,
   $do_not_log_traps        = $snmp::params::do_not_log_traps,
+  $do_not_log_tcpwrappers  = $snmp::params::do_not_log_tcpwrappers,
   $trap_handlers           = $snmp::params::trap_handlers,
   $trap_forwards           = $snmp::params::trap_forwards,
   $snmptrapd_config        = $snmp::params::snmptrapd_config,
@@ -261,7 +299,8 @@ class snmp (
   $trap_service_name       = $snmp::params::trap_service_name,
   $trap_service_enable     = $snmp::params::trap_service_enable,
   $trap_service_hasstatus  = $snmp::params::trap_service_hasstatus,
-  $trap_service_hasrestart = $snmp::params::trap_service_hasrestart
+  $trap_service_hasrestart = $snmp::params::trap_service_hasrestart,
+  $openmanage_enable       = $snmp::params::openmanage_enable,
 ) inherits snmp::params {
   # Validate our booleans
   validate_bool($manage_client)
@@ -269,6 +308,7 @@ class snmp (
   validate_bool($service_enable)
   validate_bool($service_hasstatus)
   validate_bool($service_hasrestart)
+  validate_bool($openmanage_enable)
 
   # Validate our arrays
   validate_array($snmptrapdaddr)
@@ -285,6 +325,7 @@ class snmp (
   $states = [ '^yes$', '^no$' ]
   validate_re($disable_authorization, $states, '$disable_authorization must be either yes or no.')
   validate_re($do_not_log_traps, $states, '$do_not_log_traps must be either yes or no.')
+  validate_re($do_not_log_tcpwrappers, $states, '$do_not_log_tcpwrappers must be either yes or no.')
 
   # Deprecated backwards-compatibility
   if $install_client != undef {

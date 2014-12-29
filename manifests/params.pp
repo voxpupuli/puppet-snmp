@@ -17,12 +17,12 @@ class snmp::params {
   # If we have a top scope variable defined, use it, otherwise fall back to a
   # hardcoded value.
   $agentaddress = $::snmp_agentaddress ? {
-    undef   => [ 'udp:127.0.0.1:161' ],
+    undef   => [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ],
     default => $::snmp_agentaddress,
   }
 
   $snmptrapdaddr = $::snmp_snmptrapdaddr ? {
-    undef   => [ 'udp:127.0.0.1:162' ],
+    undef   => [ 'udp:127.0.0.1:162', 'udp6:[::1]:162' ],
     default => $::snmp_snmptrapdaddr,
   }
 
@@ -30,10 +30,20 @@ class snmp::params {
     undef   => 'public',
     default => $::snmp_ro_community,
   }
+  
+  $ro_community6 = $::snmp_ro_community6 ? {
+    undef   => 'public',
+    default => $::snmp_ro_community6,
+  }
 
   $rw_community = $::snmp_rw_community ? {
     undef   => undef,
     default => $::snmp_rw_community,
+  }
+  
+  $rw_community6 = $::snmp_rw_community6 ? {
+    undef   => undef,
+    default => $::snmp_rw_community6,
   }
 
   $ro_network = $::snmp_ro_network ? {
@@ -41,9 +51,19 @@ class snmp::params {
     default => $::snmp_ro_network,
   }
 
+  $ro_network6 = $::snmp_ro_network6 ? {
+    undef   => '::1',
+    default => $::snmp_ro_network6,
+  }
+
   $rw_network = $::snmp_rw_network ? {
     undef   => '127.0.0.1',
     default => $::snmp_rw_network,
+  }
+  
+  $rw_network6 = $::snmp_rw_network6 ? {
+    undef   => '::1',
+    default => $::snmp_rw_network6,
   }
 
   $contact = $::snmp_contact ? {
@@ -63,9 +83,16 @@ class snmp::params {
 
   $com2sec = $::snmp_com2sec ? {
     undef   => [
-      "notConfigUser  default       ${ro_community}",
+      "notConfigUser  default       public",
     ],
     default => $::snmp_com2sec,
+  }
+
+  $com2sec6 = $::snmp_com2sec6 ? {
+    undef   => [
+      "notConfigUser  default       public",
+    ],
+    default => $::snmp_com2sec6,
   }
 
   $groups = $::snmp_groups ? {
@@ -79,6 +106,11 @@ class snmp::params {
   $services = $::snmp_services ? {
     undef   => 72,
     default => $::snmp_services,
+  }
+
+  $openmanage_enable = $::openmanage_enable ? {
+    undef   => false,
+    default => $::openmanage_enable
   }
 
   $views = $::snmp_views ? {
@@ -109,6 +141,11 @@ class snmp::params {
   $do_not_log_traps = $::snmp_do_not_log_traps ? {
     undef   => 'no',
     default => $::snmp_do_not_log_traps,
+  }
+
+  $do_not_log_tcpwrappers = $::snmp_do_not_log_tcpwrappers ? {
+    undef   => 'no',
+    default => $::snmp_do_not_log_tcpwrappers,
   }
 
   $trap_handlers = $::snmp_trap_handlers ? {

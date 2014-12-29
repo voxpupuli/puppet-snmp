@@ -62,9 +62,11 @@ describe 'snmp', :type => 'class' do
         # TODO add more contents for File[snmpd.conf]
         it 'should contain File[snmpd.conf] with expected contents' do
           verify_contents(subject, 'snmpd.conf', [
-            'agentaddress udp:127.0.0.1:161',
+            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
             '#rocommunity public 127.0.0.1',
+            '#rocommunity6 public ::1',
             'com2sec notConfigUser  default       public',
+            'com2sec6 notConfigUser  default       public',
             'group   notConfigGroup v1            notConfigUser',
             'group   notConfigGroup v2c           notConfigUser',
             'view    systemview    included   .1.3.6.1.2.1.1',
@@ -74,6 +76,7 @@ describe 'snmp', :type => 'class' do
             'sysContact Unknown',
             'sysServices 72',
             'sysName myhost.localdomain',
+            'dontLogTCPWrappersConnects no',
           ])
         end
         it { should contain_file('snmpd.sysconfig').with(
@@ -177,9 +180,11 @@ describe 'snmp', :type => 'class' do
         # TODO add more contents for File[snmpd.conf]
         it 'should contain File[snmpd.conf] with expected contents' do
           verify_contents(subject, 'snmpd.conf', [
-            'agentaddress udp:127.0.0.1:161',
+            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
             '#rocommunity public 127.0.0.1',
+            '#rocommunity6 public ::1',
             'com2sec notConfigUser  default       public',
+            'com2sec6 notConfigUser  default       public',
             'group   notConfigGroup v1            notConfigUser',
             'group   notConfigGroup v2c           notConfigUser',
             'view    systemview    included   .1.3.6.1.2.1.1',
@@ -189,6 +194,7 @@ describe 'snmp', :type => 'class' do
             'sysContact Unknown',
             'sysServices 72',
             'sysName myhost2.localdomain',
+            'dontLogTCPWrappersConnects no',
           ])
         end
         it { should contain_file('snmpd.sysconfig').with(
@@ -279,9 +285,11 @@ describe 'snmp', :type => 'class' do
         # TODO add more contents for File[snmpd.conf]
         it 'should contain File[snmpd.conf] with expected contents' do
           verify_contents(subject, 'snmpd.conf', [
-            'agentaddress udp:127.0.0.1:161',
+            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
             '#rocommunity public 127.0.0.1',
+            '#rocommunity6 public ::1',
             'com2sec notConfigUser  default       public',
+            'com2sec6 notConfigUser  default       public',
             'group   notConfigGroup v1            notConfigUser',
             'group   notConfigGroup v2c           notConfigUser',
             'view    systemview    included   .1.3.6.1.2.1.1',
@@ -291,6 +299,7 @@ describe 'snmp', :type => 'class' do
             'sysContact Unknown',
             'sysServices 72',
             'sysName myhost3.localdomain',
+            'dontLogTCPWrappersConnects no',
           ])
         end
         it { should contain_file('snmpd.sysconfig').with(
@@ -386,9 +395,11 @@ describe 'snmp', :type => 'class' do
         # TODO add more contents for File[snmpd.conf]
         it 'should contain File[snmpd.conf] with expected contents' do
           verify_contents(subject, 'snmpd.conf', [
-            'agentaddress udp:127.0.0.1:161',
+            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
             '#rocommunity public 127.0.0.1',
+            '#rocommunity6 public ::1',
             'com2sec notConfigUser  default       public',
+            'com2sec6 notConfigUser  default       public',
             'group   notConfigGroup v1            notConfigUser',
             'group   notConfigGroup v2c           notConfigUser',
             'view    systemview    included   .1.3.6.1.2.1.1',
@@ -398,6 +409,7 @@ describe 'snmp', :type => 'class' do
             'sysContact Unknown',
             'sysServices 72',
             'sysName myhost4.localdomain',
+            'dontLogTCPWrappersConnects no',
           ])
         end
         it { should contain_service('snmpd').with(
@@ -583,6 +595,15 @@ describe 'snmp', :type => 'class' do
       end
     end
 
+    describe 'com2sec6 => [ SomeString ]' do
+      let(:params) {{ :com2sec6 => [ 'SomeString', ] }}
+      it 'should contain File[snmpd.conf] with contents "com2sec6 SomeString"' do
+        verify_contents(subject, 'snmpd.conf', [
+          'com2sec6 SomeString',
+        ])
+      end
+    end
+
     describe 'groups => [ SomeString ]' do
       let(:params) {{ :groups => [ 'SomeString', ] }}
       it 'should contain File[snmpd.conf] with contents "groups SomeString"' do
@@ -601,6 +622,15 @@ describe 'snmp', :type => 'class' do
       end
     end
 
+    describe 'openmanage_enable => true' do
+        let(:params) {{ :openmanage_enable => true }}
+        it 'should contain File[snmpd.conf] with contents "smuxpeer .1.3.6.1.4.1.674.10892.1"' do
+            verify_contents(subject, 'snmpd.conf', [
+                'smuxpeer .1.3.6.1.4.1.674.10892.1',
+            ])
+        end
+    end
+
     describe 'agentaddress => [ "1.2.3.4", "8.6.7.5:222" ]' do
       let(:params) {{ :agentaddress => ['1.2.3.4','8.6.7.5:222'] }}
       it 'should contain File[snmpd.conf] with contents "agentaddress 1.2.3.4,8.6.7.5:222"' do
@@ -608,6 +638,15 @@ describe 'snmp', :type => 'class' do
           'agentaddress 1.2.3.4,8.6.7.5:222',
         ])
       end
+    end
+
+    describe 'do_not_log_tcpwrappers => "yes"' do
+        let(:params) {{:do_not_log_tcpwrappers => 'yes'}}
+        it 'should contain File[snmpd.conf] with contents "dontLogTCPWrappersConnects yes' do
+            verify_contents(subject, 'snmpd.conf', [
+                'dontLogTCPWrappersConnects yes',
+            ])
+        end
     end
 
     describe 'snmptrapdaddr => [ "5.6.7.8", "2.3.4.5:3333" ]' do
