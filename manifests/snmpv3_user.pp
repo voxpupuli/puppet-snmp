@@ -78,9 +78,9 @@ define snmp::snmpv3_user (
   }
 
   if $privpass {
-    $cmd = "createUser ${title} ${authtype} ${authpass} ${privtype} ${privpass}"
+    $cmd = "createUser ${title} ${authtype} \\"${authpass}\\" ${privtype} \\"${privpass}\\""
   } else {
-    $cmd = "createUser ${title} ${authtype} ${authpass}"
+    $cmd = "createUser ${title} ${authtype} \\"${authpass}\\""
   }
   exec { "create-snmpv3-user-${title}":
     path    => '/bin:/sbin:/usr/bin:/usr/sbin',
