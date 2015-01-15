@@ -96,10 +96,7 @@ class snmp::params {
   }
 
   $groups = $::snmp_groups ? {
-    undef   => [
-      'notConfigGroup v1            notConfigUser',
-      'notConfigGroup v2c           notConfigUser',
-    ],
+    undef   => undef,
     default => $::snmp_groups,
   }
 
