@@ -36,7 +36,7 @@ To install the SNMP service listening on all IPv4 and IPv6 interfaces:
 class { 'snmp':
   agentaddress => [ 'udp:161', 'udp6:161' ],
   com2sec      => [ 'notConfigUser 10.20.30.40/32 SeCrEt' ],
-  come2sec6    => [ 'notConfiguser fd48:45d7:f49b:cb0f::1/128 SeCrEt' ],
+  com2sec6     => [ 'notConfiguser fd48:45d7:f49b:cb0f::1/128 SeCrEt' ],
   contact      => 'root@yourdomain.org',
   location     => 'Phoenix, AZ',
 }
