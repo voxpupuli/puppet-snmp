@@ -55,7 +55,7 @@
 define snmp::snmpv3_user (
   $authpass,
   $authtype = 'SHA',
-  $privpass = '',
+  $privpass = undef,
   $privtype = 'AES',
   $daemon   = 'snmpd'
 ) {

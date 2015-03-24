@@ -371,7 +371,7 @@ class snmp::params {
 
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
-      $snmptrapd_options        = ''
+      $snmptrapd_options        = undef
     }
     'FreeBSD': {
       $package_name             = 'net-mgmt/net-snmp'
@@ -393,7 +393,7 @@ class snmp::params {
 
       $trap_service_config      = '/usr/local/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
-      $snmptrapd_options        = ''
+      $snmptrapd_options        = undef
     }
     default: {
       fail("Module ${::module} is not supported on ${::operatingsystem}")
