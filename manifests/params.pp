@@ -290,7 +290,7 @@ class snmp::params {
           $varnetsnmp_perms  = '0755'
         }
         default: {
-          if $majdistrelease <= '5' {
+          if $majdistrelease <= 5 {
             $snmpd_options    = '-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a'
             $sysconfig        = '/etc/sysconfig/snmpd.options'
             $trap_sysconfig   = '/etc/sysconfig/snmptrapd.options'
