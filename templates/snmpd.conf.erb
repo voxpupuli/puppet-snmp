@@ -14,11 +14,23 @@ agentaddress <%= @agentaddress.join(',') %>
 
 # ------------------------------------------------------------------------------
 # Traditional Access Control
-<% if @ro_community and (@ro_community.size > 0) -%>
-rocommunity <%= @ro_community %> <%= @ro_network %>
+<% if @ro_community.any? -%>
+<% if @ro_network.any? -%>
+<% @ro_community.each do |ro_community| -%>
+<% @ro_network.each do |ro_network| -%>
+rocommunity <%= ro_community %> <%= ro_network %>
 <% end -%>
-<% if @ro_community6 and (@ro_community6.size > 0) -%>
-rocommunity6 <%= @ro_community6 %> <%= @ro_network6 %>
+<% end -%>
+<% end -%>
+<% end -%>
+<% if @ro_community6 -%>
+<% if @ro_network6.any? -%>
+<% @ro_community6.each do |ro_community6| -%>
+<% @ro_network6.each do |ro_network6| -%>
+rocommunity6 <%= ro_community6 %> <%= ro_network6 %>
+<% end -%>
+<% end -%>
+<% end -%>
 <% end -%>
 <% if @rw_community and (@rw_community.size > 0) -%>
 rwcommunity <%= @rw_community %> <%= @rw_network %>
