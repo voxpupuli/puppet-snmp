@@ -55,7 +55,7 @@
 define snmp::snmpv3_user (
   $authpass,
   $authtype = 'SHA',
-  $privpass = '',
+  $privpass = undef,
   $privtype = 'AES',
   $daemon   = 'snmpd'
 ) {
@@ -67,7 +67,7 @@ define snmp::snmpv3_user (
   $daemon_options = [ '^snmpd$', '^snmptrapd$' ]
   validate_re($daemon, $daemon_options, '$daemon must be either snmpd or snmptrapd.')
 
-  include snmp
+  include ::snmp
 
   if ($daemon == 'snmptrapd') and ($::osfamily != 'Debian') {
     $service_name   = 'snmptrapd'

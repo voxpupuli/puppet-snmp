@@ -27,12 +27,16 @@ class snmp::params {
   }
 
   $ro_community = $::snmp_ro_community ? {
-    undef   => 'public',
+    undef   => [
+      "public",
+    ],
     default => $::snmp_ro_community,
   }
-  
+
   $ro_community6 = $::snmp_ro_community6 ? {
-    undef   => 'public',
+    undef   => [
+      "public",
+    ],
     default => $::snmp_ro_community6,
   }
 
@@ -47,12 +51,16 @@ class snmp::params {
   }
 
   $ro_network = $::snmp_ro_network ? {
-    undef   => '127.0.0.1',
+    undef   => [
+      "127.0.0.1",
+    ],
     default => $::snmp_ro_network,
   }
 
   $ro_network6 = $::snmp_ro_network6 ? {
-    undef   => '::1',
+    undef   => [
+      '::1',
+    ],
     default => $::snmp_ro_network6,
   }
 
@@ -279,7 +287,13 @@ class snmp::params {
 
   case $::osfamily {
     'RedHat': {
-      $majdistrelease = regsubst($::operatingsystemrelease,'^(\d+)\.(\d+)','\1')
+      if $::operatingsystemmajrelease { # facter 1.7+
+        $majdistrelease = $::operatingsystemmajrelease
+      } elsif $::lsbmajdistrelease {    # requires LSB to already be installed
+        $majdistrelease = $::lsbmajdistrelease
+      } else {
+        $majdistrelease = regsubst($::operatingsystemrelease,'^(\d+)\.(\d+)','\1')
+      }
       case $::operatingsystem {
         'Fedora': {
           $snmpd_options     = '-LS0-6d'
@@ -291,19 +305,27 @@ class snmp::params {
         }
         default: {
           if $majdistrelease <= '5' {
-            $snmpd_options    = '-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a'
-            $sysconfig        = '/etc/sysconfig/snmpd.options'
-            $trap_sysconfig   = '/etc/sysconfig/snmptrapd.options'
-            $var_net_snmp     = '/var/net-snmp'
-            $varnetsnmp_perms = '0700'
+            $snmpd_options     = '-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a'
+            $sysconfig         = '/etc/sysconfig/snmpd.options'
+            $trap_sysconfig    = '/etc/sysconfig/snmptrapd.options'
+            $var_net_snmp      = '/var/net-snmp'
+            $varnetsnmp_perms  = '0700'
+            $snmptrapd_options = '-Lsd -p /var/run/snmptrapd.pid'
+          } elsif $majdistrelease == '6' {
+            $snmpd_options     = '-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid'
+            $sysconfig         = '/etc/sysconfig/snmpd'
+            $trap_sysconfig    = '/etc/sysconfig/snmptrapd'
+            $var_net_snmp      = '/var/lib/net-snmp'
+            $varnetsnmp_perms  = '0755'
+            $snmptrapd_options = '-Lsd -p /var/run/snmptrapd.pid'
           } else {
-            $snmpd_options    = '-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid'
-            $sysconfig        = '/etc/sysconfig/snmpd'
-            $trap_sysconfig   = '/etc/sysconfig/snmptrapd'
-            $var_net_snmp     = '/var/lib/net-snmp'
-            $varnetsnmp_perms = '0755'
+            $snmpd_options     = '-LS0-6d'
+            $sysconfig         = '/etc/sysconfig/snmpd'
+            $trap_sysconfig    = '/etc/sysconfig/snmptrapd'
+            $var_net_snmp      = '/var/lib/net-snmp'
+            $varnetsnmp_perms  = '0755'
+            $snmptrapd_options = '-Lsd'
           }
-          $snmptrapd_options = '-Lsd -p /var/run/snmptrapd.pid'
         }
       }
       $package_name             = 'net-snmp'
@@ -357,7 +379,7 @@ class snmp::params {
 
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
-      $snmptrapd_options        = ''
+      $snmptrapd_options        = undef
     }
     'FreeBSD': {
       $package_name             = 'net-mgmt/net-snmp'
@@ -379,7 +401,7 @@ class snmp::params {
 
       $trap_service_config      = '/usr/local/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
-      $snmptrapd_options        = ''
+      $snmptrapd_options        = undef
     }
     default: {
       fail("Module ${::module} is not supported on ${::operatingsystem}")
