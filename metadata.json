@@ -2,7 +2,7 @@
   "name": "razorsedge-snmp",
   "version": "3.3.1",
   "author": "razorsedge",
-  "summary": "Simple Network Management Protocol is a protocol for monitoring the health of network and computer equipment. Net-SNMP implements SNMP v1, v2c, and v3 using both IPv4 and IPv6.",
+  "summary": "Simple Network Management Protocol is for monitoring network and computer equipment. Net-SNMP implements v1, v2c, and v3 on both IPv4 and IPv6.",
   "license": "Apache-2.0",
   "project_page": "https://github.com/razorsedge/puppet-snmp",
   "issues_url": "https://github.com/razorsedge/puppet-snmp/issues",
