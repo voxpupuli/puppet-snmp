@@ -89,6 +89,41 @@ class { 'snmp':
 
 ###Access Control
 
+With traditional access control, you can give a simple password and (optional) network restriction:
+```puppet
+class { 'snmp':
+  ro_community => 'myPassword',
+  ro_network   => '10.0.0.0/8',
+}
+```
+and it becomes this in snmpd.conf:
+```
+rocommunity myPassword 10.0.0.0/8
+```
+This says that any host on network 10.0.0.0/8 can read any SNMP value via SNMP versions 1 and 2c as long as they provide the password 'myPassword'.
+
+With View-based Access Control Model (VACM), you can do this (more complex) configuration instead:
+```puppet
+class { 'snmp':
+  com2sec  => ['myUserName  10.0.0.0/8 myPassword'],
+  groups   => ['myGroupName v1         myUserName',
+               'myGroupName v2c        myUserName'],
+  views    => ['everyThing  included   .'],
+  accesses => ['myGroupName ""      any   noauth  exact  everyThing  none   none'],
+}
+```
+and it becomes this in snmpd.conf:
+```
+com2sec myUserName  10.0.0.0/8 myPassword
+group   myGroupName v1         myUserName
+group   myGroupName v2c        myUserName
+view    everyThing  included   .
+access  myGroupName ""      any   noauth  exact  everyThing  none   none
+```
+This also says that any host on network 10.0.0.0/8 can read any SNMP value via SNMP versions 1 and 2c as long as they provide the password 'myPassword'.  But it also gives you the ability to change *any* of those variables.
+
+Reference: [Manpage of snmpd.conf - Access Control](http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAJ)
+
 ###Client
 
 If you just want to install the SNMP client:
