@@ -12,10 +12,10 @@
     * [Beginning with this module](#beginning-with-this module)
     * [Upgrading](#upgrading)
 4. [Usage - Configuration options and additional functionality](#usage)
-    * [Access Control](#access-control)
     * [Client](#client)
     * [Trap Daemon](#trap-daemon)
     * [SNMPv3 Users](#snmpv3-users)
+    * [Access Control](#access-control)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 6. [Limitations - OS compatibility, etc.](#limitations)
     * [OS Support](#os-support)
@@ -29,8 +29,9 @@ This Puppet module manages the installation and configuration of [Net-SNMP](http
 
 ##Module Description
 
-Simple Network Management Protocol (SNMP) is a widely used protocol for monitoring the health and welfare of network and computer equipment. [Net-SNMP](http://www.net-snmp.org/) implements SNMP v1, SNMP v2c, and SNMP v3 using both IPv4 and IPv6.  This Puppet module manages the installation and configuration of the Net-SNMP client, server, and trap server.  Only platforms that have Net-SNMP available are supported.  This module will not work with AIX or Solaris SNMP.
-It also can create a SNMPv3 user with authentication and privacy passwords.
+Simple Network Management Protocol (SNMP) is a widely used protocol for monitoring the health and welfare of network and computer equipment. [Net-SNMP](http://www.net-snmp.org/) implements SNMP v1, SNMP v2c, and SNMP v3 using both IPv4 and IPv6.  This Puppet module manages the installation and configuration of the Net-SNMP client, server, and trap server.  It also can create a SNMPv3 user with authentication and privacy passwords.
+
+Only platforms that have Net-SNMP available are supported.  This module will not work with AIX or Solaris SNMP.
 
 ##Setup
 
@@ -40,10 +41,6 @@ It also can create a SNMPv3 user with authentication and privacy passwords.
 * Installs the Net-SNMP daemon package, service, and configuration.
 * Installs the Net-SNMP trap daemon service and configuration.
 * Creates a SNMPv3 user with authentication and encryption paswords.
-
-###Requirements
-
-If your module requires anything extra before setting up (pluginsync enabled, etc.), mention it here.
 
 ###Beginning with this module
 
@@ -64,18 +61,41 @@ The parameters `ro_community`, `rw_community`, `ro_network`, and `rw_network` wi
 
 ##Usage
 
-Most interaction with the snmp module can be done through the main snmp class. This means you can simply toggle the options in ::snmp to have most functionality of the module.  Additional fuctionality can be achieved by only utilizing the ::snmp::client class or the ::snmp::user define.
+Most interaction with the snmp module can be done through the main snmp class. This means you can simply toggle the parameters in `::snmp` to have most functionality of the module.  Additional fuctionality can be achieved by only utilizing the `::snmp::client` class or the `::snmp::snmpv3_user` define.
 
 To install the SNMP service listening on all IPv4 and IPv6 interfaces:
 
 ```puppet
 class { 'snmp':
   agentaddress => [ 'udp:161', 'udp6:161' ],
-  com2sec      => [ 'notConfigUser 10.20.30.40/32 SeCrEt' ], # optional
-  com2sec6     => [ 'notConfiguser fd48:45d7:f49b:cb0f::1/128 SeCrEt' ], # optional
-  contact      => 'root@yourdomain.org', # optional
-  location     => 'Phoenix, AZ', # optional
 }
+```
+
+To change the SNMP community from the default value and limit the netblocks that can use it:
+
+```puppet
+class { 'snmp':
+  agentaddress => [ 'udp:161', ],
+  ro_community => 'myPassword',
+  ro_network   => '192.168.0.0/16',
+}
+```
+
+To set the responsible person and location of the SNMP system:
+
+```puppet
+class { 'snmp':
+  contact  => 'root@yourdomain.org',
+  location => 'Phoenix, Arizona, U.S.A., Earth, Milky Way',
+}
+```
+
+###Client
+
+If you just want to install the SNMP client:
+
+```puppet
+include ::snmp::client
 ```
 
 To install the SNMP service and the client:
@@ -83,7 +103,60 @@ To install the SNMP service and the client:
 ```puppet
 class { 'snmp':
   manage_client => true,
-  snmp_config   => [ 'defVersion 2c', 'defCommunity public', ], # optional
+}
+```
+
+If you want to pass client configuration stanzas to the snmp.conf file:
+
+```puppet
+class { 'snmp':
+  snmp_config => [
+    'defVersion 2c',
+    'defCommunity public',
+    'mibdirs +/usr/local/share/snmp/mibs',
+  ],
+}
+```
+
+###Trap Daemon
+
+To only configure and run the snmptrap daemon:
+
+```puppet
+class { 'snmp':
+  service_ensure      => 'stopped',
+  trap_service_ensure => 'running',
+  trap_service_enable => true,
+  snmptrapdaddr       => [ 'udp:162', ],
+  trap_handlers       => [
+    'default /usr/bin/perl /usr/bin/traptoemail me@somewhere.local', # optional
+    'TRAP-TEST-MIB::demo-trap /home/user/traptest.sh demo-trap', # optional
+  ],
+  trap_forwards       => [ 'default udp:55.55.55.55:162' ], # optional
+}
+```
+
+###SNMPv3 Users
+
+To install a SNMP version 3 user for snmpd:
+
+```puppet
+snmp::snmpv3_user { 'myuser':
+  authpass => '1234auth',
+  privpass => '5678priv',
+}
+class { 'snmp':
+  snmpd_config => [ 'rouser myuser authPriv' ],
+}
+```
+
+To install a SNMP version 3 user for snmptrapd:
+
+```puppet
+snmp::snmpv3_user { 'myuser':
+  authpass => 'SeCrEt',
+  privpass => 'PhRaSe',
+  daemon   => 'snmptrapd',
 }
 ```
 
@@ -123,59 +196,6 @@ access  myGroupName ""      any   noauth  exact  everyThing  none   none
 This also says that any host on network 10.0.0.0/8 can read any SNMP value via SNMP versions 1 and 2c as long as they provide the password 'myPassword'.  But it also gives you the ability to change *any* of those variables.
 
 Reference: [Manpage of snmpd.conf - Access Control](http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAJ)
-
-###Client
-
-If you just want to install the SNMP client:
-
-```puppet
-class { 'snmp::client':
-  snmp_config => [ 'mibdirs +/usr/local/share/snmp/mibs', ], # optional
-}
-```
-
-###Trap Daemon
-
-Only configure and run the snmptrap daemon:
-
-```puppet
-class { 'snmp':
-  snmptrapdaddr       => [ 'udp:162', ],
-  ro_community        => 'SeCrEt',
-  service_ensure      => 'stopped',
-  trap_service_ensure => 'running',
-  trap_service_enable => true,
-  trap_handlers       => [
-    'default /usr/bin/perl /usr/bin/traptoemail me@somewhere.local', # optional
-    'TRAP-TEST-MIB::demo-trap /home/user/traptest.sh demo-trap', # optional
-  ],
-  trap_forwards       => [ 'default udp:55.55.55.55:162' ], # optional
-}
-```
-
-###SNMPv3 Users
-
-To install a SNMP version 3 user for snmpd:
-
-```puppet
-snmp::snmpv3_user { 'myuser':
-  authpass => '1234auth',
-  privpass => '5678priv',
-}
-class { 'snmp':
-  snmpd_config => [ 'rouser myuser authPriv' ],
-}
-```
-
-To install a SNMP version 3 user for snmptrapd:
-
-```puppet
-snmp::snmpv3_user { 'myuser':
-  authpass => 'SeCrEt',
-  privpass => 'PhRaSe',
-  daemon   => 'snmptrapd',
-}
-```
 
 ##Reference
 
@@ -300,14 +320,17 @@ Default: no
 #####`trap_handlers`
 An array of programs to invoke on receipt of traps.  Must provide OID and PROGRAM (ex. "IF-MIB::linkDown /bin/traps down").  See http://www.net-snmp.org/docs/man/snmptrapd.conf.html#lbAI for details.
 Default: []
+Affects snmptrapd.conf
 
 #####`trap_forwards`
 An array of destinations to send to on receipt of traps.  Must provide OID and DESTINATION (ex. "IF-MIB::linkUp udp:1.2.3.5:162").  See http://www.net-snmp.org/docs/man/snmptrapd.conf.html#lbAI for details.
 Default: []
+Affects snmptrapd.conf
 
 #####`snmptrapd_config`
 Safety valve.  Array of lines to add to the snmptrapd.conf file.  See http://www.net-snmp.org/docs/man/snmptrapd.conf.html for all options.
 Default: []
+Affects snmptrapd.conf
 
 
 #####`manage_client`
@@ -317,6 +340,7 @@ Default: false
 #####`snmp_config`
 Safety valve.  Array of lines to add to the client's global snmp.conf file.  See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
 Default: []
+Affects snmp.conf
 
 
 #####`ensure`
@@ -458,7 +482,7 @@ Net-SNMP module support is available with these operating systems:
 * Not all parts of [Traditional Access
   Control](http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAK) or [VACM
   Configuration](http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL) are
-  fully supported in this module.  
+  fully supported in this module.
 
 ###Issues:
 
