@@ -208,22 +208,16 @@ Reference: [Manpage of snmpd.conf - Access Control](http://www.net-snmp.org/docs
 
 ###Classes
 
-####Public Classes
-
-* snmp: Installs the Net-SNMP software.
-* snmp::client: Separately installs the Net-SNMP client software. Can be called from `Class['snmp']`.
-
-####Private Classes
-
-* snmp::params
+* [`snmp`](#class-snmp): Installs the Net-SNMP software.
+* [`snmp::client`](#class-snmpclient): Separately installs the Net-SNMP client software. Can be called from `Class['snmp']`.
 
 ###Defines
 
-####Public Defines
+* [`snmp::snmpv3_user`](#define-snmpsnmpv3_user): Creates a SNMPv3 user with authentication and encryption paswords.
 
-* snmp::snmpv3_user: Creates a SNMPv3 user with authentication and encryption paswords.
+###Class: `snmp`
 
-###Parameters
+####Parameters
 
 The following parameters are available in the `::snmp` class:
 
@@ -415,6 +409,10 @@ Adds the smuxpeer directive to the snmpd.conf file to allow net-snmp to talk wit
 Default: false
 
 
+###Class: `snmp::client`
+
+####Parameters
+
 The following parameters are available in the `::snmp::client` class:
 
 ####`snmp_config`
@@ -433,6 +431,10 @@ Default: false
 Name of the package.  Only set this if your platform is not supported or you know what you are doing.
 Default: auto-set, platform specific
 
+
+###Define: `snmp::snmpv3_user`
+
+####Parameters
 
 The following parameters are available in the `::snmp::snmpv3_user` define:
 
