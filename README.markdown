@@ -45,6 +45,7 @@ Only platforms that have Net-SNMP available are supported.  This module will not
 ###Beginning with this module
 
 This declaration will get you the SNMP daemon listening on the loopback IPv4 and IPv6 addresses with a v1 and v2c read-only community of 'public'.
+
 ```puppet
 include ::snmp
 ```
@@ -178,18 +179,24 @@ This says that any host on network 10.0.0.0/8 can read any SNMP value via SNMP v
 With View-based Access Control Model (VACM), you can do this (more complex) configuration instead:
 ```puppet
 class { 'snmp':
-  com2sec  => ['myUserName  10.0.0.0/8 myPassword'],
-  groups   => ['myGroupName v1         myUserName',
-               'myGroupName v2c        myUserName'],
+  com2sec  => ['mySecName   10.0.0.0/8 myPassword'],
+  groups   => ['myGroupName v1         mySecName',
+               'myGroupName v2c        mySecName'],
   views    => ['everyThing  included   .'],
   accesses => ['myGroupName ""      any   noauth  exact  everyThing  none   none'],
 }
 ```
+where the variables have the following meanings:
+* "mySecName": A security name you have selected.
+* "myPassword": The community (password) for the security name.
+* "myGroupName": A group name to which you assign security names.
+* "everyThing": A view name (i.e. a list of MIBs that will be ACLed as a unit).
+
 and it becomes this in snmpd.conf:
 ```
-com2sec myUserName  10.0.0.0/8 myPassword
-group   myGroupName v1         myUserName
-group   myGroupName v2c        myUserName
+com2sec mySecName   10.0.0.0/8 myPassword
+group   myGroupName v1         mySecName
+group   myGroupName v2c        mySecName
 view    everyThing  included   .
 access  myGroupName ""      any   noauth  exact  everyThing  none   none
 ```
