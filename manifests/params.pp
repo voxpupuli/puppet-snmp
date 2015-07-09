@@ -27,12 +27,16 @@ class snmp::params {
   }
 
   $ro_community = $::snmp_ro_community ? {
-    undef   => 'public',
+    undef   => [
+      "public",
+    ],
     default => $::snmp_ro_community,
   }
-  
+
   $ro_community6 = $::snmp_ro_community6 ? {
-    undef   => 'public',
+    undef   => [
+      "public",
+    ],
     default => $::snmp_ro_community6,
   }
 
@@ -47,12 +51,16 @@ class snmp::params {
   }
 
   $ro_network = $::snmp_ro_network ? {
-    undef   => '127.0.0.1',
+    undef   => [
+      "127.0.0.1",
+    ],
     default => $::snmp_ro_network,
   }
 
   $ro_network6 = $::snmp_ro_network6 ? {
-    undef   => '::1',
+    undef   => [
+      '::1',
+    ],
     default => $::snmp_ro_network6,
   }
 
