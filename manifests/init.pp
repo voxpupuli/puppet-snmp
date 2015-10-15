@@ -30,19 +30,19 @@
 #   Default: none
 #
 # [*ro_network*]
-#   Network that is allowed to RO query the daemon.
+#   Network that is allowed to RO query the daemon.  Can be an array.
 #   Default: 127.0.0.1
 #
 # [*ro_network6*]
-#   Network that is allowed to RO query the daemon via IPv6.
+#   Network that is allowed to RO query the daemon via IPv6.  Can be an array.
 #   Default: ::1/128
 #
 # [*rw_network*]
-#   Network that is allowed to RW query the daemon.
+#   Network that is allowed to RW query the daemon.  Can be an array.
 #   Default: 127.0.0.1
 #
 # [*rw_network6*]
-#   Network that is allowed to RW query the daemon via IPv6.
+#   Network that is allowed to RW query the daemon via IPv6.  Can be an array.
 #   Default: ::1/128
 #
 # [*contact*]
