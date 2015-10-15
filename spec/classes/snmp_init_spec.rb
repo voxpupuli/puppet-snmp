@@ -790,6 +790,16 @@ describe 'snmp', :type => 'class' do
         ])
       end
     end
+
+    describe 'ro_network => [ "127.0.0.1", "192.168.1.1/24", ]' do
+      let(:params) {{ :ro_network => [ '127.0.0.1', '192.168.1.1/24', ] }}
+      it 'should contain File[snmpd.conf] with contents "127.0.0.1" and "192.168.1.1/24"' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'rocommunity public 127.0.0.1',
+          'rocommunity public 192.168.1.1/24',
+        ])
+      end
+    end
   end
 
   context 'on a supported osfamily (Debian), custom parameters' do

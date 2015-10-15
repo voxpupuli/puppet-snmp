@@ -204,6 +204,21 @@ This also says that any host on network 10.0.0.0/8 can read any SNMP value via S
 
 Reference: [Manpage of snmpd.conf - Access Control](http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAJ)
 
+####Multiple Network Restrictions
+
+In traditional access control, you can also pass multiple networks for the community string.
+```puppet
+class { 'snmp':
+  ro_community => 'shibboleth',
+  ro_network   => [ '192.168.0.0/16', '1.2.3.4/32', ],
+}
+```
+and it becomes this in snmpd.conf:
+```
+rocommunity shibboleth 192.168.0.0/16
+rocommunity shibboleth 1.2.3.4/32
+```
+
 ##Reference
 
 ###Classes
@@ -246,19 +261,19 @@ Read-write (RW) community string for IPv6.
 Default: none
 
 #####`ro_network`
-Network that is allowed to RO query the daemon.
+Network that is allowed to RO query the daemon.  Can be an array.
 Default: 127.0.0.1
 
 #####`ro_network6`
-Network that is allowed to RO query the daemon via IPv6.
+Network that is allowed to RO query the daemon via IPv6.  Can be an array.
 Default: ::1/128
 
 #####`rw_network`
-Network that is allowed to RW query the daemon.
+Network that is allowed to RW query the daemon.  Can be an array.
 Default: 127.0.0.1
 
 #####`rw_network6`
-Network that is allowed to RW query the daemon via IPv6.
+Network that is allowed to RW query the daemon via IPv6.  Can be an array.
 Default: ::1/128
 
 #####`contact`
