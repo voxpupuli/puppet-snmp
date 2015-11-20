@@ -245,35 +245,35 @@ An array of addresses, on which snmptrapd will listen to receive incoming SNMP n
 Default: [ udp:127.0.0.1:162, udp6:[::1]:162 ]
 
 #####`ro_community`
-Read-only (RO) community string for snmptrap daemon.
+Read-only (RO) community string or array for snmptrap daemon.
 Default: public
 
 #####`ro_community6`
-Read-only (RO) community string for IPv6.
+Read-only (RO) community string or array for IPv6.
 Default: public
 
 #####`rw_community`
-Read-write (RW) community string.
+Read-write (RW) community string or array.
 Default: none
 
 #####`rw_community6`
-Read-write (RW) community string for IPv6.
+Read-write (RW) community string or array for IPv6.
 Default: none
 
 #####`ro_network`
-Network that is allowed to RO query the daemon.  Can be an array.
+Network that is allowed to RO query the daemon.  Can be string or array.
 Default: 127.0.0.1
 
 #####`ro_network6`
-Network that is allowed to RO query the daemon via IPv6.  Can be an array.
+Network that is allowed to RO query the daemon via IPv6.  Can be string or array.
 Default: ::1/128
 
 #####`rw_network`
-Network that is allowed to RW query the daemon.  Can be an array.
+Network that is allowed to RW query the daemon.  Can be string or array.
 Default: 127.0.0.1
 
 #####`rw_network6`
-Network that is allowed to RW query the daemon via IPv6.  Can be an array.
+Network that is allowed to RW query the daemon via IPv6.  Can be string or array.
 Default: ::1/128
 
 #####`contact`
