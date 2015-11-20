@@ -614,6 +614,12 @@ describe 'snmp', :type => 'class' do
       end
     end
 
+    describe 'service_config_perms => "0123"' do
+      let(:params) {{ :service_config_perms => '0123' }}
+      it { should contain_file('snmpd.conf').with_mode('0123') }
+      it { should contain_file('snmptrapd.conf').with_mode('0123') }
+    end
+
     describe 'install_client => true' do
       let(:params) {{ :install_client => true }}
       it { should contain_class('snmp::client').with(

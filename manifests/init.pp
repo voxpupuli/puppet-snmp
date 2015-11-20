@@ -289,6 +289,7 @@ class snmp (
   $autoupgrade             = $snmp::params::safe_autoupgrade,
   $package_name            = $snmp::params::package_name,
   $snmpd_options           = $snmp::params::snmpd_options,
+  $service_config_perms    = $snmp::params::service_config_perms,
   $service_ensure          = $snmp::params::service_ensure,
   $service_name            = $snmp::params::service_name,
   $service_enable          = $snmp::params::service_enable,
@@ -428,7 +429,7 @@ class snmp (
 
   file { 'snmpd.conf':
     ensure  => $file_ensure,
-    mode    => $snmp::params::service_config_perms,
+    mode    => $service_config_perms,
     owner   => 'root',
     group   => $snmp::params::service_config_dir_group,
     path    => $snmp::params::service_config,
@@ -452,7 +453,7 @@ class snmp (
 
   file { 'snmptrapd.conf':
     ensure  => $file_ensure,
-    mode    => $snmp::params::service_config_perms,
+    mode    => $service_config_perms,
     owner   => 'root',
     group   => $snmp::params::service_config_dir_group,
     path    => $snmp::params::trap_service_config,
