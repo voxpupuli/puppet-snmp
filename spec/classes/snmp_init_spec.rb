@@ -624,6 +624,12 @@ describe 'snmp', :type => 'class' do
       end
     end
 
+    describe 'service_config_perms => "0123"' do
+      let(:params) {{ :service_config_perms => '0123' }}
+      it { should contain_file('snmpd.conf').with_mode('0123') }
+      it { should contain_file('snmptrapd.conf').with_mode('0123') }
+    end
+
     describe 'install_client => true' do
       let(:params) {{ :install_client => true }}
       it { should contain_class('snmp::client').with(
@@ -719,9 +725,29 @@ describe 'snmp', :type => 'class' do
 
     describe 'groups => [ SomeString ]' do
       let(:params) {{ :groups => [ 'SomeString', ] }}
-      it 'should contain File[snmpd.conf] with contents "groups SomeString"' do
+      it 'should contain File[snmpd.conf] with contents "group SomeString"' do
         verify_contents(catalogue, 'snmpd.conf', [
           'group   SomeString',
+        ])
+      end
+    end
+
+    describe 'views => [ "SomeArray1", "SomeArray2" ]' do
+      let(:params) {{ :views => [ 'SomeArray1', 'SomeArray2' ] }}
+      it 'should contain File[snmpd.conf] with contents from array' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'view    SomeArray1',
+          'view    SomeArray2',
+        ])
+      end
+    end
+
+    describe 'accesses => [ "SomeArray1", "SomeArray2" ]' do
+      let(:params) {{ :accesses => [ 'SomeArray1', 'SomeArray2' ] }}
+      it 'should contain File[snmpd.conf] with contents from array' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'access  SomeArray1',
+          'access  SomeArray2',
         ])
       end
     end
@@ -797,6 +823,25 @@ describe 'snmp', :type => 'class' do
         verify_contents(catalogue, 'snmpd.conf', [
           'rocommunity public 127.0.0.1',
           'rocommunity public 192.168.1.1/24',
+        ])
+      end
+    end
+
+    describe 'ro_network => "127.0.0.2"' do
+      let(:params) {{ :ro_network => '127.0.0.2' }}
+      it 'should contain File[snmpd.conf] with contents "127.0.0.2"' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'rocommunity public 127.0.0.2',
+        ])
+      end
+    end
+
+    describe 'ro_community => [ "a", "b", ] and ro_network => "127.0.0.2"' do
+      let(:params) {{ :ro_community => ['a', 'b'], :ro_network => '127.0.0.2' }}
+      it 'should contain File[snmpd.conf] with contents "a 127.0.0.2" and "b 127.0.0.2"' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'rocommunity a 127.0.0.2',
+          'rocommunity b 127.0.0.2',
         ])
       end
     end

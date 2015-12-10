@@ -14,63 +14,41 @@ agentaddress <%= @agentaddress.join(',') %>
 
 # ------------------------------------------------------------------------------
 # Traditional Access Control
-<% if @ro_community and (@ro_community.size > 0) -%>
-<% if (@ro_network.is_a?(Array)) and (@ro_network.count > 0) -%>
-<% @ro_network.each do |ro_net| -%>
-rocommunity <%= @ro_community %> <%= ro_net %>
-<% end -%>
-<% else -%>
-rocommunity <%= @ro_community %> <%= @ro_network %>
-<% end -%>
-<% end -%>
-<% if @ro_community6 and (@ro_community6.size > 0) -%>
-<% if (@ro_network6.is_a?(Array)) and (@ro_network6.count > 0) -%>
-<% @ro_network6.each do |ro_net6| -%>
-rocommunity6 <%= @ro_community6 %> <%= ro_net6 %>
-<% end -%>
-<% else -%>
-rocommunity6 <%= @ro_community6 %> <%= @ro_network6 %>
-<% end -%>
-<% end -%>
-<% if @rw_community and (@rw_community.size > 0) -%>
-<% if (@rw_network.is_a?(Array)) and (@rw_network.count > 0) -%>
-<% @rw_network.each do |rw_net| -%>
-rwcommunity <%= @rw_community %> <%= rw_net %>
-<% end -%>
-<% else -%>
-rwcommunity <%= @rw_community %> <%= @rw_network %>
-<% end -%>
-<% end -%>
-<% if @rw_community6 and (@rw_community6.size > 0) -%>
-<% if (@rw_network6.is_a?(Array)) and (@rw_network6.count > 0) -%>
-<% @rw_network6.each do |rw_net6| -%>
-rwcommunity6 <%= @rw_community6 %> <%= rw_net6 %>
-<% end -%>
-<% else -%>
-rwcommunity6 <%= @rw_community6 %> <%= @rw_network6 %>
-<% end -%>
-<% end -%>
+<%- [*@ro_community].compact.each do |c| -%>
+  <%- [*@ro_network].compact.each do |n| -%>
+rocommunity <%= c %> <%= n %>
+  <%- end -%>
+<%- end -%>
+<%- [*@ro_community6].compact.each do |c| -%>
+  <%- [*@ro_network6].compact.each do |n| -%>
+rocommunity6 <%= c %> <%= n %>
+  <%- end -%>
+<%- end -%>
+<%- [*@rw_community].compact.each do |c| -%>
+  <%- [*@rw_network].compact.each do |n| -%>
+rwcommunity <%= c %> <%= n %>
+  <%- end -%>
+<%- end -%>
+<%- [*@rw_community6].compact.each do |c| -%>
+  <%- [*@rw_network6].compact.each do |n| -%>
+rocommunity6 <%= c %> <%= n %>
+  <%- end -%>
+<%- end -%>
 
 # ------------------------------------------------------------------------------
 # VACM Configuration
 #       sec.name       source        community
-<% if @com2sec.any? -%>
-<% @com2sec.each do |com2sec| -%>
-com2sec <%= com2sec %>
-<% end -%>
+<% @com2sec.each do |c| -%>
+com2sec <%= c %>
 <% end -%>
 
-<% if @com2sec6.any? -%>
-<% @com2sec6.each do |com2sec6| -%>
-com2sec6 <%= com2sec6 %>
-<% end -%>
+<% @com2sec6.each do |c| -%>
+com2sec6 <%= c %>
 <% end -%>
 
 #       groupName      securityModel securityName
-<% if @groups.any? -%>
 <% @groups.each do |group| -%>
 group   <%= group %>
-<% end -%>
 <% end -%>
 
 #       name          incl/excl  subtree             mask(optional)
