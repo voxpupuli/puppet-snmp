@@ -14,35 +14,35 @@
 #   Default: [ udp:127.0.0.1:162, udp6:[::1]:162 ]
 #
 # [*ro_community*]
-#   Read-only (RO) community string for snmptrap daemon.
+#   Read-only (RO) community string or array for snmptrap daemon.
 #   Default: public
 #
 # [*ro_community6*]
-#   Read-only (RO) community string for IPv6.
+#   Read-only (RO) community string or array for IPv6.
 #   Default: public
 #
 # [*rw_community*]
-#   Read-write (RW) community string.
+#   Read-write (RW) community string or array.
 #   Default: none
 #
 # [*rw_community6*]
-#   Read-write (RW) community string for IPv6.
+#   Read-write (RW) community string or array for IPv6.
 #   Default: none
 #
 # [*ro_network*]
-#   Network that is allowed to RO query the daemon.  Can be an array.
+#   Network that is allowed to RO query the daemon.  Can be string or array.
 #   Default: 127.0.0.1
 #
 # [*ro_network6*]
-#   Network that is allowed to RO query the daemon via IPv6.  Can be an array.
+#   Network that is allowed to RO query the daemon via IPv6.  Can be string or array.
 #   Default: ::1/128
 #
 # [*rw_network*]
-#   Network that is allowed to RW query the daemon.  Can be an array.
+#   Network that is allowed to RW query the daemon.  Can be string or array.
 #   Default: 127.0.0.1
 #
 # [*rw_network6*]
-#   Network that is allowed to RW query the daemon via IPv6.  Can be an array.
+#   Network that is allowed to RW query the daemon via IPv6.  Can be string or array.
 #   Default: ::1/128
 #
 # [*contact*]
@@ -289,6 +289,7 @@ class snmp (
   $autoupgrade             = $snmp::params::safe_autoupgrade,
   $package_name            = $snmp::params::package_name,
   $snmpd_options           = $snmp::params::snmpd_options,
+  $service_config_perms    = $snmp::params::service_config_perms,
   $service_ensure          = $snmp::params::service_ensure,
   $service_name            = $snmp::params::service_name,
   $service_enable          = $snmp::params::service_enable,
@@ -315,6 +316,9 @@ class snmp (
   validate_array($trap_handlers)
   validate_array($trap_forwards)
   validate_array($snmp_config)
+  validate_array($com2sec)
+  validate_array($com2sec6)
+  validate_array($groups)
   validate_array($views)
   validate_array($accesses)
   validate_array($dlmod)
@@ -428,7 +432,7 @@ class snmp (
 
   file { 'snmpd.conf':
     ensure  => $file_ensure,
-    mode    => $snmp::params::service_config_perms,
+    mode    => $service_config_perms,
     owner   => 'root',
     group   => $snmp::params::service_config_dir_group,
     path    => $snmp::params::service_config,
@@ -452,7 +456,7 @@ class snmp (
 
   file { 'snmptrapd.conf':
     ensure  => $file_ensure,
-    mode    => $snmp::params::service_config_perms,
+    mode    => $service_config_perms,
     owner   => 'root',
     group   => $snmp::params::service_config_dir_group,
     path    => $snmp::params::trap_service_config,
