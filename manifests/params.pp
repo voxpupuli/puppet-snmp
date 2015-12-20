@@ -30,7 +30,7 @@ class snmp::params {
     undef   => 'public',
     default => $::snmp_ro_community,
   }
-  
+
   $ro_community6 = $::snmp_ro_community6 ? {
     undef   => 'public',
     default => $::snmp_ro_community6,
@@ -40,7 +40,7 @@ class snmp::params {
     undef   => undef,
     default => $::snmp_rw_community,
   }
-  
+
   $rw_community6 = $::snmp_rw_community6 ? {
     undef   => undef,
     default => $::snmp_rw_community6,
@@ -60,7 +60,7 @@ class snmp::params {
     undef   => '127.0.0.1',
     default => $::snmp_rw_network,
   }
-  
+
   $rw_network6 = $::snmp_rw_network6 ? {
     undef   => '::1',
     default => $::snmp_rw_network6,
