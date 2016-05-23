@@ -32,6 +32,10 @@
       "operatingsystemrelease": [ "9.2", "10.0" ]
     },
     {
+      "operatingsystem": "OpenBSD",
+      "operatingsystemrelease": [ "5.9" ]
+    },
+    {
       "operatingsystem": "SLES",
       "operatingsystemrelease": [ "11 SP1" ]
     },
