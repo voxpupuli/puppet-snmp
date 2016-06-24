@@ -8,6 +8,7 @@ describe 'snmp::snmpv3_user', :type => 'define' do
     let :facts do {
       :osfamily               => 'RedHat',
       :operatingsystem        => 'CentOS',
+      :operatingsystemmajrelease => '6',
       :operatingsystemrelease => '6.4'
     }
     end
@@ -65,6 +66,7 @@ describe 'snmp::snmpv3_user', :type => 'define' do
     let :facts do {
       :osfamily               => 'RedHat',
       :operatingsystem        => 'CentOS',
+      :operatingsystemmajrelease => '6',
       :operatingsystemrelease => '6.4'
     }
     end
