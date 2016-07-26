@@ -277,6 +277,11 @@ class snmp::params {
     $safe_trap_service_hasrestart = $trap_service_hasrestart
   }
 
+  $template_snmpd_conf = 'snmp/snmpd.conf.erb'
+  $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${::osfamily}.erb"
+  $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
+  $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${::osfamily}.erb"
+
   case $::osfamily {
     'RedHat': {
       if $::operatingsystemmajrelease { # facter 1.7+
