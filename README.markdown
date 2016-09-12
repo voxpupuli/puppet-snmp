@@ -82,6 +82,15 @@ class { 'snmp':
 }
 ```
 
+Or more than one community:
+
+```puppet
+class { 'snmp':
+  agentaddress => [ 'udp:161', ],
+  ro_community => [ 'myPassword', 'myOtherPassword', ],
+}
+```
+
 To set the responsible person and location of the SNMP system:
 
 ```puppet
