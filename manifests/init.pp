@@ -303,6 +303,7 @@ class snmp (
   $trap_service_hasrestart = $snmp::params::trap_service_hasrestart,
   $openmanage_enable       = $snmp::params::openmanage_enable,
   $proxy                   = $snmp::params::proxy,
+  $rwusers                 = $snmp::params::rwusers,
   $master                  = "agentx",
 ) inherits snmp::params {
   # Validate our booleans

@@ -281,6 +281,10 @@ class snmp::params {
     undef   => [],
     default => $::snmp_proxy,
   }
+  $rwusers = $::snmp_rwusers ? {
+    undef   => [],
+    default => $::snmp_rwusers,
+  }
 
   case $::osfamily {
     'RedHat': {

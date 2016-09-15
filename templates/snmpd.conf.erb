@@ -82,6 +82,9 @@ proxy   <%= opt %> -Cn <%= host['context'] %> -v <%= host['version'] %> -u <%= u
 
 <% end -%>
 <% end -%>
+<% @rwusers.each do |user| -%>
+rwuser <%= user %>
+<% end -%>
 
 # ------------------------------------------------------------------------------
 # Typed-View Configuration
