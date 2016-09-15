@@ -282,6 +282,11 @@ class snmp::params {
     default => $::snmp_proxy,
   }
 
+  $rwusers = $::snmp_rwusers ? {
+    undef   => [],
+    default => $::snmp_rwusers,
+  }
+
   $master = $::snmp_master ? {
     undef   => 'agentx',
     default => $::snmp_master,
