@@ -314,6 +314,12 @@ class snmp::params {
     $safe_trap_service_hasrestart = $trap_service_hasrestart
   }
 
+  if defined('$snmp_proxy') {
+    $proxy = $::snmp_proxy
+  } else {
+    $proxy   = []
+  }
+
   case $::osfamily {
     'RedHat': {
       if defined('$operatingsystemmajrelease') { # facter 1.7+
