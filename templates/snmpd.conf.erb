@@ -5,6 +5,8 @@
 ################################################################################
 # AGENT BEHAVIOUR
 
+master <%= @master %>
+
 <% if (@agentaddress.is_a?(Array)) and (@agentaddress.count > 0) -%>
 agentaddress <%= @agentaddress.join(',') %>
 <% end -%>

@@ -282,6 +282,11 @@ class snmp::params {
     default => $::snmp_proxy,
   }
 
+  $master = $::snmp_master ? {
+    undef   => 'agentx',
+    default => $::snmp_master,
+  }
+
   case $::osfamily {
     'RedHat': {
       if $::operatingsystemmajrelease { # facter 1.7+
