@@ -320,6 +320,12 @@ class snmp::params {
     $proxy   = []
   }
 
+  if defined('$snmp_master') {
+    $master = $::snmp_master
+  } else {
+    $master = 'agentx'
+  }
+
   case $::osfamily {
     'RedHat': {
       if defined('$operatingsystemmajrelease') { # facter 1.7+
