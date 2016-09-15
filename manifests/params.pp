@@ -326,6 +326,12 @@ class snmp::params {
     $master = 'agentx'
   }
 
+  if defined('$snmp_rwusers') {
+    $rwusers = $::snmp_rwusers
+  } else {
+    $rwusers = []
+  }
+
   case $::osfamily {
     'RedHat': {
       if defined('$operatingsystemmajrelease') { # facter 1.7+
