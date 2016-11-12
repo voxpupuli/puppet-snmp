@@ -322,7 +322,7 @@ class snmp::params {
       }
       $package_name             = 'net-snmp'
       $service_config           = '/etc/snmp/snmpd.conf'
-      $service_config_perms     = '0644'
+      $service_config_perms     = '0600'
       $service_config_dir_group = 'root'
       $service_name             = 'snmpd'
       $varnetsnmp_owner         = 'root'
