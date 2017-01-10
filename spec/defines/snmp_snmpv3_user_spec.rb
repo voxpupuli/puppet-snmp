@@ -6,9 +6,10 @@ describe 'snmp::snmpv3_user', :type => 'define' do
 
   context 'on a supported osfamily' do
     let :facts do {
-      :osfamily               => 'RedHat',
-      :operatingsystem        => 'CentOS',
-      :operatingsystemrelease => '6.4'
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'CentOS',
+      :operatingsystemmajrelease => '6',
+      :operatingsystemrelease    => '6.4'
     }
     end
 
@@ -63,9 +64,10 @@ describe 'snmp::snmpv3_user', :type => 'define' do
 
   context 'on a supported osfamily, RedHat' do
     let :facts do {
-      :osfamily               => 'RedHat',
-      :operatingsystem        => 'CentOS',
-      :operatingsystemrelease => '6.4'
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'CentOS',
+      :operatingsystemmajrelease => '6',
+      :operatingsystemrelease    => '6.4'
     }
     end
 

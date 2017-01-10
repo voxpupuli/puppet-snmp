@@ -30,9 +30,10 @@ describe 'snmp::client', :type => 'class' do
       describe "for osfamily RedHat, operatingsystem #{os}" do
         let(:params) {{}}
         let :facts do {
-          :osfamily               => 'RedHat',
-          :operatingsystem        => os,
-          :operatingsystemrelease => '6.4'
+          :osfamily                  => 'RedHat',
+          :operatingsystem           => os,
+          :operatingsystemmajrelease => '6',
+          :operatingsystemrelease    => '6.4'
         }
         end
         it { should contain_package('snmp-client').with(
@@ -122,9 +123,10 @@ describe 'snmp::client', :type => 'class' do
 
   context 'on a supported osfamily, custom parameters' do
     let :facts do {
-      :osfamily               => 'RedHat',
-      :operatingsystem        => 'RedHat',
-      :operatingsystemrelease => '6.4'
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'RedHat',
+      :operatingsystemmajrelease => '6',
+      :operatingsystemrelease    => '6.4'
     }
     end
 
