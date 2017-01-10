@@ -29,10 +29,11 @@ describe 'snmp', :type => 'class' do
       describe "for osfamily RedHat, operatingsystem RedHat, operatingsystemrelease 5.9" do
         let(:params) {{}}
         let :facts do {
-          :osfamily               => 'RedHat',
-          :operatingsystem        => 'RedHat',
-          :operatingsystemrelease => '5.9',
-          :fqdn                   => 'myhost.localdomain'
+          :osfamily                  => 'RedHat',
+          :operatingsystem           => 'RedHat',
+          :operatingsystemmajrelease => '5',
+          :operatingsystemrelease    => '5.9',
+          :fqdn                      => 'myhost.localdomain'
         }
         end
         it { should contain_package('snmpd').with(
@@ -144,10 +145,11 @@ describe 'snmp', :type => 'class' do
       describe "for osfamily RedHat, operatingsystem RedHat, operatingsystemrelease 6.4" do
         let(:params) {{}}
         let :facts do {
-          :osfamily               => 'RedHat',
-          :operatingsystem        => 'RedHat',
-          :operatingsystemrelease => '6.4',
-          :fqdn                   => 'myhost.localdomain'
+          :osfamily                  => 'RedHat',
+          :operatingsystem           => 'RedHat',
+          :operatingsystemmajrelease => '6',
+          :operatingsystemrelease    => '6.4',
+          :fqdn                      => 'myhost.localdomain'
         }
         end
         it { should contain_package('snmpd').with(
@@ -565,9 +567,10 @@ describe 'snmp', :type => 'class' do
 
   context 'on a supported osfamily (RedHat), custom parameters' do
     let :facts do {
-      :osfamily               => 'RedHat',
-      :operatingsystem        => 'RedHat',
-      :operatingsystemrelease => '6.4'
+      :osfamily                  => 'RedHat',
+      :operatingsystem           => 'RedHat',
+      :operatingsystemmajrelease => '6',
+      :operatingsystemrelease    => '6.4'
     }
     end
 
