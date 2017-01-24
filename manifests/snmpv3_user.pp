@@ -8,6 +8,10 @@
 #   Name of the user.
 #   Required
 #
+# [*engineid*]
+#   ID of Engine Generating traps
+#   Optional
+#
 # [*authpass*]
 #   Authentication password for the user.
 #   Required
@@ -39,6 +43,7 @@
 # === Sample Usage:
 #
 #   snmp::snmpv3_user { 'myuser':
+#     engineid => '0x90d00d73c50c003BFFEC53'
 #     authtype => 'MD5',
 #     authpass => '1234auth',
 #     privpass => '5678priv',
@@ -54,6 +59,7 @@
 #
 define snmp::snmpv3_user (
   $authpass,
+  $engineid,
   $authtype = 'SHA',
   $privpass = undef,
   $privtype = 'AES',
@@ -76,11 +82,17 @@ define snmp::snmpv3_user (
     $service_name   = 'snmpd'
     $service_before = Service['snmpd']
   }
-
-  if $privpass {
-    $cmd = "createUser ${title} ${authtype} \\\"${authpass}\\\" ${privtype} \\\"${privpass}\\\""
+  
+  if $engineid {
+    $engineparam = "-e ${engineid}"
   } else {
-    $cmd = "createUser ${title} ${authtype} \\\"${authpass}\\\""
+    $engineparam = ""
+  }
+  
+  if $privpass {
+    $cmd = "createUser ${engineid} ${title} ${authtype} \\\"${authpass}\\\" ${privtype} \\\"${privpass}\\\""
+  } else {
+    $cmd = "createUser ${engineid} ${title} ${authtype} \\\"${authpass}\\\""
   }
   exec { "create-snmpv3-user-${title}":
     path    => '/bin:/sbin:/usr/bin:/usr/sbin',
