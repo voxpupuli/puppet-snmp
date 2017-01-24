@@ -109,12 +109,13 @@ describe 'snmp::snmpv3_user', :type => 'define' do
 
       let :params do {
         :authpass => 'myauthpass',
+        :engineid => '0x4432046378719066780391',
         :daemon   => 'snmptrapd',
       }
       end
 
       it { should contain_exec('create-snmpv3-user-myTRAPuser').with(
-        :command => 'service snmptrapd stop ; sleep 5 ; echo "createUser myTRAPuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmptrapd.conf && touch /var/lib/net-snmp/myTRAPuser-snmptrapd',
+        :command => 'service snmptrapd stop ; sleep 5 ; echo "createUser -e 0x4432046378719066780391 myTRAPuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmptrapd.conf && touch /var/lib/net-snmp/myTRAPuser-snmptrapd',
         :creates => '/var/lib/net-snmp/myTRAPuser-snmptrapd',
         :require => [ 'Package[snmpd]', 'File[var-net-snmp]' ],
         :before  => 'Service[snmptrapd]'
@@ -170,12 +171,13 @@ describe 'snmp::snmpv3_user', :type => 'define' do
 
       let :params do {
         :authpass => 'myauthpass',
+        :engineid => '0x4432046378719066780391',
         :daemon   => 'snmptrapd',
       }
       end
 
       it { should contain_exec('create-snmpv3-user-myTRAPuser').with(
-        :command => 'service snmpd stop ; sleep 5 ; echo "createUser myTRAPuser SHA \"myauthpass\"" >>/var/lib/snmp/snmptrapd.conf && touch /var/lib/snmp/myTRAPuser-snmptrapd',
+        :command => 'service snmpd stop ; sleep 5 ; echo "createUser -e 0x4432046378719066780391 myTRAPuser SHA \"myauthpass\"" >>/var/lib/snmp/snmptrapd.conf && touch /var/lib/snmp/myTRAPuser-snmptrapd',
         :creates => '/var/lib/snmp/myTRAPuser-snmptrapd',
         :require => [ 'Package[snmpd]', 'File[var-net-snmp]' ],
         :before  => 'Service[snmpd]'
@@ -231,12 +233,13 @@ describe 'snmp::snmpv3_user', :type => 'define' do
 
       let :params do {
         :authpass => 'myauthpass',
+        :engineid => '0x4432046378719066780391',
         :daemon   => 'snmptrapd',
       }
       end
 
       it { should contain_exec('create-snmpv3-user-myTRAPuser').with(
-        :command => 'service snmptrapd stop ; sleep 5 ; echo "createUser myTRAPuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmptrapd.conf && touch /var/lib/net-snmp/myTRAPuser-snmptrapd',
+        :command => 'service snmptrapd stop ; sleep 5 ; echo "createUser -e 0x4432046378719066780391 myTRAPuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmptrapd.conf && touch /var/lib/net-snmp/myTRAPuser-snmptrapd',
         :creates => '/var/lib/net-snmp/myTRAPuser-snmptrapd',
         :require => [ 'Package[snmpd]', 'File[var-net-snmp]' ],
         :before  => 'Service[snmptrapd]'
