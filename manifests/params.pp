@@ -395,6 +395,49 @@ class snmp::params {
       $trap_service_name        = 'snmptrapd'
       $snmptrapd_options        = undef
     }
+    'Solaris': {
+      case $::operatingsystemmajrelease {
+        '10': {
+          $package_name             = 'SUNWsmmgr'
+          $service_name             = 'sma'
+          $service_config_dir_path  = '/etc/sma/snmp'
+          $service_config_dir_perms = '0755'
+          $service_config_dir_owner = 'root'
+          $service_config_dir_group = 'bin'
+          $service_config           = '/etc/sma/snmp/snmpd.conf'
+          $service_config_perms     = '0600'
+          $var_net_snmp             = '/var/snmp'
+          $varnetsnmp_perms         = '0755'
+          $varnetsnmp_owner         = 'root'
+          $varnetsnmp_group         = 'sys'
+        }
+        '11': {
+          $package_name             = 'net-snmp'
+          $service_name             = 'net-snmp'
+          $service_config_dir_path  = '/etc/net-snmp/snmp'
+          $service_config_dir_perms = '0755'
+          $service_config_dir_owner = 'root'
+          $service_config_dir_group = 'bin'
+          $service_config           = '/etc/net-snmp/snmp/snmpd.conf'
+          $service_config_perms     = '0600'
+          $var_net_snmp             = '/var/snmp'
+          $varnetsnmp_perms         = '0755'
+          $varnetsnmp_owner         = 'root'
+          $varnetsnmp_group         = 'sys'
+        }
+        default: {
+          fail("Module ${::module} is not supported on ${::operatingsystem} ${::kernelrelease}")
+        }
+      }
+      $snmpd_options            = 'd'
+
+      $client_package_name      = undef
+      $client_config            = undef
+
+      $trap_service_config      = undef
+      $trap_service_name        = undef
+      $snmptrapd_options        = undef
+    }
     default: {
       fail("Module ${::module} is not supported on ${::operatingsystem}")
     }

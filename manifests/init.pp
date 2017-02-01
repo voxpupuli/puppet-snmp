@@ -441,7 +441,7 @@ class snmp (
     notify  => Service['snmpd'],
   }
 
-  if $::osfamily != 'FreeBSD' {
+  if $::osfamily != 'FreeBSD' and $::osfamily != 'Solaris' {
     file { 'snmpd.sysconfig':
       ensure  => $file_ensure,
       mode    => '0644',
@@ -454,15 +454,17 @@ class snmp (
     }
   }
 
-  file { 'snmptrapd.conf':
-    ensure  => $file_ensure,
-    mode    => $service_config_perms,
-    owner   => 'root',
-    group   => $snmp::params::service_config_dir_group,
-    path    => $snmp::params::trap_service_config,
-    content => template('snmp/snmptrapd.conf.erb'),
-    require => Package['snmpd'],
-    notify  => $snmptrapd_conf_notify,
+  if $::osfamily != 'Solaris' {
+    file { 'snmptrapd.conf':
+      ensure  => $file_ensure,
+      mode    => $service_config_perms,
+      owner   => 'root',
+      group   => $snmp::params::service_config_dir_group,
+      path    => $snmp::params::trap_service_config,
+      content => template('snmp/snmptrapd.conf.erb'),
+      require => Package['snmpd'],
+      notify  => $snmptrapd_conf_notify,
+    }
   }
 
   if $::osfamily == 'RedHat' {
