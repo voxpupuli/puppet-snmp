@@ -1,0 +1,23 @@
+snmp::packages:
+    - 'snmpd'
+
+snmp::services:
+    - 'snmpd'
+
+snmp::service_config           : '/etc/snmp/snmpd.conf'
+snmp::service_config_perms     : '0600'
+snmp::service_config_dir_group : 'root'
+snmp::snmpd_options            : '-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid'
+snmp::sysconfig_path           : '/etc/default/snmpd'
+snmp::var_net_snmp             : '/var/lib/snmp'
+snmp::varnetsnmp_perms         : '0755'
+snmp::varnetsnmp_owner         : 'snmp'
+snmp::varnetsnmp_group         : 'snmp'
+
+snmp::client::packages:
+    - 'snmp'
+
+snmp::client::conf_file        : '/etc/snmp/snmp.conf'
+
+snmp::trap_service_config      : '/etc/snmp/snmptrapd.conf'
+snmp::snmptrapd_options        : '-Lsd -p /var/run/snmptrapd.pid'

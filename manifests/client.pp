@@ -4,7 +4,10 @@
 #
 # === Parameters:
 #
-# [*snmp_config*]
+# [*conf_file*]
+#   Path to the snmp client configuration file.
+#
+# [*config*]
 #   Array of lines to add to the client's global snmp.conf file.
 #   See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
 #   Default: []
@@ -17,11 +20,8 @@
 #   Upgrade package automatically, if there is a newer version.
 #   Default: false
 #
-# [*package_name*]
-#   Name of the package.
-#   Only set this if your platform is not supported or you know what you are
-#   doing.
-#   Default: auto-set, platform specific
+# [*packages*]
+#   List of packages.
 #
 # === Actions:
 #
@@ -34,61 +34,57 @@
 # === Sample Usage:
 #
 #   class { 'snmp::client':
-#     snmp_config => [ 'defVersion 2c', 'defCommunity public', ],
+#     snmp_client_config => [ 'defVersion 2c', 'defCommunity public', ],
 #   }
 #
 # === Authors:
 #
-# Mike Arnold <mike@razorsedge.org>
+# Michael Watters <wattersm@watters.ws>
 #
 # === Copyright:
 #
-# Copyright (C) 2012 Mike Arnold, unless otherwise noted.
-#
+# Copyright (C) 2017
+
 class snmp::client (
-  $snmp_config        = $snmp::params::snmp_config,
-  $ensure             = $snmp::params::ensure,
-  $autoupgrade        = $snmp::params::safe_autoupgrade,
-  $package_name       = $snmp::params::client_package_name
-) inherits snmp::params {
-  # Validate our booleans
-  validate_bool($autoupgrade)
+    String $conf_file = '/etc/snmp.conf',
+    Array[String] $config = [],
+    Variant[String, Enum['present', 'installed', 'absent']] $ensure = 'installed',
+    Boolean $autoupgrade = false,
+    Array[String] $packages = [],
+    ) {
 
-  case $ensure {
-    /(present)/: {
-      if $autoupgrade == true {
-        $package_ensure = 'latest'
-      } else {
-        $package_ensure = 'present'
-      }
-      $file_ensure = 'present'
-    }
-    /(absent)/: {
-      $package_ensure = 'absent'
-      $file_ensure = 'absent'
-    }
-    default: {
-      fail('ensure parameter must be present or absent')
-    }
-  }
+    case $ensure {
+        /(present|installed)/: {
+          if $autoupgrade == true {
+              $package_ensure = 'latest'
+          }
+          else {
+              $package_ensure = $ensure
+          }
 
-  if $::osfamily != 'Suse' {
-    package { 'snmp-client':
-      ensure => $package_ensure,
-      name   => $package_name,
-    }
-    $req = Package['snmp-client']
-  } else {
-    $req = undef
-  }
+          $file_ensure = 'present'
+        }
 
-  file { 'snmp.conf':
-    ensure  => $file_ensure,
-    mode    => '0644',
-    owner   => 'root',
-    group   => 'root',
-    path    => $snmp::params::client_config,
-    content => template('snmp/snmp.conf.erb'),
-    require => $req,
-  }
+        /(absent)/: {
+            $package_ensure = $ensure
+            $file_ensure = $ensure
+        }
+
+        default: {
+            fail('ensure parameter must be present or absent')
+        }
+    }
+
+    package { $packages:
+        ensure => $package_ensure,
+    }
+
+    file { $conf_file:
+        ensure  => $file_ensure,
+        mode    => '0644',
+        owner   => 'root',
+        group   => 'root',
+        path    => $config,
+        content => template('snmp/snmp.conf.erb'),
+    }
 }

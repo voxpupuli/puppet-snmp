@@ -1,0 +1,7 @@
+---
+snmp::snmpd_options     : '-LS0-6d'
+snmp::sysconfig_path    : '/etc/sysconfig/snmpd'
+snmp::trap_sysconfig    : '/etc/sysconfig/snmptrapd'
+snmp::var_net_snmp      : '/var/lib/net-snmp'
+snmp::varnetsnmp_perms  : '0755'
+snmp::snmptrapd_options : '-Lsd'
