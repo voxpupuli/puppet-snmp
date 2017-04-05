@@ -42,16 +42,15 @@
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [ "12.04", "14.04" ]
+    },
+    {
+      "operatingsystem": "openSUSE",
+      "operatingsystemrelease": [ "4" ]
     }
   ],
   "requirements": [
     {
-      "name": "pe",
-      "version_requirement": "3.x"
-    },
-    {
-      "name": "puppet",
-      "version_requirement": ">=2.7.20 <5.0.0"
+      "name": "puppet", "version_requirement": ">=2.7.20 <5.0.0"
     }
   ]
 }

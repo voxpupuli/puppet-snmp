@@ -32,6 +32,7 @@ describe 'snmp::client', :type => 'class' do
         let :facts do {
           :osfamily               => 'RedHat',
           :operatingsystem        => os,
+          :operatingsystemmajrelease => '6',
           :operatingsystemrelease => '6.4'
         }
         end
@@ -124,6 +125,7 @@ describe 'snmp::client', :type => 'class' do
     let :facts do {
       :osfamily               => 'RedHat',
       :operatingsystem        => 'RedHat',
+      :operatingsystemmajrelease => '6',
       :operatingsystemrelease => '6.4'
     }
     end

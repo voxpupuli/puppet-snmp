@@ -31,6 +31,7 @@ describe 'snmp', :type => 'class' do
         let :facts do {
           :osfamily               => 'RedHat',
           :operatingsystem        => 'RedHat',
+          :operatingsystemmajrelease => '5',
           :operatingsystemrelease => '5.9',
           :fqdn                   => 'myhost.localdomain'
         }
@@ -146,6 +147,7 @@ describe 'snmp', :type => 'class' do
         let :facts do {
           :osfamily               => 'RedHat',
           :operatingsystem        => 'RedHat',
+          :operatingsystemmajrelease => '6',
           :operatingsystemrelease => '6.4',
           :fqdn                   => 'myhost.localdomain'
         }
@@ -567,6 +569,7 @@ describe 'snmp', :type => 'class' do
     let :facts do {
       :osfamily               => 'RedHat',
       :operatingsystem        => 'RedHat',
+      :operatingsystemmajrelease => '6',
       :operatingsystemrelease => '6.4'
     }
     end
