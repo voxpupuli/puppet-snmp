@@ -14,6 +14,7 @@ group :development, :unit_tests do
   gem 'puppet-lint-empty_string-check',       :require => false
   gem 'puppet-lint-leading_zero-check',       :require => false
   gem 'puppet-lint-variable_contains_upcase', :require => false
+  gem 'parallel_tests', '~> 2.9',             :require => false
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
