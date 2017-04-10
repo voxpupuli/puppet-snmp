@@ -1,9 +1,9 @@
 source ENV['GEM_SOURCE'] || "https://rubygems.org"
 
 group :development, :unit_tests do
-  gem 'rake',                                 :require => false
+  gem 'rake', '~> 0.9',                       :require => false
   gem 'rspec', '~> 2.0',                      :require => false
-  gem 'rspec-puppet', '>= 2.1.0',             :require => false
+  gem 'rspec-puppet', '~> 2.3.2',             :require => false
   gem 'puppetlabs_spec_helper',               :require => false
   gem 'puppet-lint', '>= 1.1.0',              :require => false
   gem 'simplecov',                            :require => false
@@ -14,6 +14,7 @@ group :development, :unit_tests do
   gem 'puppet-lint-empty_string-check',       :require => false
   gem 'puppet-lint-leading_zero-check',       :require => false
   gem 'puppet-lint-variable_contains_upcase', :require => false
+  gem 'parallel_tests', '= 2.8',              :require => false
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
