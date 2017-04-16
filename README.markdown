@@ -518,7 +518,7 @@ Net-SNMP module support is available with these operating systems:
 
 ## Development
 
-Please see [DEVELOP.md](DEVELOP.md) for information on how to contribute.
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for information on how to contribute.
 
 Copyright (C) 2012 Mike Arnold <mike@razorsedge.org>
 
