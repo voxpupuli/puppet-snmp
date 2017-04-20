@@ -630,6 +630,12 @@ describe 'snmp', :type => 'class' do
       it { should contain_file('snmptrapd.conf').with_mode('0123') }
     end
 
+    describe 'service_config_dir_group => "anothergroup"' do
+      let(:params) {{ :service_config_dir_group => 'anothergroup' }}
+      it { should contain_file('snmpd.conf').with_group('anothergroup') }
+      it { should contain_file('snmptrapd.conf').with_group('anothergroup') }
+    end
+
     describe 'install_client => true' do
       let(:params) {{ :install_client => true }}
       it { should contain_class('snmp::client').with(

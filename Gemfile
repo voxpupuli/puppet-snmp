@@ -18,6 +18,7 @@ group :development, :unit_tests do
   gem 'puppet-lint-empty_string-check',       :require => false
   gem 'puppet-lint-leading_zero-check',       :require => false
   gem 'puppet-lint-variable_contains_upcase', :require => false
+  gem 'parallel_tests', '= 2.8',              :require => false
 end
 
 gem 'puppet', ENV['PUPPET_GEM_VERSION'], :require => false
