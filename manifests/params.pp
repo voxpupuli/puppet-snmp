@@ -277,6 +277,21 @@ class snmp::params {
     $safe_trap_service_hasrestart = $trap_service_hasrestart
   }
 
+  $proxy = $::snmp_proxy ? {
+    undef   => [],
+    default => $::snmp_proxy,
+  }
+
+  $rwusers = $::snmp_rwusers ? {
+    undef   => [],
+    default => $::snmp_rwusers,
+  }
+
+  $master = $::snmp_master ? {
+    undef   => 'agentx',
+    default => $::snmp_master,
+  }
+
   case $::osfamily {
     'RedHat': {
       if $::operatingsystemmajrelease { # facter 1.7+
