@@ -441,7 +441,7 @@ class snmp (
     notify  => Service['snmpd'],
   }
 
-  if $::osfamily != 'FreeBSD' {
+  if $::osfamily != 'FreeBSD' and $::osfamily != 'OpenBSD' {
     file { 'snmpd.sysconfig':
       ensure  => $file_ensure,
       mode    => '0644',
@@ -504,7 +504,7 @@ class snmp (
         Exec['install /etc/init.d/snmptrapd'],
       ],
     }
-  } elsif $::osfamily == 'FreeBSD' {
+  } elsif $::osfamily == 'FreeBSD'  or $::osfamily == 'OpenBSD' {
     service { 'snmptrapd':
       ensure     => $trap_service_ensure_real,
       name       => $trap_service_name,
