@@ -9,7 +9,7 @@
 3. [Setup - The basics of getting started with this module](#setup)
     * [What this module affects](#what-this-module-affects)
     * [What this module requires](#requirements)
-    * [Beginning with this module](#beginning-with-this module)
+    * [Beginning with this module](#beginning-with-this-module)
     * [Upgrading](#upgrading)
 4. [Usage - Configuration options and additional functionality](#usage)
     * [Client](#client)
