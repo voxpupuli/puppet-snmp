@@ -24,6 +24,7 @@ describe 'snmp::client', :type => 'class' do
   #debianish = ['Debian', 'Ubuntu']
   suseish = ['Suse']
   freebsdish = ['FreeBSD']
+  openbsdish = ['OpenBSD']
 
   context 'on a supported osfamily, default parameters' do
     redhatish.each do |os|
@@ -114,6 +115,30 @@ describe 'snmp::client', :type => 'class' do
           :owner   => 'root',
           :group   => 'wheel',
           :path    => '/usr/local/etc/snmp/snmp.conf',
+          :require => nil
+        )}
+      end
+    end
+
+    openbsdish.each do |os|
+      describe "for osfamily OpenBSD, operatingsystem #{os}" do
+        let(:params) {{}}
+        let :facts do {
+          :osfamily               => 'OpenBSD',
+          :operatingsystem        => os,
+          :operatingsystemrelease => '5.9'
+        }
+        end
+        it { should contain_package('snmp-client').with(
+          :ensure => 'present',
+          :name   => 'net-snmp'
+        )}
+        it { should_not contain_file('snmp.conf').with(
+          :ensure  => 'present',
+          :mode    => '0755',
+          :owner   => 'root',
+          :group   => 'wheel',
+          :path    => '/etc/snmp/snmp.conf',
           :require => nil
         )}
       end
