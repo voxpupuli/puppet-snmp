@@ -165,6 +165,14 @@
 #   Commandline options passed to snmpd via init script.
 #   Default: auto-set, platform specific
 #
+# [*service_config_perms*]
+#   Set permissions for the service configuration file.
+#   Default: auto-set, platform specific
+#
+# [*service_config_dir_group*]
+#   Set group ownership for the service configuration file.
+#   Default: auto-set, platform specific
+#
 # [*service_ensure*]
 #   Ensure if service is running or stopped.
 #   Default: running
@@ -290,6 +298,7 @@ class snmp (
   $package_name                 = $snmp::params::package_name,
   $snmpd_options                = $snmp::params::snmpd_options,
   $service_config_perms         = $snmp::params::service_config_perms,
+  $service_config_dir_group     = $snmp::params::service_config_dir_group,
   $service_ensure               = $snmp::params::service_ensure,
   $service_name                 = $snmp::params::service_name,
   $service_enable               = $snmp::params::service_enable,
@@ -444,7 +453,7 @@ class snmp (
     ensure  => $file_ensure,
     mode    => $service_config_perms,
     owner   => 'root',
-    group   => $snmp::params::service_config_dir_group,
+    group   => $service_config_dir_group,
     path    => $snmp::params::service_config,
     content => template($template_snmpd_conf),
     require => Package['snmpd'],
@@ -468,7 +477,7 @@ class snmp (
     ensure  => $file_ensure,
     mode    => $service_config_perms,
     owner   => 'root',
-    group   => $snmp::params::service_config_dir_group,
+    group   => $service_config_dir_group,
     path    => $snmp::params::trap_service_config,
     content => template($template_snmptrapd),
     require => Package['snmpd'],
