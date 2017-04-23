@@ -37,6 +37,10 @@
 #   Network that is allowed to RO query the daemon via IPv6.  Can be string or array.
 #   Default: ::1/128
 #
+# [*rw_users*]
+#   Read-write (RW) user array.
+#   Default: none
+#
 # [*rw_network*]
 #   Network that is allowed to RW query the daemon.  Can be string or array.
 #   Default: 127.0.0.1
@@ -273,6 +277,7 @@ class snmp (
   $ro_network6                  = $snmp::params::ro_network6,
   $rw_network                   = $snmp::params::rw_network,
   $rw_network6                  = $snmp::params::rw_network6,
+  $rw_users                     = $snmp::params::rw_users,
   $contact                      = $snmp::params::contact,
   $location                     = $snmp::params::location,
   $sysname                      = $snmp::params::sysname,

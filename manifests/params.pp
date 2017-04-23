@@ -276,6 +276,10 @@ class snmp::params {
   } else {
     $safe_trap_service_hasrestart = $trap_service_hasrestart
   }
+  $rw_users = $::snmp_rw_users ? {
+    undef   => [],
+    default => $::snmp_rw_users,
+  }
 
   $template_snmpd_conf = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${::osfamily}.erb"

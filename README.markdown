@@ -182,6 +182,17 @@ class { 'snmp':
 and it becomes this in snmpd.conf:
 ```
 rocommunity myPassword 10.0.0.0/8
+
+Some users permission could be added as:
+```puppet
+class { 'snmp':
+  rw_users => [ 'user1', 'user2' ],
+}
+```
+and it becomes this in snmpd.conf:
+```
+rwuser user1
+rwuser user2
 ```
 This says that any host on network 10.0.0.0/8 can read any SNMP value via SNMP versions 1 and 2c as long as they provide the password 'myPassword'.
 
@@ -284,6 +295,10 @@ Default: 127.0.0.1
 ##### `rw_network6`
 Network that is allowed to RW query the daemon via IPv6.  Can be string or array.
 Default: ::1/128
+
+##### `rw_users`
+Read-write (RW) user  array.
+Default: none
 
 ##### `contact`
 Responsible person for the SNMP system.
