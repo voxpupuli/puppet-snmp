@@ -165,6 +165,14 @@
 #   Commandline options passed to snmpd via init script.
 #   Default: auto-set, platform specific
 #
+# [*service_config_perms*]
+#   Set permissions for the service configuration file.
+#   Default: auto-set, platform specific
+#
+# [*service_config_dir_group*]
+#   Set group ownership for the service configuration file.
+#   Default: auto-set, platform specific
+#
 # [*service_ensure*]
 #   Ensure if service is running or stopped.
 #   Default: running
@@ -255,53 +263,58 @@
 # Copyright (C) 2012 Mike Arnold, unless otherwise noted.
 #
 class snmp (
-  $agentaddress            = $snmp::params::agentaddress,
-  $snmptrapdaddr           = $snmp::params::snmptrapdaddr,
-  $ro_community            = $snmp::params::ro_community,
-  $ro_community6           = $snmp::params::ro_community6,
-  $rw_community            = $snmp::params::rw_community,
-  $rw_community6           = $snmp::params::rw_community6,
-  $ro_network              = $snmp::params::ro_network,
-  $ro_network6             = $snmp::params::ro_network6,
-  $rw_network              = $snmp::params::rw_network,
-  $rw_network6             = $snmp::params::rw_network6,
-  $contact                 = $snmp::params::contact,
-  $location                = $snmp::params::location,
-  $sysname                 = $snmp::params::sysname,
-  $services                = $snmp::params::services,
-  $com2sec                 = $snmp::params::com2sec,
-  $com2sec6                = $snmp::params::com2sec6,
-  $groups                  = $snmp::params::groups,
-  $views                   = $snmp::params::views,
-  $accesses                = $snmp::params::accesses,
-  $dlmod                   = $snmp::params::dlmod,
-  $snmpd_config            = $snmp::params::snmpd_config,
-  $disable_authorization   = $snmp::params::disable_authorization,
-  $do_not_log_traps        = $snmp::params::do_not_log_traps,
-  $do_not_log_tcpwrappers  = $snmp::params::do_not_log_tcpwrappers,
-  $trap_handlers           = $snmp::params::trap_handlers,
-  $trap_forwards           = $snmp::params::trap_forwards,
-  $snmptrapd_config        = $snmp::params::snmptrapd_config,
-  $install_client          = $snmp::params::install_client,
-  $manage_client           = $snmp::params::safe_manage_client,
-  $snmp_config             = $snmp::params::snmp_config,
-  $ensure                  = $snmp::params::ensure,
-  $autoupgrade             = $snmp::params::safe_autoupgrade,
-  $package_name            = $snmp::params::package_name,
-  $snmpd_options           = $snmp::params::snmpd_options,
-  $service_config_perms    = $snmp::params::service_config_perms,
-  $service_ensure          = $snmp::params::service_ensure,
-  $service_name            = $snmp::params::service_name,
-  $service_enable          = $snmp::params::service_enable,
-  $service_hasstatus       = $snmp::params::service_hasstatus,
-  $service_hasrestart      = $snmp::params::service_hasrestart,
-  $snmptrapd_options       = $snmp::params::snmptrapd_options,
-  $trap_service_ensure     = $snmp::params::trap_service_ensure,
-  $trap_service_name       = $snmp::params::trap_service_name,
-  $trap_service_enable     = $snmp::params::trap_service_enable,
-  $trap_service_hasstatus  = $snmp::params::trap_service_hasstatus,
-  $trap_service_hasrestart = $snmp::params::trap_service_hasrestart,
-  $openmanage_enable       = $snmp::params::openmanage_enable,
+  $agentaddress                 = $snmp::params::agentaddress,
+  $snmptrapdaddr                = $snmp::params::snmptrapdaddr,
+  $ro_community                 = $snmp::params::ro_community,
+  $ro_community6                = $snmp::params::ro_community6,
+  $rw_community                 = $snmp::params::rw_community,
+  $rw_community6                = $snmp::params::rw_community6,
+  $ro_network                   = $snmp::params::ro_network,
+  $ro_network6                  = $snmp::params::ro_network6,
+  $rw_network                   = $snmp::params::rw_network,
+  $rw_network6                  = $snmp::params::rw_network6,
+  $contact                      = $snmp::params::contact,
+  $location                     = $snmp::params::location,
+  $sysname                      = $snmp::params::sysname,
+  $services                     = $snmp::params::services,
+  $com2sec                      = $snmp::params::com2sec,
+  $com2sec6                     = $snmp::params::com2sec6,
+  $groups                       = $snmp::params::groups,
+  $views                        = $snmp::params::views,
+  $accesses                     = $snmp::params::accesses,
+  $dlmod                        = $snmp::params::dlmod,
+  $snmpd_config                 = $snmp::params::snmpd_config,
+  $disable_authorization        = $snmp::params::disable_authorization,
+  $do_not_log_traps             = $snmp::params::do_not_log_traps,
+  $do_not_log_tcpwrappers       = $snmp::params::do_not_log_tcpwrappers,
+  $trap_handlers                = $snmp::params::trap_handlers,
+  $trap_forwards                = $snmp::params::trap_forwards,
+  $snmptrapd_config             = $snmp::params::snmptrapd_config,
+  $install_client               = $snmp::params::install_client,
+  $manage_client                = $snmp::params::safe_manage_client,
+  $snmp_config                  = $snmp::params::snmp_config,
+  $ensure                       = $snmp::params::ensure,
+  $autoupgrade                  = $snmp::params::safe_autoupgrade,
+  $package_name                 = $snmp::params::package_name,
+  $snmpd_options                = $snmp::params::snmpd_options,
+  $service_config_perms         = $snmp::params::service_config_perms,
+  $service_config_dir_group     = $snmp::params::service_config_dir_group,
+  $service_ensure               = $snmp::params::service_ensure,
+  $service_name                 = $snmp::params::service_name,
+  $service_enable               = $snmp::params::service_enable,
+  $service_hasstatus            = $snmp::params::service_hasstatus,
+  $service_hasrestart           = $snmp::params::service_hasrestart,
+  $snmptrapd_options            = $snmp::params::snmptrapd_options,
+  $trap_service_ensure          = $snmp::params::trap_service_ensure,
+  $trap_service_name            = $snmp::params::trap_service_name,
+  $trap_service_enable          = $snmp::params::trap_service_enable,
+  $trap_service_hasstatus       = $snmp::params::trap_service_hasstatus,
+  $trap_service_hasrestart      = $snmp::params::trap_service_hasrestart,
+  $template_snmpd_conf          = $snmp::params::template_snmpd_conf,
+  $template_snmpd_sysconfig     = $snmp::params::template_snmpd_sysconfig,
+  $template_snmptrapd           = $snmp::params::template_snmptrapd,
+  $template_snmptrapd_sysconfig = $snmp::params::template_snmptrapd_sysconfig,
+  $openmanage_enable            = $snmp::params::openmanage_enable,
 ) inherits snmp::params {
   # Validate our booleans
   validate_bool($manage_client)
@@ -324,6 +337,12 @@ class snmp (
   validate_array($dlmod)
   validate_array($snmpd_config)
   validate_array($snmptrapd_config)
+
+  # Validate our strings
+  validate_string($template_snmpd_conf)
+  validate_string($template_snmpd_sysconfig)
+  validate_string($template_snmptrapd)
+  validate_string($template_snmptrapd_sysconfig)
 
   # Validate our regular expressions
   $states = [ '^yes$', '^no$' ]
@@ -434,21 +453,21 @@ class snmp (
     ensure  => $file_ensure,
     mode    => $service_config_perms,
     owner   => 'root',
-    group   => $snmp::params::service_config_dir_group,
+    group   => $service_config_dir_group,
     path    => $snmp::params::service_config,
-    content => template('snmp/snmpd.conf.erb'),
+    content => template($template_snmpd_conf),
     require => Package['snmpd'],
     notify  => Service['snmpd'],
   }
 
-  if $::osfamily != 'FreeBSD' {
+  if $::osfamily != 'FreeBSD' and $::osfamily != 'OpenBSD' {
     file { 'snmpd.sysconfig':
       ensure  => $file_ensure,
       mode    => '0644',
       owner   => 'root',
       group   => 'root',
       path    => $snmp::params::sysconfig,
-      content => template("snmp/snmpd.sysconfig-${::osfamily}.erb"),
+      content => template($template_snmpd_sysconfig),
       require => Package['snmpd'],
       notify  => Service['snmpd'],
     }
@@ -458,9 +477,9 @@ class snmp (
     ensure  => $file_ensure,
     mode    => $service_config_perms,
     owner   => 'root',
-    group   => $snmp::params::service_config_dir_group,
+    group   => $service_config_dir_group,
     path    => $snmp::params::trap_service_config,
-    content => template('snmp/snmptrapd.conf.erb'),
+    content => template($template_snmptrapd),
     require => Package['snmpd'],
     notify  => $snmptrapd_conf_notify,
   }
@@ -472,7 +491,7 @@ class snmp (
       owner   => 'root',
       group   => 'root',
       path    => $snmp::params::trap_sysconfig,
-      content => template("snmp/snmptrapd.sysconfig-${::osfamily}.erb"),
+      content => template($template_snmptrapd_sysconfig),
       require => Package['snmpd'],
       notify  => Service['snmptrapd'],
     }
@@ -504,7 +523,7 @@ class snmp (
         Exec['install /etc/init.d/snmptrapd'],
       ],
     }
-  } elsif $::osfamily == 'FreeBSD' {
+  } elsif $::osfamily == 'FreeBSD'  or $::osfamily == 'OpenBSD' {
     service { 'snmptrapd':
       ensure     => $trap_service_ensure_real,
       name       => $trap_service_name,
