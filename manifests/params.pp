@@ -21,6 +21,11 @@ class snmp::params {
     default => $::snmp_agentaddress,
   }
 
+  $master = $::snmp_master ? {
+    undef   => 'agentx',
+    default => $::snmp_master,
+  }
+
   $snmptrapdaddr = $::snmp_snmptrapdaddr ? {
     undef   => [ 'udp:127.0.0.1:162', 'udp6:[::1]:162' ],
     default => $::snmp_snmptrapdaddr,
