@@ -315,6 +315,7 @@ class snmp (
   $template_snmptrapd           = $snmp::params::template_snmptrapd,
   $template_snmptrapd_sysconfig = $snmp::params::template_snmptrapd_sysconfig,
   $openmanage_enable            = $snmp::params::openmanage_enable,
+  $proxy                        = $snmp::params::proxy,
 ) inherits snmp::params {
   # Validate our booleans
   validate_bool($manage_client)

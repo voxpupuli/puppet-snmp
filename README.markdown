@@ -16,6 +16,7 @@
     * [Trap Daemon](#trap-daemon)
     * [SNMPv3 Users](#snmpv3-users)
     * [Access Control](#access-control)
+    * [Proxy Configuration](#proxy-configuration)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 6. [Limitations - OS compatibility, etc.](#limitations)
     * [OS Support](#os-support)
@@ -226,6 +227,34 @@ and it becomes this in snmpd.conf:
 ```
 rocommunity shibboleth 192.168.0.0/16
 rocommunity shibboleth 1.2.3.4/32
+```
+
+### Proxy Configuration
+
+A snmp proxy can be configured to target a other snmp agent depending on the snmp context.
+
+```puppet
+class { 'snmp':
+  proxy   => [ { hostname => 'dv0',
+                 context => 'ctx_host1',
+                 version =>  '3',
+                 extra_opt => '-t 30',
+                 subtree => '.1.3',
+                 users =>{ 'v3user_md5d' => {
+                                              authtype => 'MD5',
+                                              authpass => 'authpass',
+                                              privtype => 'DES',
+                                              privpass => 'privpass',
+                                            }
+                         }
+               },
+                           
+             ],
+}
+```
+and it becomes this in snmpd.conf:
+```
+proxy   <%= opt %> -Cn cxt_host1 -v 3 -u v3user_md5d -a MD5 -A "authpass" -x DES -X "privpass" -l authPriv  <%= host['hostname'] %>  .1.3
 ```
 
 ## Reference

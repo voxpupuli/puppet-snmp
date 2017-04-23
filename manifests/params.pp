@@ -282,6 +282,11 @@ class snmp::params {
   $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
   $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${::osfamily}.erb"
 
+  $proxy = $::snmp_proxy ? {
+    undef   => [],
+    default => $::snmp_proxy,
+  }
+
   case $::osfamily {
     'RedHat': {
       if $::operatingsystemmajrelease { # facter 1.7+

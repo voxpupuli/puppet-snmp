@@ -61,6 +61,26 @@ view    <%= view %>
 access  <%= access %>
 <% end -%>
 
+#       Proxy
+<% @proxy.each do |host| -%>
+<% if host['extra_opt'] != nil -%>
+<% opt = host['extra_opt'] -%>
+<% else -%>
+<% opt = "" -%>
+<% end -%>
+<% host['users'].each_pair do |username, creds| %>
+<% if creds['privpass'] == nil and  creds['authpass'] == nil -%>
+proxy   <%= opt %> -Cn <%= host['context'] %> -v <%= host['version'] %> -u <%= username %> -l noAuthNoPriv  <%= host['hostname'] %>  <%=  host['subtree'] %>
+<% elsif creds['privpass'] == nil -%>
+proxy   <%= opt %> -Cn <%= host['context'] %> -v <%= host['version'] %> -u <%= username %> -a <%= creds['authtype'] %> -A "<%= creds['authpass'] %>" -l authNoPriv  <%= host['hostname'] %>  <%=  host['subtree'] %>
+<% elsif creds['privpass'] != nil and creds['authpass'] != nil -%>
+proxy   <%= opt %> -Cn <%= host['context'] %> -v <%= host['version'] %> -u <%= username %> -a <%= creds['authtype'] %> -A "<%= creds['authpass'] %>" -x <%= creds['privtype'] %> -X "<%= creds['privpass'] %>" -l authPriv  <%= host['hostname'] %>  <%=  host['subtree'] %>
+<%else -%>
+<% end -%>
+
+<% end -%>
+<% end -%>
+
 # ------------------------------------------------------------------------------
 # Typed-View Configuration
 
