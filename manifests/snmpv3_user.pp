@@ -44,39 +44,48 @@
 #     privpass => '5678priv',
 #   }
 #
+# === Authors:
+#
+# Mike Arnold <mike@razorsedge.org>
+# Michael Watters <wattersm@watters.ws>
+#
+# === Copyright:
+#
+# Copyright (C) 2017
+
 define snmp::snmpv3_user (
-  $authpass,
-  Enum['SHA','MD5'] $authtype = 'SHA',
+  Variant[String, Enum['SHA', 'MD5']] $authtype = 'SHA',
+  Variant[String, Enum['AES', 'DES']] $privtype = 'AES',
+  Variant[String, Enum['snmpd', 'snmptrapd']] $daemon = 'snmpd',
+  String $authpass = undef,
+  String $privpass = undef,
+  ) {
 
-  $privpass = undef,
-  Enum['AES','DES'] $privtype = 'AES',
+  include 'snmp'
 
-  Enum['snmpd','snmptrapd'] $daemon = 'snmpd'
-) {
-  include snmp
-
-  if ($daemon == 'snmptrapd') and ($facts['os']['family'] != 'Debian') {
-    $service_name   = 'snmptrapd'
-    $service_before = Service['snmptrapd']
-  } else {
-    $service_name   = 'snmpd'
-    $service_before = Service['snmpd']
+  if ($daemon == 'snmptrapd') and ($::osfamily != 'Debian') {
+      $service_name   = 'snmptrapd'
+      $service_before = Service['snmptrapd']
+  }
+  else {
+      $service_name   = 'snmpd'
+      $service_before = Service['snmpd']
   }
 
   if $privpass {
-    $cmd = "createUser ${title} ${authtype} \\\"${authpass}\\\" ${privtype} \\\"${privpass}\\\""
-  } else {
-    $cmd = "createUser ${title} ${authtype} \\\"${authpass}\\\""
+      $cmd = "createUser ${title} ${authtype} \\\"${authpass}\\\" ${privtype} \\\"${privpass}\\\""
   }
+  else {
+      $cmd = "createUser ${title} ${authtype} \\\"${authpass}\\\""
+  }
+
   exec { "create-snmpv3-user-${title}":
-    path    => '/bin:/sbin:/usr/bin:/usr/sbin',
-    # TODO: Add "rwuser ${title}" (or rouser) to /etc/snmp/${daemon}.conf
-    command => "service ${service_name} stop ; sleep 5 ; \
-echo \"${cmd}\" >>${snmp::params::var_net_snmp}/${daemon}.conf \
-&& touch ${snmp::params::var_net_snmp}/${title}-${daemon}",
-    creates => "${snmp::params::var_net_snmp}/${title}-${daemon}",
-    user    => 'root',
-    require => [ Package['snmpd'], File['var-net-snmp'], ],
-    before  => $service_before,
+      path    => '/bin:/sbin:/usr/bin:/usr/sbin',
+      # TODO: Add "rwuser ${title}" (or rouser) to /etc/snmp/${daemon}.conf
+      command => "service ${service_name} stop ; sleep 5 ; echo \"${cmd}\" >>${snmp::var_net_snmp}/${daemon}.conf && touch ${snmp::var_net_snmp}/${title}-${daemon}",
+      creates => "${snmp::var_net_snmp}/${title}-${daemon}",
+      user    => 'root',
+      require => [ Package[$snmp::packages], File[$snmp::var_net_snmp], ],
+      before  => $service_before,
   }
 }

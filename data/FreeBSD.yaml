@@ -1,0 +1,26 @@
+---
+snmp::packages:
+    - 'net-mgmt/net-snmp'
+
+snmp::services:
+    - 'snmpd'
+
+snmp::service_config_dir_path  : '/usr/local/etc/snmp'
+snmp::service_config_dir_perms : '0755'
+snmp::service_config_dir_owner : 'root'
+snmp::service_config_dir_group : 'wheel'
+snmp::service_config           : '/usr/local/etc/snmp/snmpd.conf'
+snmp::service_config_perms     : '0755'
+snmp::snmpd_options            : 'd'
+snmp::var_net_snmp             : '/var/net-snmp'
+snmp::varnetsnmp_perms         : '0600'
+snmp::varnetsnmp_owner         : 'root'
+snmp::varnetsnmp_group         : 'wheel'
+
+snmp::client::packages:
+    - 'net-mgmt/net-snmp'
+
+snmp::client::conf_file        : '/usr/local/etc/snmp/snmp.conf'
+
+snmp::trap_service_config      : '/usr/local/etc/snmp/snmptrapd.conf'
+snmp::trap_service_name        : 'snmptrapd'
