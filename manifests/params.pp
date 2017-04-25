@@ -361,7 +361,9 @@ class snmp::params {
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
     }
-    'Suse': {
+
+    #OpenSUSE Tumbleweed reports the osfamily as 'Linux'.  Leap reports osfamily as 'Suse'.
+    /(Linux|Suse)/: {
       $package_name             = 'net-snmp'
       $service_config           = '/etc/snmp/snmpd.conf'
       $service_config_perms     = '0600'

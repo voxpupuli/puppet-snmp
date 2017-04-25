@@ -504,7 +504,7 @@ class snmp (
       hasrestart => $trap_service_hasrestart,
       require    => [ Package['snmpd'], File['var-net-snmp'], ],
     }
-  } elsif $::osfamily == 'Suse' {
+  } elsif $::osfamily =~ /(Suse|Linux)/ {
     exec { 'install /etc/init.d/snmptrapd':
       command => '/usr/bin/install -o 0 -g 0 -m0755 -p /usr/share/doc/packages/net-snmp/rc.snmptrapd /etc/init.d/snmptrapd',
       creates => '/etc/init.d/snmptrapd',
