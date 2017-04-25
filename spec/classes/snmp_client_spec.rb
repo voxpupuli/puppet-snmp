@@ -46,7 +46,7 @@ describe 'snmp::client', :type => 'class' do
           :owner   => 'root',
           :group   => 'root',
           :path    => '/etc/snmp/snmp.conf',
-          :require => 'Package[snmp-client]'
+          :require => ['Package[snmp-client]', 'Package[net-snmp]']
         )}
       end
     end
