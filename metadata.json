@@ -1,6 +1,6 @@
 {
   "name": "razorsedge-snmp",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "author": "razorsedge",
   "summary": "Simple Network Management Protocol is for monitoring network and computer equipment. Net-SNMP implements v1, v2c, and v3 on both IPv4 and IPv6.",
   "license": "Apache-2.0",
@@ -32,6 +32,10 @@
       "operatingsystemrelease": [ "9.2", "10.0" ]
     },
     {
+      "operatingsystem": "OpenBSD",
+      "operatingsystemrelease": [ "5.9" ]
+    },
+    {
       "operatingsystem": "SLES",
       "operatingsystemrelease": [ "11 SP1" ]
     },
@@ -45,10 +49,6 @@
     }
   ],
   "requirements": [
-    {
-      "name": "pe",
-      "version_requirement": "3.x"
-    },
     {
       "name": "puppet",
       "version_requirement": ">=2.7.20 <5.0.0"
