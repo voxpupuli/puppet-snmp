@@ -537,4 +537,3 @@ Licensed under the Apache License, Version 2.0.
 [razorsedge/puppet-snmp on GitHub](https://github.com/razorsedge/puppet-snmp)
 
 [razorsedge/snmp on Puppet Forge](https://forge.puppetlabs.com/razorsedge/snmp)
-
