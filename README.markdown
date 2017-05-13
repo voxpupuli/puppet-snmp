@@ -329,7 +329,6 @@ Default: []
 Safety valve.  Array of lines to add to the snmpd.conf file.  See http://www.net-snmp.org/docs/man/snmpd.conf.html for all options.
 Default: []
 
-
 ##### `disable_authorization`
 Disable all access control checks. (yes|no)
 Default: no
@@ -357,7 +356,6 @@ Safety valve.  Array of lines to add to the snmptrapd.conf file.  See http://www
 Default: []
 Affects snmptrapd.conf
 
-
 ##### `manage_client`
 Whether to install the Net-SNMP client package. (true|false)
 Default: false
@@ -366,7 +364,6 @@ Default: false
 Safety valve.  Array of lines to add to the client's global snmp.conf file.  See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
 Default: []
 Affects snmp.conf
-
 
 ##### `ensure`
 Ensure if present or absent.
@@ -432,6 +429,29 @@ Default: true
 Adds the smuxpeer directive to the snmpd.conf file to allow net-snmp to talk with Dell's OpenManage.
 Default: false
 
+##### `master`
+Allow setting the *master* option, typically to enable AgentX registrations.
+Default: false
+
+##### `agentx_perms`
+Defines the permissions and ownership of the AgentX Unix Domain socket.
+Default: none
+
+##### `agentx_ping_interval`
+This will make the subagent try and reconnect every NUM seconds to the master if it ever becomes (or starts) disconnected.
+Default: none
+
+##### `agentx_socket`
+Defines the address the master agent listens at, or the subagent should connect to.
+Default: none
+
+##### `agentx_timeout`
+Defines the timeout period (NUM seconds) for an AgentX request.
+Default: 1
+
+##### `agentx_retries`
+Defines the number of retries for an AgentX request.
+Default: 5
 
 ### Class: `snmp::client`
 
@@ -537,4 +557,3 @@ Licensed under the Apache License, Version 2.0.
 [razorsedge/puppet-snmp on GitHub](https://github.com/razorsedge/puppet-snmp)
 
 [razorsedge/snmp on Puppet Forge](https://forge.puppetlabs.com/razorsedge/snmp)
-

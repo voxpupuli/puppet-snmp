@@ -959,6 +959,54 @@ describe 'snmp', :type => 'class' do
         ])
       end
     end
+
+    describe 'master => true' do
+      let(:params) {{ :master => true }}
+      it 'should contain File[snmpd.conf] with contents "master agentx"' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'master agentx',
+        ])
+      end
+    end
+
+    describe 'master => true, with all agentx options set' do
+      let(:params) {{
+        :master => true,
+        :agentx_perms => '0644',
+        :agentx_ping_interval => '5',
+        :agentx_socket => 'unix:/var/agentx/master',
+        :agentx_timeout => '10',
+        :agentx_retries => '10',
+      }}
+      it 'should contain File[snmpd.conf] with correct contents' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'master agentx',
+          'agentXPerms 0644',
+          'agentXPingInterval 5',
+          'agentXSocket unix:/var/agentx/master',
+          'agentXTimeout 10',
+          'agentXRetries 10',
+        ])
+      end
+    end
+
+    describe 'master => false, with all agentx options set' do
+      let(:params) {{
+        :master => false,
+        :agentx_perms => '0644',
+        :agentx_ping_interval => '5',
+        :agentx_socket => 'unix:/var/agentx/master',
+        :agentx_timeout => '10',
+        :agentx_retries => '10',
+      }}
+      it { should contain_file('snmpd.conf').without_content('/master agentx/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXPerms 0644/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXPingInterval 5/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXSocket unix:/var/agentx/master/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXTimeout 10/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXRetries 10/') }
+    end
+
   end
 
   context 'on a supported osfamily (Debian), custom parameters' do
