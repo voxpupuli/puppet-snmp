@@ -273,6 +273,7 @@ class snmp (
   $ro_network6                  = $snmp::params::ro_network6,
   $rw_network                   = $snmp::params::rw_network,
   $rw_network6                  = $snmp::params::rw_network6,
+  $master                       = $snmp::params::master,
   $contact                      = $snmp::params::contact,
   $location                     = $snmp::params::location,
   $sysname                      = $snmp::params::sysname,
