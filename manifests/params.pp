@@ -362,9 +362,11 @@ class snmp::params {
 
   case $::osfamily {
     'RedHat': {
-      if $::operatingsystemmajrelease { # facter 1.7+
+      $osmr = getvar('::operatingsystemmajrelease')
+      $lsbmdr = getvar('::lsbmajdistrelease')
+      if $osmr {
         $majdistrelease = $::operatingsystemmajrelease
-      } elsif $::lsbmajdistrelease {    # requires LSB to already be installed
+      } elsif $lsbmdr {    # requires LSB to already be installed
         $majdistrelease = $::lsbmajdistrelease
       } else {
         $majdistrelease = regsubst($::operatingsystemrelease,'^(\d+)\.(\d+)','\1')
@@ -436,6 +438,7 @@ class snmp::params {
       $client_package_name      = 'snmp'
       $client_config            = '/etc/snmp/snmp.conf'
 
+      $trap_service_name        = 'snmptrapd'
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = undef
       $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
