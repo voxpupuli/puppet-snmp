@@ -77,9 +77,12 @@ class snmp::client (
       ensure => $package_ensure,
       name   => $package_name,
     }
-    $req = Package['snmp-client']
-  } else {
-    $req = undef
+  }
+
+  $req = $::osfamily ? {
+    'RedHat' => [Package['snmp-client'], Package[$snmp::params::package_name]],
+    'Suse'   => undef,
+    default  => Package['snmp-client'],
   }
 
   file { 'snmp.conf':
