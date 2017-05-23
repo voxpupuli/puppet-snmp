@@ -60,6 +60,8 @@ The parameter `install_client` will be renamed to `manage_client` in version 4.0
 
 The parameters `ro_community`, `rw_community`, `ro_network`, and `rw_network` will be removed in version 4.0.0 of this module.  The snmptrapd parameter name will become `authcommunity`.
 
+Support for Puppet 2.7 will be removed in version 4.0.0 of this module.
+
 ## Usage
 
 Most interaction with the snmp module can be done through the main snmp class. This means you can simply toggle the parameters in `::snmp` to have most functionality of the module.  Additional fuctionality can be achieved by only utilizing the `::snmp::client` class or the `::snmp::snmpv3_user` define.
