@@ -33,7 +33,9 @@ describe 'snmp::client', :type => 'class' do
         let :facts do {
           :osfamily               => 'RedHat',
           :operatingsystem        => os,
-          :operatingsystemrelease => '6.4'
+          :operatingsystemrelease => '6.4',
+          :lsbmajdistrelease      => '6',
+          :operatingsystemmajrelease => '6'
         }
         end
         it { should contain_package('snmp-client').with(
@@ -57,7 +59,9 @@ describe 'snmp::client', :type => 'class' do
         let :facts do {
           :osfamily        => 'Debian',
           :operatingsystem => os,
-          :operatingsystemrelease => '6.0.7'
+          :operatingsystemrelease => '6.0.7',
+          :lsbmajdistrelease      => '6',
+          :operatingsystemmajrelease => '6'
         }
         end
         it { should contain_package('snmp-client').with(
@@ -81,7 +85,9 @@ describe 'snmp::client', :type => 'class' do
         let :facts do {
           :osfamily               => 'Suse',
           :operatingsystem        => os,
-          :operatingsystemrelease => '11.1'
+          :operatingsystemrelease => '11.1',
+          :lsbmajdistrelease      => '11',
+          :operatingsystemmajrelease => '11'
         }
         end
         it { should_not contain_package('snmp-client') }
@@ -102,7 +108,8 @@ describe 'snmp::client', :type => 'class' do
         let :facts do {
           :osfamily               => 'FreeBSD',
           :operatingsystem        => os,
-          :operatingsystemrelease => '9.2'
+          :operatingsystemrelease => '9.2',
+          :operatingsystemmajrelease => '9'
         }
         end
         it { should contain_package('snmp-client').with(
@@ -126,7 +133,8 @@ describe 'snmp::client', :type => 'class' do
         let :facts do {
           :osfamily               => 'OpenBSD',
           :operatingsystem        => os,
-          :operatingsystemrelease => '5.9'
+          :operatingsystemrelease => '5.9',
+          :operatingsystemmajrelease => '5'
         }
         end
         it { should contain_package('snmp-client').with(
@@ -149,7 +157,9 @@ describe 'snmp::client', :type => 'class' do
     let :facts do {
       :osfamily               => 'RedHat',
       :operatingsystem        => 'RedHat',
-      :operatingsystemrelease => '6.4'
+      :operatingsystemrelease => '6.4',
+      :lsbmajdistrelease      => '6',
+      :operatingsystemmajrelease => '6'
     }
     end
 
