@@ -5,6 +5,28 @@
 ################################################################################
 # AGENT BEHAVIOUR
 
+<% if @master != nil -%>
+<% if @master -%>
+master agentx
+
+<% if @agentx_perms != nil -%>
+agentXPerms <%= @agentx_perms %>
+<% end -%>
+<% if @agentx_ping_interval != nil -%>
+agentXPingInterval <%= @agentx_ping_interval %>
+<% end -%>
+<% if @agentx_socket != nil -%>
+agentXSocket <%= @agentx_socket %>
+<% end -%>
+<% if @agentx_timeout != nil -%>
+agentXTimeout <%= @agentx_timeout %>
+<% end -%>
+<% if @agentx_retries != nil -%>
+agentXRetries <%= @agentx_retries %>
+<% end -%>
+<% end -%>
+<% end -%>
+
 <% if (@agentaddress.is_a?(Array)) and (@agentaddress.count > 0) -%>
 agentaddress <%= @agentaddress.join(',') %>
 <% end -%>
