@@ -23,6 +23,48 @@ class snmp::params {
     $agentaddress = [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ]
   }
 
+  $snmp_master = getvar('::snmp_master')
+  if $snmp_master {
+    $master = $::snmp_master
+  } else {
+    $master = false
+  }
+
+  $snmp_agentx_perms = getvar('::snmp_agentx_perms')
+  if $snmp_agentx_perms {
+    $agentx_perms = $::snmp_agentx_perms
+  } else {
+    $agentx_perms = undef
+  }
+
+  $snmp_agentx_ping_interval = getvar('::snmp_agentx_ping_interval')
+  if $snmp_agentx_ping_interval {
+    $agentx_ping_interval = $::snmp_agentx_ping_interval
+  } else {
+    $agentx_ping_interval = undef
+  }
+
+  $snmp_agentx_socket = getvar('::snmp_agentx_socket')
+  if $snmp_agentx_socket {
+    $agentx_socket = $::snmp_agentx_socket
+  } else {
+    $agentx_socket = undef
+  }
+
+  $snmp_agentx_timeout = getvar('::snmp_agentx_timeout')
+  if $snmp_agentx_timeout {
+    $agentx_timeout = $::snmp_agentx_timeout
+  } else {
+    $agentx_timeout = 1
+  }
+
+  $snmp_agentx_retries = getvar('::snmp_agentx_retries')
+  if $snmp_agentx_retries {
+    $agentx_retries = $::snmp_agentx_retries
+  } else {
+    $agentx_retries = 5
+  }
+
   $snmp_snmptrapdaddr = getvar('::snmp_snmptrapdaddr')
   if $snmp_snmptrapdaddr {
     $snmptrapdaddr = $::snmp_snmptrapdaddr
