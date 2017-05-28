@@ -8,7 +8,9 @@ describe 'snmp::snmpv3_user', :type => 'define' do
     let :facts do {
       :osfamily               => 'RedHat',
       :operatingsystem        => 'CentOS',
-      :operatingsystemrelease => '6.4'
+      :operatingsystemrelease => '6.4',
+      :lsbmajdistrelease      => '6',
+      :operatingsystemmajrelease => '6'
     }
     end
 
@@ -65,7 +67,9 @@ describe 'snmp::snmpv3_user', :type => 'define' do
     let :facts do {
       :osfamily               => 'RedHat',
       :operatingsystem        => 'CentOS',
-      :operatingsystemrelease => '6.4'
+      :operatingsystemrelease => '6.4',
+      :lsbmajdistrelease      => '6',
+      :operatingsystemmajrelease => '6'
     }
     end
 
@@ -126,7 +130,9 @@ describe 'snmp::snmpv3_user', :type => 'define' do
     let :facts do {
       :osfamily               => 'Debian',
       :operatingsystem        => 'Ubuntu',
-      :operatingsystemrelease => '12.04'
+      :operatingsystemrelease => '12.04',
+      :lsbmajdistrelease      => '12',
+      :operatingsystemmajrelease => '12'
     }
     end
 
@@ -187,7 +193,9 @@ describe 'snmp::snmpv3_user', :type => 'define' do
     let :facts do {
       :osfamily               => 'Suse',
       :operatingsystem        => 'SLES',
-      :operatingsystemrelease => '11.1'
+      :operatingsystemrelease => '11.1',
+      :lsbmajdistrelease      => '11',
+      :operatingsystemmajrelease => '11'
     }
     end
 

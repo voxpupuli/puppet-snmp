@@ -33,7 +33,9 @@ describe 'snmp', :type => 'class' do
           :osfamily               => 'RedHat',
           :operatingsystem        => 'RedHat',
           :operatingsystemrelease => '5.9',
-          :fqdn                   => 'myhost.localdomain'
+          :fqdn                   => 'myhost.localdomain',
+          :lsbmajdistrelease      => '5',
+          :operatingsystemmajrelease => '5' 
         }
         end
         it { should contain_package('snmpd').with(
@@ -148,7 +150,9 @@ describe 'snmp', :type => 'class' do
           :osfamily               => 'RedHat',
           :operatingsystem        => 'RedHat',
           :operatingsystemrelease => '6.4',
-          :fqdn                   => 'myhost.localdomain'
+          :fqdn                   => 'myhost.localdomain',
+          :lsbmajdistrelease      => '6',
+          :operatingsystemmajrelease => '6'
         }
         end
         it { should contain_package('snmpd').with(
@@ -265,7 +269,9 @@ describe 'snmp', :type => 'class' do
           :osfamily               => 'Debian',
           :operatingsystem        => os,
           :operatingsystemrelease => '6.0.7',
-          :fqdn                   => 'myhost2.localdomain'
+          :fqdn                   => 'myhost2.localdomain',
+          :lsbmajdistrelease      => '6',
+          :operatingsystemmajrelease => '6'
         }
         end
         it { should contain_package('snmpd').with(
@@ -370,7 +376,9 @@ describe 'snmp', :type => 'class' do
           :osfamily               => 'Suse',
           :operatingsystem        => os,
           :operatingsystemrelease => '11.1',
-          :fqdn                   => 'myhost3.localdomain'
+          :fqdn                   => 'myhost3.localdomain',
+          :lsbmajdistrelease      => '6',
+          :operatingsystemmajrelease => '6'
         }
         end
         it { should contain_package('snmpd').with(
@@ -480,7 +488,8 @@ describe 'snmp', :type => 'class' do
           :osfamily               => 'FreeBSD',
           :operatingsystem        => os,
           :operatingsystemrelease => '9.2',
-          :fqdn                   => 'myhost4.localdomain'
+          :fqdn                   => 'myhost4.localdomain',
+          :operatingsystemmajrelease => '9'
         }
         end
         it { should contain_package('snmpd').with(
@@ -570,7 +579,8 @@ describe 'snmp', :type => 'class' do
           :osfamily               => 'OpenBSD',
           :operatingsystem        => os,
           :operatingsystemrelease => '5.9',
-          :fqdn                   => 'myhost4.localdomain'
+          :fqdn                   => 'myhost4.localdomain',
+          :operatingsystemmajrelease => '5'
         }
         end
         it { should contain_package('snmpd').with(
@@ -658,7 +668,9 @@ describe 'snmp', :type => 'class' do
     let :facts do {
       :osfamily               => 'RedHat',
       :operatingsystem        => 'RedHat',
-      :operatingsystemrelease => '6.4'
+      :operatingsystemrelease => '6.4',
+      :lsbmajdistrelease      => '6',
+      :operatingsystemmajrelease => '6'
     }
     end
 
@@ -947,13 +959,63 @@ describe 'snmp', :type => 'class' do
         ])
       end
     end
+
+    describe 'master => true' do
+      let(:params) {{ :master => true }}
+      it 'should contain File[snmpd.conf] with contents "master agentx"' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'master agentx',
+        ])
+      end
+    end
+
+    describe 'master => true, with all agentx options set' do
+      let(:params) {{
+        :master => true,
+        :agentx_perms => '0644',
+        :agentx_ping_interval => '5',
+        :agentx_socket => 'unix:/var/agentx/master',
+        :agentx_timeout => '10',
+        :agentx_retries => '10',
+      }}
+      it 'should contain File[snmpd.conf] with correct contents' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'master agentx',
+          'agentXPerms 0644',
+          'agentXPingInterval 5',
+          'agentXSocket unix:/var/agentx/master',
+          'agentXTimeout 10',
+          'agentXRetries 10',
+        ])
+      end
+    end
+
+    describe 'master => false, with all agentx options set' do
+      let(:params) {{
+        :master => false,
+        :agentx_perms => '0644',
+        :agentx_ping_interval => '5',
+        :agentx_socket => 'unix:/var/agentx/master',
+        :agentx_timeout => '10',
+        :agentx_retries => '10',
+      }}
+      it { should contain_file('snmpd.conf').without_content('/master agentx/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXPerms 0644/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXPingInterval 5/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXSocket unix:/var/agentx/master/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXTimeout 10/') }
+      it { should contain_file('snmpd.conf').without_content('/agentXRetries 10/') }
+    end
+
   end
 
   context 'on a supported osfamily (Debian), custom parameters' do
     let :facts do {
       :osfamily               => 'Debian',
       :operatingsystem        => 'Debian',
-      :operatingsystemrelease => '7.0'
+      :operatingsystemrelease => '7.0',
+      :lsbmajdistrelease      => '7',
+      :operatingsystemmajrelease => '7'
     }
     end
 
@@ -998,7 +1060,9 @@ describe 'snmp', :type => 'class' do
     let :facts do {
       :osfamily               => 'Suse',
       :operatingsystem        => 'Suse',
-      :operatingsystemrelease => '11.1'
+      :operatingsystemrelease => '11.1',
+      :lsbmajdistrelease      => '11',
+      :operatingsystemmajrelease => '11'
     }
     end
 
