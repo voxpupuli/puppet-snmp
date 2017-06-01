@@ -72,7 +72,7 @@ class snmp::client (
     }
   }
 
-  if $::osfamily != 'Suse' {
+  if $::osfamily !~ /(Suse|Linux)/ {
     package { 'snmp-client':
       ensure => $package_ensure,
       name   => $package_name,
