@@ -13,7 +13,9 @@ doNotLogTraps <%= @do_not_log_traps %>
 ################################################################################
 # ACCESS CONTROL
 
-authCommunity log,execute,net <%= @ro_community %>
+<%- [*@ro_community].compact.each do |c| -%>
+authCommunity log,execute,net <%= c %>
+<%- end -%>
 disableAuthorization <%= @disable_authorization %>
 
 ################################################################################
