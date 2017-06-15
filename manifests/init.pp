@@ -14,19 +14,19 @@
 #   Default: [ udp:127.0.0.1:162, udp6:[::1]:162 ]
 #
 # [*ro_community*]
-#   Read-only (RO) community string or array for snmptrap daemon.
+#   Read-only (RO) community string or array for agent and snmptrap daemon.
 #   Default: public
 #
 # [*ro_community6*]
-#   Read-only (RO) community string or array for IPv6.
+#   Read-only (RO) community string or array for IPv6 agent.
 #   Default: public
 #
 # [*rw_community*]
-#   Read-write (RW) community string or array.
+#   Read-write (RW) community string or array agent.
 #   Default: none
 #
 # [*rw_community6*]
-#   Read-write (RW) community string or array for IPv6.
+#   Read-write (RW) community string or array for IPv6 agent.
 #   Default: none
 #
 # [*ro_network*]

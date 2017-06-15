@@ -958,6 +958,12 @@ describe 'snmp', :type => 'class' do
           'rocommunity b 127.0.0.2',
         ])
       end
+      it 'should contain File[snmptrapd.conf] with contents "a" and "b"' do
+        verify_contents(catalogue, 'snmptrapd.conf', [
+          'authCommunity log,execute,net a',
+          'authCommunity log,execute,net b',
+        ])
+      end
     end
 
     describe 'master => true' do
