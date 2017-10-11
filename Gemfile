@@ -24,4 +24,3 @@ gem 'puppet', ENV['PUPPET_GEM_VERSION'], :require => false
 gem 'facter', ENV['FACTER_GEM_VERSION'], :require => false
 
 # vim:ft=ruby
-
