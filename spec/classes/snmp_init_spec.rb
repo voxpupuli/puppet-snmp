@@ -1062,6 +1062,32 @@ describe 'snmp', :type => 'class' do
     end
   end
 
+  context 'on a supported osfamily (Debian Stretch), custom parameters' do
+    let :facts do {
+      :osfamily               => 'Debian',
+      :operatingsystem        => 'Debian',
+      :lsbmajdistrelease      => '9',
+      :operatingsystemmajrelease => '9'
+    }
+    end
+
+    describe 'service_ensure => stopped and trap_service_ensure => running' do
+      let :params do {
+        :service_ensure      => 'stopped',
+        :trap_service_ensure => 'running'
+      }
+      end
+    end
+
+    describe 'Debian-snmp as snmp user' do
+      it 'should contain File[snmpd.sysconfig] with contents "OPTIONS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
+        verify_contents(catalogue, 'snmpd.sysconfig', [
+          'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\'', 
+        ])
+      end
+    end
+  end
+
   context 'on a supported osfamily (Suse), custom parameters' do
     let :facts do {
       :osfamily               => 'Suse',
