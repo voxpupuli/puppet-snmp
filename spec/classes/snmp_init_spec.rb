@@ -1077,12 +1077,12 @@ describe 'snmp', :type => 'class' do
         :trap_service_ensure => 'running'
       }
       end
-      it { should contain_service('snmpd').with_ensure('running') }
-      it { should_not contain_service('snmptrapd') }
-      it 'should contain File[snmpd.sysconfig] with contents "SNMPDRUN=no" and "TRAPDRUN=yes"' do
+    end
+
+    describe 'Debian-snmp as snmp user' do
+      it 'should contain File[snmpd.sysconfig] with contents "OPTIONS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-          'SNMPDRUN=no',
-          'TRAPDRUN=yes',
+          'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\'', 
         ])
       end
     end
