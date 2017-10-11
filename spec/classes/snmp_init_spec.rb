@@ -1062,6 +1062,32 @@ describe 'snmp', :type => 'class' do
     end
   end
 
+  context 'on a supported osfamily (Debian Stretch), custom parameters' do
+    let :facts do {
+      :osfamily               => 'Debian',
+      :operatingsystem        => 'Debian',
+      :lsbmajdistrelease      => '9',
+      :operatingsystemmajrelease => '9'
+    }
+    end
+
+    describe 'service_ensure => stopped and trap_service_ensure => running' do
+      let :params do {
+        :service_ensure      => 'stopped',
+        :trap_service_ensure => 'running'
+      }
+      end
+      it { should contain_service('snmpd').with_ensure('running') }
+      it { should_not contain_service('snmptrapd') }
+      it 'should contain File[snmpd.sysconfig] with contents "SNMPDRUN=no" and "TRAPDRUN=yes"' do
+        verify_contents(catalogue, 'snmpd.sysconfig', [
+          'SNMPDRUN=no',
+          'TRAPDRUN=yes',
+        ])
+      end
+    end
+  end
+
   context 'on a supported osfamily (Suse), custom parameters' do
     let :facts do {
       :osfamily               => 'Suse',
