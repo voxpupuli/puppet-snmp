@@ -491,8 +491,13 @@ class snmp::params {
       $client_config            = '/etc/snmp/snmp.conf'
 
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
-      $trap_service_name        = undef
+      $trap_service_name        = 'snmptrapd'
       $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
+
+      if $::operatingsystem == 'Ubuntu' and (versioncmp($::operatingsystemrelease,'16.04') >= 0) {
+        $snmptrapd_package = 'snmptrapd'
+        $trap_sysconfig    = '/etc/default/snmptrapd'
+      }
     }
     'Suse': {
       $package_name             = 'net-snmp'

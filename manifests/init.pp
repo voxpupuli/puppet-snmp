@@ -474,6 +474,14 @@ class snmp (
     name   => $package_name,
   }
 
+  # In latest ubuntu platforms, there is a differente snmptrad package
+  if $snmp::params::snmptrapd_package {
+    package { 'snmptrapd':
+      ensure => $package_ensure,
+      name   => $snmp::params::snmptrapd_package,
+    }
+  }
+
   file { 'var-net-snmp':
     ensure  => 'directory',
     mode    => $snmp::params::varnetsnmp_perms,
@@ -578,6 +586,28 @@ class snmp (
         Package['snmpd'],
         File['var-net-snmp'],
       ],
+    }
+  } elsif $::operatingsystem == 'Ubuntu' and (versioncmp($::operatingsystemrelease,'16.04') >= 0) {
+    if $snmp::params::snmptrapd_package {
+      file { 'snmptrapd.sysconfig':
+        ensure  => $file_ensure,
+        mode    => '0644',
+        owner   => 'root',
+        group   => 'root',
+        path    => $snmp::params::trap_sysconfig,
+        content => template($template_snmptrapd_sysconfig),
+        require => Package['snmptrapd'],
+        notify  => Service['snmptrapd'],
+      }
+    }
+
+    service { 'snmptrapd':
+      ensure     => $trap_service_ensure_real,
+      name       => $trap_service_name,
+      enable     => $trap_service_enable_real,
+      hasstatus  => $trap_service_hasstatus,
+      hasrestart => $trap_service_hasrestart,
+      subscribe  => File['snmpd.sysconfig'],
     }
   }
 
