@@ -98,6 +98,9 @@ sysName <%= @sysname %>
 
 ################################################################################
 # EXTENDING AGENT FUNCTIONALITY
+<% @extends.each do |extending| -%>
+extend <%= extending %>
+<% end -%>
 
 <% if @dlmod.any? -%>
 # ------------------------------------------------------------------------------

@@ -870,6 +870,16 @@ describe 'snmp', :type => 'class' do
       end
     end
 
+    describe 'extends=> [ "SomeArray1", "SomeArray2" ]' do
+      let(:params) {{ :extends=> [ 'SomeArray1', 'SomeArray2' ] }}
+      it 'should contain File[snmpd.conf] with contents from array' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'extend  SomeArray1',
+          'extend  SomeArray2',
+        ])
+      end
+    end
+
     describe 'openmanage_enable => true' do
         let(:params) {{ :openmanage_enable => true }}
         it 'should contain File[snmpd.conf] with contents "smuxpeer .1.3.6.1.4.1.674.10892.1"' do
