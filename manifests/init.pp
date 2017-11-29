@@ -462,7 +462,7 @@ class snmp (
   }
 
   if $real_manage_client {
-    class { '::snmp::client':
+    class { 'snmp::client':
       ensure      => $ensure,
       autoupgrade => $autoupgrade,
       snmp_config => $snmp_config,
