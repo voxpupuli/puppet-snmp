@@ -213,6 +213,13 @@ class snmp::params {
     $dlmod =  []
   }
 
+  $snmp_extends = getvar('::snmp_extends')
+  if $snmp_extends {
+    $extemds =  $::snmp_extends
+  } else {
+    $extends =  []
+  }
+
   $snmp_disable_authorization = getvar('::snmp_disable_authorization')
   if $snmp_disable_authorization {
     $disable_authorization =  $::snmp_disable_authorization
@@ -463,17 +470,22 @@ class snmp::params {
       $trap_service_name        = 'snmptrapd'
     }
     'Debian': {
+      if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease >= '9' {
+        $varnetsnmp_owner = 'Debian-snmp'
+        $varnetsnmp_group = 'Debian-snmp'
+      } else {
+        $varnetsnmp_owner       = 'snmp'
+        $varnetsnmp_group       = 'snmp'
+      }
       $package_name             = 'snmpd'
       $service_config           = '/etc/snmp/snmpd.conf'
       $service_config_perms     = '0600'
       $service_config_dir_group = 'root'
       $service_name             = 'snmpd'
-      $snmpd_options            = '-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid'
+      $snmpd_options            = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid"
       $sysconfig                = '/etc/default/snmpd'
       $var_net_snmp             = '/var/lib/snmp'
       $varnetsnmp_perms         = '0755'
-      $varnetsnmp_owner         = 'snmp'
-      $varnetsnmp_group         = 'snmp'
 
       $client_package_name      = 'snmp'
       $client_config            = '/etc/snmp/snmp.conf'
