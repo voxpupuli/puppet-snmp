@@ -327,6 +327,11 @@ Default: [ 'notConfigGroup "" any noauth exact systemview none none' ]
 Array of dlmod lines to add to the snmpd.conf file.  Must provide NAME and PATH (ex. "cmaX /usr/lib64/libcmaX64.so").  See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBD for details.
 Default: []
 
+##### `extend`
+Array of extendlines to add to the snmpd.conf file.
+Default: []
+
+
 ##### `snmpd_config`
 Safety valve.  Array of lines to add to the snmpd.conf file.  See http://www.net-snmp.org/docs/man/snmpd.conf.html for all options.
 Default: []
