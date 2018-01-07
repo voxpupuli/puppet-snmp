@@ -41,11 +41,11 @@
     },
     {
       "operatingsystem": "Debian",
-      "operatingsystemrelease": [ "6", "7" ]
+      "operatingsystemrelease": [ "6", "7", "8", "9" ]
     },
     {
       "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [ "12.04", "14.04" ]
+      "operatingsystemrelease": [ "12.04", "14.04", "16.04" ]
     }
   ],
   "requirements": [
