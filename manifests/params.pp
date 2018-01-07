@@ -213,6 +213,13 @@ class snmp::params {
     $dlmod =  []
   }
 
+  $snmp_extends = getvar('::snmp_extends')
+  if $snmp_extends {
+    $extemds =  $::snmp_extends
+  } else {
+    $extends =  []
+  }
+
   $snmp_disable_authorization = getvar('::snmp_disable_authorization')
   if $snmp_disable_authorization {
     $disable_authorization =  $::snmp_disable_authorization
