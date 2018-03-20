@@ -355,48 +355,48 @@ class snmp (
   $agentx_retries               = $snmp::params::agentx_retries,
 ) inherits snmp::params {
   # Validate our booleans
-  validate_bool($master)
-  validate_bool($manage_client)
-  validate_bool($autoupgrade)
-  validate_bool($service_enable)
-  validate_bool($service_hasstatus)
-  validate_bool($service_hasrestart)
-  validate_bool($openmanage_enable)
+  validate_legacy($master)
+  validate_legacy($manage_client)
+  validate_legacy($autoupgrade)
+  validate_legacy($service_enable)
+  validate_legacy($service_hasstatus)
+  validate_legacy($service_hasrestart)
+  validate_legacy($openmanage_enable)
 
   # Validate our arrays
-  validate_array($snmptrapdaddr)
-  validate_array($trap_handlers)
-  validate_array($trap_forwards)
-  validate_array($snmp_config)
-  validate_array($com2sec)
-  validate_array($com2sec6)
-  validate_array($groups)
-  validate_array($views)
-  validate_array($accesses)
-  validate_array($dlmod)
-  validate_array($extends)
-  validate_array($snmpd_config)
-  validate_array($snmptrapd_config)
+  validate_legacy($snmptrapdaddr)
+  validate_legacy($trap_handlers)
+  validate_legacy($trap_forwards)
+  validate_legacy($snmp_config)
+  validate_legacy($com2sec)
+  validate_legacy($com2sec6)
+  validate_legacy($groups)
+  validate_legacy($views)
+  validate_legacy($accesses)
+  validate_legacy($dlmod)
+  validate_legacy($extends)
+  validate_legacy($snmpd_config)
+  validate_legacy($snmptrapd_config)
 
   # Validate our strings
-  validate_string($template_snmpd_conf)
-  validate_string($template_snmpd_sysconfig)
-  validate_string($template_snmptrapd)
-  validate_string($template_snmptrapd_sysconfig)
+  validate_legacy($template_snmpd_conf)
+  validate_legacy($template_snmpd_sysconfig)
+  validate_legacy($template_snmptrapd)
+  validate_legacy($template_snmptrapd_sysconfig)
 
   # Validate our numbers
-  validate_numeric($agentx_retries)
-  validate_numeric($agentx_timeout)
+  validate_legacy($agentx_retries)
+  validate_legacy($agentx_timeout)
 
   # Validate our regular expressions
   $states = [ '^yes$', '^no$' ]
-  validate_re($disable_authorization, $states, '$disable_authorization must be either yes or no.')
-  validate_re($do_not_log_traps, $states, '$do_not_log_traps must be either yes or no.')
-  validate_re($do_not_log_tcpwrappers, $states, '$do_not_log_tcpwrappers must be either yes or no.')
+  validate_legacy($disable_authorization, $states, '$disable_authorization must be either yes or no.')
+  validate_legacy($do_not_log_traps, $states, '$do_not_log_traps must be either yes or no.')
+  validate_legacy($do_not_log_tcpwrappers, $states, '$do_not_log_tcpwrappers must be either yes or no.')
 
   # Deprecated backwards-compatibility
   if $install_client != undef {
-    validate_bool($install_client)
+    validate_legacy($install_client)
     warning('snmp: parameter install_client is deprecated; please use manage_client')
     $real_manage_client = $install_client
   } else {
