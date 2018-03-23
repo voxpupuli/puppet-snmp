@@ -327,6 +327,10 @@ Default: [ 'notConfigGroup "" any noauth exact systemview none none' ]
 Array of dlmod lines to add to the snmpd.conf file.  Must provide NAME and PATH (ex. "cmaX /usr/lib64/libcmaX64.so").  See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBD for details.
 Default: []
 
+##### `extends`
+Array of extend lines to add to the snmpd.conf file.  Must provide NAME, PROG and ARG.  See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBA for details.
+Default: []
+
 ##### `snmpd_config`
 Safety valve.  Array of lines to add to the snmpd.conf file.  See http://www.net-snmp.org/docs/man/snmpd.conf.html for all options.
 Default: []
@@ -517,7 +521,7 @@ Net-SNMP module support is available with these operating systems:
 
 * RedHat family  - tested on CentOS 5.9, CentOS 6.6, and CentOS 7.0
 * SuSE family    - tested on SLES 11 SP1
-* Debian family  - tested on Ubuntu 12.04.2 LTS, Debian 6.0.7, and Debian 7.0
+* Debian family  - tested on Ubuntu 12.04.2 LTS, Debian 6.0.7, Debian 7.0, and Debian 9.
 * FreeBSD family - tested on FreeBSD 9.2-RELEASE, FreeBSD 10.0-RELEASE
 * OpenBSD family - tested on OpenBSD 5.9
 

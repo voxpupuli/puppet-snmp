@@ -870,6 +870,16 @@ describe 'snmp', :type => 'class' do
       end
     end
 
+    describe 'extends => [ "SomeArray1", "SomeArray2" ]' do
+      let(:params) {{ :extends => [ 'SomeArray1', 'SomeArray2' ] }}
+      it 'should contain File[snmpd.conf] with contents from array' do
+        verify_contents(catalogue, 'snmpd.conf', [
+          'extend SomeArray1',
+          'extend SomeArray2',
+        ])
+      end
+    end
+
     describe 'openmanage_enable => true' do
         let(:params) {{ :openmanage_enable => true }}
         it 'should contain File[snmpd.conf] with contents "smuxpeer .1.3.6.1.4.1.674.10892.1"' do
@@ -1057,6 +1067,32 @@ describe 'snmp', :type => 'class' do
       it 'should contain File[snmpd.sysconfig] with contents "TRAPDOPTS=\'bleh\'"' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
           'TRAPDOPTS=\'bleh\'',
+        ])
+      end
+    end
+  end
+
+  context 'on a supported osfamily (Debian Stretch), custom parameters' do
+    let :facts do {
+      :osfamily               => 'Debian',
+      :operatingsystem        => 'Debian',
+      :lsbmajdistrelease      => '9',
+      :operatingsystemmajrelease => '9'
+    }
+    end
+
+    describe 'service_ensure => stopped and trap_service_ensure => running' do
+      let :params do {
+        :service_ensure      => 'stopped',
+        :trap_service_ensure => 'running'
+      }
+      end
+    end
+
+    describe 'Debian-snmp as snmp user' do
+      it 'should contain File[snmpd.sysconfig] with contents "OPTIONS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
+        verify_contents(catalogue, 'snmpd.sysconfig', [
+          'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\'', 
         ])
       end
     end
