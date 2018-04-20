@@ -315,6 +315,7 @@ class snmp (
   $accesses                     = $snmp::params::accesses,
   $dlmod                        = $snmp::params::dlmod,
   $extends                      = $snmp::params::extends,
+  $extends_sh                   = $snmp::params::extends_sh,
   $snmpd_config                 = $snmp::params::snmpd_config,
   $disable_authorization        = $snmp::params::disable_authorization,
   $do_not_log_traps             = $snmp::params::do_not_log_traps,
@@ -375,6 +376,7 @@ class snmp (
   validate_array($accesses)
   validate_array($dlmod)
   validate_array($extends)
+  validate_array($extends_sh)
   validate_array($snmpd_config)
   validate_array($snmptrapd_config)
 

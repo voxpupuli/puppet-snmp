@@ -331,6 +331,10 @@ Default: []
 Array of extend lines to add to the snmpd.conf file.  Must provide NAME, PROG and ARG.  See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBA for details.
 Default: []
 
+##### `extends_sh`
+Array of extend-sh lines to add to the snmpd.conf file.  Must provide NAME, PROG and ARG.  See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBA for details.
+Default: []
+
 ##### `snmpd_config`
 Safety valve.  Array of lines to add to the snmpd.conf file.  See http://www.net-snmp.org/docs/man/snmpd.conf.html for all options.
 Default: []

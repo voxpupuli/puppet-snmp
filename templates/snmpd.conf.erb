@@ -104,6 +104,12 @@ extend <%= extending %>
 <% end -%>
 <% end -%>
 
+<% if @extends_sh.any? -%>
+<% @extends_sh.each do |extending_sh| -%>
+extend-sh <%= extending_sh %>
+<% end -%>
+<% end -%>
+
 <% if @dlmod.any? -%>
 # ------------------------------------------------------------------------------
 # Dynamically Loadable Modules

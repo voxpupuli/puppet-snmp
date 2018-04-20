@@ -220,6 +220,13 @@ class snmp::params {
     $extends =  []
   }
 
+  $snmp_extends_sh = getvar('::snmp_extends_sh')
+  if $snmp_extends_sh {
+    $extends_sh =  $::snmp_extends_sh
+  } else {
+    $extends_sh =  []
+  }
+
   $snmp_disable_authorization = getvar('::snmp_disable_authorization')
   if $snmp_disable_authorization {
     $disable_authorization =  $::snmp_disable_authorization
