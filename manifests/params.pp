@@ -470,7 +470,8 @@ class snmp::params {
       $trap_service_name        = 'snmptrapd'
     }
     'Debian': {
-      if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease >= '9' {
+      if ($::operatingsystem == 'Debian' and $::operatingsystemmajrelease >= '9') or 
+         ($::operatingsystem == 'Ubuntu' and $::operatingsystemmajrelease >= '18.04') {
         $varnetsnmp_owner = 'Debian-snmp'
         $varnetsnmp_group = 'Debian-snmp'
       } else {
