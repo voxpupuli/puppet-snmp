@@ -418,7 +418,7 @@ class snmp::params {
       } else {
         $majdistrelease = regsubst($::operatingsystemrelease,'^(\d+)\.(\d+)','\1')
       }
-      $systemctl_path         = ""
+      $systemctl_path         = ''
       case $::operatingsystem {
         'Fedora': {
           $snmpd_options        = '-LS0-6d'
@@ -476,15 +476,15 @@ class snmp::params {
         $varnetsnmp_owner       = 'Debian-snmp'
         $varnetsnmp_group       = 'Debian-snmp'
         $sysconfig              = '/lib/systemd/system/snmpd.service'
-	#These options are used in debian package 5.7.3+dfsg-1.7 except the -Lsd => -LS6d fix from debian bug https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=684721
+        #These options are used in debian package 5.7.3+dfsg-1.7 except the -Lsd => -LS6d fix from debian bug https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=684721
         $snmpd_options          = "-LS6d -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux,mteTrigger,mteTriggerConf -f"
-	$systemctl_path         = "/bin/systemctl"
+        $systemctl_path         = "/bin/systemctl"
       } else {
         $varnetsnmp_owner       = 'snmp'
         $varnetsnmp_group       = 'snmp'
         $sysconfig              = '/etc/default/snmpd'
         $snmpd_options          = "-LS6d -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid"
-	$systemctl_path         = ""
+        $systemctl_path         = ''
       }
       $package_name             = 'snmpd'
       $service_config           = '/etc/snmp/snmpd.conf'
@@ -520,7 +520,7 @@ class snmp::params {
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
       $snmptrapd_options        = undef
-      $systemctl_path           = ""
+      $systemctl_path           = ''
     }
     'FreeBSD': {
       $package_name             = 'net-mgmt/net-snmp'
@@ -543,7 +543,7 @@ class snmp::params {
       $trap_service_config      = '/usr/local/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
       $snmptrapd_options        = undef
-      $systemctl_path           = ""
+      $systemctl_path           = ''
     }
     'OpenBSD': {
       $package_name             = 'net-snmp'
@@ -566,7 +566,7 @@ class snmp::params {
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'netsnmptrapd'
       $snmptrapd_options        = undef
-      $systemctl_path           = ""
+      $systemctl_path           = ''
     }
     default: {
       fail("Module ${::module} is not supported on ${::operatingsystem}")

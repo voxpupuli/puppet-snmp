@@ -583,11 +583,11 @@ class snmp (
     }
   }
 
-  if $systemctl_path != "" {
+  if $systemctl_path != '' {
     exec { "${systemctl_path} daemon-reload":
       refreshonly => true,
-      subscribe => File["snmpd.sysconfig"],
-      notify  => Service['snmpd'],
+      subscribe   => File['snmpd.sysconfig'],
+      notify      => Service['snmpd'],
     }
   }
 
