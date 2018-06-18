@@ -353,6 +353,7 @@ class snmp (
   $agentx_socket                = $snmp::params::agentx_socket,
   $agentx_timeout               = $snmp::params::agentx_timeout,
   $agentx_retries               = $snmp::params::agentx_retries,
+  $systemctl_path               = $snmp::params::systemctl_path,
 ) inherits snmp::params {
   # Validate our booleans
   validate_bool($master)
@@ -383,6 +384,7 @@ class snmp (
   validate_string($template_snmpd_sysconfig)
   validate_string($template_snmptrapd)
   validate_string($template_snmptrapd_sysconfig)
+  validate_string($systemctl_path)
 
   # Validate our numbers
   validate_numeric($agentx_retries)
@@ -578,6 +580,14 @@ class snmp (
         Package['snmpd'],
         File['var-net-snmp'],
       ],
+    }
+  }
+
+  if $systemctl_path != "" {
+    exec { "${systemctl_path} daemon-reload":
+      refreshonly => true,
+      subscribe => File["snmpd.sysconfig"],
+      notify  => Service['snmpd'],
     }
   }
 

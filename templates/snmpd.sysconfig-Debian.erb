@@ -1,3 +1,21 @@
+<%- if @systemctl_path != "" then -%>
+[Unit]
+Description=Simple Network Management Protocol (SNMP) Daemon.
+After=network.target
+ConditionPathExists=/etc/snmp/snmpd.conf
+
+[Service]
+Environment="MIBSDIR=/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/snmp/mibs/ietf:/usr/share/mibs/site:/usr/share/snmp/mibs:/usr/share/mibs/iana:/usr/share/mibs/ietf:/usr/share/mibs/netsnmp"
+Environment="MIBS="
+Type=simple
+ExecStartPre=/bin/mkdir -p /var/run/agentx
+ExecStart=/usr/sbin/snmpd <%= @snmpd_options %>
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+
+<% else -%>
 ###
 ### File managed by Puppet
 ###
@@ -23,3 +41,5 @@ TRAPDOPTS='<%= @snmptrapd_options %>'
 
 # create symlink on Debian legacy location to official RFC path
 SNMPDCOMPAT=yes
+<% end -%>
+
