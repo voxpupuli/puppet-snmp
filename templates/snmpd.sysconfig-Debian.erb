@@ -1,4 +1,4 @@
-<%- if @systemctl_path != "" then -%>
+<%- if @systemctl_path then -%>
 [Unit]
 Description=Simple Network Management Protocol (SNMP) Daemon.
 After=network.target
