@@ -326,10 +326,10 @@ describe 'snmp', :type => 'class' do
           :require => 'Package[snmpd]',
           :notify  => 'Service[snmpd]'
         )}
-        it 'should contain File[snmpd.sysconfig] with contents "SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'"' do
+        it 'should contain File[snmpd.sysconfig] with contents "SNMPDOPTS=\'-LS6d -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'"' do
           verify_contents(catalogue, 'snmpd.sysconfig', [
             'SNMPDRUN=yes',
-            'SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'',
+            'SNMPDOPTS=\'-LS6d -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'',
           ])
         end
         it { should contain_service('snmpd').with(
@@ -1090,11 +1090,61 @@ describe 'snmp', :type => 'class' do
     end
 
     describe 'Debian-snmp as snmp user' do
-      it 'should contain File[snmpd.sysconfig] with contents "OPTIONS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
+      it 'should contain File[snmpd.sysconfig] with contents "ExecStart=/usr/sbin/snmp -LS6d -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid"' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-          'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\'', 
+          'ExecStart=/usr/sbin/snmpd -LS6d -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f',
         ])
       end
+    end
+
+    describe 'snmpd.sysconfig in /lib/systemd/system/snmpd.service' do
+        it { should contain_file('snmpd.sysconfig').with(
+          :ensure  => 'present',
+          :mode    => '0644',
+          :owner   => 'root',
+          :group   => 'root',
+          :path    => '/lib/systemd/system/snmpd.service',
+          :require => 'Package[snmpd]',
+          :notify  => 'Service[snmpd]'
+        )}
+    end
+  end
+
+  context 'on a supported osfamily (Debian Jessie), custom parameters' do
+    let :facts do {
+      :osfamily               => 'Debian',
+      :operatingsystem        => 'Debian',
+      :lsbmajdistrelease      => '8',
+      :operatingsystemmajrelease => '8'
+    }
+    end
+
+    describe 'service_ensure => stopped and trap_service_ensure => running' do
+      let :params do {
+        :service_ensure      => 'stopped',
+        :trap_service_ensure => 'running'
+      }
+      end
+    end
+
+    describe 'Debian-snmp as snmp user' do
+      it 'should contain File[snmpd.sysconfig] with contents "OPTIONS="-LS6d -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid""' do
+        verify_contents(catalogue, 'snmpd.sysconfig', [
+          'SNMPDOPTS=\'-LS6d -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'',
+        ])
+      end
+    end
+
+    describe 'snmpd.sysconfig in /etc/default/snmpd' do
+        it { should contain_file('snmpd.sysconfig').with(
+          :ensure  => 'present',
+          :mode    => '0644',
+          :owner   => 'root',
+          :group   => 'root',
+          :path    => '/etc/default/snmpd',
+          :require => 'Package[snmpd]',
+          :notify  => 'Service[snmpd]'
+        )}
     end
   end
 
