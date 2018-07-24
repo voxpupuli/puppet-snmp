@@ -473,6 +473,9 @@ class snmp::params {
       if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease >= '9' {
         $varnetsnmp_owner = 'Debian-snmp'
         $varnetsnmp_group = 'Debian-snmp'
+      } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemmajrelease, '18.04') >= 0 {
+        $varnetsnmp_owner = 'Debian-snmp'
+        $varnetsnmp_group = 'Debian-snmp'
       } else {
         $varnetsnmp_owner       = 'snmp'
         $varnetsnmp_group       = 'snmp'
