@@ -353,6 +353,7 @@ class snmp (
   $agentx_socket                = $snmp::params::agentx_socket,
   $agentx_timeout               = $snmp::params::agentx_timeout,
   $agentx_retries               = $snmp::params::agentx_retries,
+  $snmpv2_enable                = $snmp::params::snmpv2_enable
 ) inherits snmp::params {
   # Validate our booleans
   validate_bool($master)
