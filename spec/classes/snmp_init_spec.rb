@@ -1282,4 +1282,37 @@ describe 'snmp', type: 'class' do
       end
     end
   end
+
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
+      end
+
+      describe 'snmpv2_enable => true' do
+        let(:params) { { snmpv2_enable: true } }
+
+        it 'contains File[snmpd.conf] with expected contents' do
+          verify_contents(catalogue, 'snmpd.conf', [
+                            'com2sec notConfigUser  default       public',
+                            'com2sec6 notConfigUser  default       public',
+                            'group   notConfigGroup v1            notConfigUser',
+                            'group   notConfigGroup v2c           notConfigUser',
+                            'view    systemview    included   .1.3.6.1.2.1.1',
+                            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
+                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none'
+                          ])
+        end
+      end
+      describe 'snmpv2_enable => badvalue' do
+        let(:params) { { snmpv2_enable: 'badvalue' } }
+
+        it 'fails' do
+          expect do
+            is_expected.to raise_error(Puppet::Error, %r{"badvalue" is not a boolean.})
+          end
+        end
+      end
+    end
+  end
 end
