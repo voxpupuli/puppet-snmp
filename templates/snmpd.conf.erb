@@ -60,6 +60,7 @@ rocommunity6 <%= c %> <%= n %>
 # ------------------------------------------------------------------------------
 # VACM Configuration
 #       sec.name       source        community
+<% if @snmpv2_enable -%>
 <% @com2sec.each do |c| -%>
 com2sec <%= c %>
 <% end -%>
@@ -81,6 +82,7 @@ view    <%= view %>
 #       group          context sec.model sec.level prefix read       write notif
 <% @accesses.each do |access| -%>
 access  <%= access %>
+<% end -%>
 <% end -%>
 
 # ------------------------------------------------------------------------------
