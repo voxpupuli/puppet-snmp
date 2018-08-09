@@ -257,6 +257,11 @@
 #   Defines the number of retries for an AgentX request.
 #   Default: 5
 #
+# [*snmpv2_enable*]
+#   Disable com2sec, group, and access in snmpd.conf
+#  
+#   Default: false
+#
 # === Actions:
 #
 # Installs the Net-SNMP daemon package, service, and configuration.
@@ -363,6 +368,7 @@ class snmp (
   validate_bool($service_hasstatus)
   validate_bool($service_hasrestart)
   validate_bool($openmanage_enable)
+  validate_bool($snmpv2_enable)
 
   # Validate our arrays
   validate_array($snmptrapdaddr)
