@@ -260,7 +260,7 @@
 # [*snmpv2_enable*]
 #   Disable com2sec, group, and access in snmpd.conf
 #  
-#   Default: false
+#   Default: true
 #
 # === Actions:
 #
