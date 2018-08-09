@@ -404,6 +404,13 @@ class snmp::params {
     $safe_trap_service_hasrestart = $trap_service_hasrestart
   }
 
+  $snmp_snmpv2_enable = getvar('::snmpv2_enable')
+  if $snmp_openmanage_enable {
+    $snmpv2_enable =  $snmp_snmpv2_enable
+  } else {
+    $snmpv2_enable =  true
+  }
+  
   $template_snmpd_conf = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${::osfamily}.erb"
   $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
