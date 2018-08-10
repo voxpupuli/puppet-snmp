@@ -410,7 +410,7 @@ class snmp::params {
   } else {
     $snmpv2_enable =  true
   }
-  
+ 
   $template_snmpd_conf = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${::osfamily}.erb"
   $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
