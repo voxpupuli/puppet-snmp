@@ -1225,15 +1225,6 @@ describe 'snmp', type: 'class' do
       }
     end
 
-    describe 'service_ensure => stopped and trap_service_ensure => running' do
-      let :params do
-        {
-          service_ensure: 'stopped',
-          trap_service_ensure: 'running'
-        }
-      end
-    end
-
     describe 'Debian-snmp as snmp user' do
       it 'contains File[snmpd.sysconfig] with contents "OPTIONS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
