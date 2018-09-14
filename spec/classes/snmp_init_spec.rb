@@ -17,10 +17,7 @@ describe 'snmp', type: 'class' do
     end
   end
 
-  redhatish = ['RedHat']
-  # redhatish = ['RedHat', 'Fedora']
   debianish = ['Debian']
-  # debianish = ['Debian', 'Ubuntu']
   suseish = ['Suse']
   freebsdish = ['FreeBSD']
   openbsdish = ['OpenBSD']
