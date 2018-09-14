@@ -215,7 +215,7 @@ class snmp::params {
 
   $snmp_extends = getvar('::snmp_extends')
   if $snmp_extends {
-    $extemds =  $::snmp_extends
+    $extends =  $::snmp_extends
   } else {
     $extends =  []
   }
