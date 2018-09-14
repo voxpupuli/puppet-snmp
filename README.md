@@ -1,6 +1,10 @@
 # Net-SNMP
 
-[![Build Status](https://secure.travis-ci.org/razorsedge/puppet-snmp.png?branch=master)](http://travis-ci.org/razorsedge/puppet-snmp)
+[![Build Status](https://travis-ci.org/voxpupuli/puppet-snmp.svg?branch=master)](https://travis-ci.org/voxpupuli/puppet-snmp)
+[![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/snmp.svg)](https://forge.puppetlabs.com/puppet/snmp)
+[![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/snmp.svg)](https://forge.puppetlabs.com/puppet/snmp)
+[![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/snmp.svg)](https://forge.puppetlabs.com/puppet/snmp)
+[![Puppet Forge - scores](https://img.shields.io/puppetforge/f/puppet/snmp.svg)](https://forge.puppetlabs.com/puppet/snmp)
 
 #### Table of Contents
 
@@ -559,7 +563,3 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md) for information on how to contribu
 Copyright (C) 2012 Mike Arnold <mike@razorsedge.org>
 
 Licensed under the Apache License, Version 2.0.
-
-[razorsedge/puppet-snmp on GitHub](https://github.com/razorsedge/puppet-snmp)
-
-[razorsedge/snmp on Puppet Forge](https://forge.puppetlabs.com/razorsedge/snmp)
