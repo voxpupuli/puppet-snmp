@@ -1,57 +1,80 @@
 {
-  "name": "razorsedge-snmp",
+  "name": "puppet-snmp",
   "version": "3.9.0",
-  "author": "razorsedge",
+  "author": "Vox Pupuli",
   "summary": "Simple Network Management Protocol is for monitoring network and computer equipment. Net-SNMP implements v1, v2c, and v3 on both IPv4 and IPv6.",
   "license": "Apache-2.0",
-  "project_page": "https://github.com/razorsedge/puppet-snmp",
-  "issues_url": "https://github.com/razorsedge/puppet-snmp/issues",
-  "source": "https://github.com/razorsedge/puppet-snmp.git",
+  "project_page": "https://github.com/voxpupuli/puppet-snmp",
+  "issues_url": "https://github.com/voxpupuli/puppet-snmp/issues",
+  "source": "https://github.com/voxpupuli/puppet-snmp.git",
   "tags": [ "snmp", "net-snmp", "monitoring" ],
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">=2.3.0 <5.0.0"
+      "version_requirement": ">= 2.3.0 < 5.0.0"
     }
   ],
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
-      "operatingsystemrelease": [ "5", "6", "7" ]
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
     },
     {
       "operatingsystem": "CentOS",
-      "operatingsystemrelease": [ "5", "6", "7" ]
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
     },
     {
       "operatingsystem": "OracleLinux",
-      "operatingsystemrelease": [ "5", "6", "7" ]
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
     },
     {
       "operatingsystem": "FreeBSD",
-      "operatingsystemrelease": [ "9.2", "10.0" ]
+      "operatingsystemrelease": [
+        "9.2",
+        "10.0"
+      ]
     },
     {
       "operatingsystem": "OpenBSD",
-      "operatingsystemrelease": [ "5.9" ]
+      "operatingsystemrelease": [
+        "5.9"
+      ]
     },
     {
       "operatingsystem": "SLES",
-      "operatingsystemrelease": [ "11 SP1" ]
+      "operatingsystemrelease": [
+        "11 SP1"
+      ]
     },
     {
       "operatingsystem": "Debian",
-      "operatingsystemrelease": [ "6", "7", "8", "9" ]
+      "operatingsystemrelease": [
+        "8",
+        "9"
+      ]
     },
     {
       "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [ "12.04", "14.04", "16.04" ]
+      "operatingsystemrelease": [
+        "12.04",
+        "14.04",
+        "16.04"
+      ]
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">=2.7.20 <5.0.0"
+      "version_requirement": ">= 2.7.20 < 5.0.0"
     }
   ]
 }
