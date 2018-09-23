@@ -8,7 +8,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
         operatingsystem: 'CentOS',
         operatingsystemrelease: '6.4',
         lsbmajdistrelease: '6',
-        operatingsystemmajrelease: '6'
+        operatingsystemmajrelease: '6',
       }
     end
 
@@ -18,12 +18,12 @@ describe 'snmp::snmpv3_user', type: 'define' do
       let :params do
         {
           authpass: 'myauthpass',
-          authtype: 'badString'
+          authtype: 'badString',
         }
       end
 
       it 'fails' do
-        expect do
+        expect.to do
           is_expected.to raise_error(Puppet::Error, %r{$authtype must be either SHA or MD5.})
         end
       end
@@ -35,12 +35,12 @@ describe 'snmp::snmpv3_user', type: 'define' do
       let :params do
         {
           authpass: 'myauthpass',
-          privtype: 'badString'
+          privtype: 'badString',
         }
       end
 
       it 'fails' do
-        expect do
+        expect.to do
           is_expected.to raise_error(Puppet::Error, %r{$privtype must be either AES or DES.})
         end
       end
@@ -52,12 +52,12 @@ describe 'snmp::snmpv3_user', type: 'define' do
       let :params do
         {
           authpass: 'myauthpass',
-          daemon: 'badString'
+          daemon: 'badString',
         }
       end
 
       it 'fails' do
-        expect do
+        expect.to do
           is_expected.to raise_error(Puppet::Error, %r{$daemon must be either snmpd or snmptrapd.})
         end
       end
@@ -71,7 +71,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
         operatingsystem: 'CentOS',
         operatingsystemrelease: '6.4',
         lsbmajdistrelease: '6',
-        operatingsystemmajrelease: '6'
+        operatingsystemmajrelease: '6',
       }
     end
 
@@ -80,7 +80,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
 
       let :params do
         {
-          authpass: 'myauthpass'
+          authpass: 'myauthpass',
         }
       end
 
@@ -89,7 +89,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myDEFAULTuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmpd.conf && touch /var/lib/net-snmp/myDEFAULTuser-snmpd',
           creates: '/var/lib/net-snmp/myDEFAULTuser-snmpd',
           require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
+          before: 'Service[snmpd]',
         )
       }
     end
@@ -102,7 +102,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           authpass: 'myauthpass',
           authtype: 'MD5',
           privpass: 'myprivpass',
-          privtype: 'DES'
+          privtype: 'DES',
         }
       end
 
@@ -111,7 +111,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myALLuser MD5 \"myauthpass\" DES \"myprivpass\"" >>/var/lib/net-snmp/snmpd.conf && touch /var/lib/net-snmp/myALLuser-snmpd',
           creates: '/var/lib/net-snmp/myALLuser-snmpd',
           require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
+          before: 'Service[snmpd]',
         )
       }
     end
@@ -122,7 +122,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
       let :params do
         {
           authpass: 'myauthpass',
-          daemon: 'snmptrapd'
+          daemon: 'snmptrapd',
         }
       end
 
@@ -131,7 +131,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           command: 'service snmptrapd stop ; sleep 5 ; echo "createUser myTRAPuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmptrapd.conf && touch /var/lib/net-snmp/myTRAPuser-snmptrapd',
           creates: '/var/lib/net-snmp/myTRAPuser-snmptrapd',
           require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmptrapd]'
+          before: 'Service[snmptrapd]',
         )
       }
     end
@@ -144,7 +144,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
         operatingsystem: 'Ubuntu',
         operatingsystemrelease: '12.04',
         lsbmajdistrelease: '12',
-        operatingsystemmajrelease: '12'
+        operatingsystemmajrelease: '12',
       }
     end
 
@@ -153,7 +153,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
 
       let :params do
         {
-          authpass: 'myauthpass'
+          authpass: 'myauthpass',
         }
       end
 
@@ -162,7 +162,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myDEFAULTuser SHA \"myauthpass\"" >>/var/lib/snmp/snmpd.conf && touch /var/lib/snmp/myDEFAULTuser-snmpd',
           creates: '/var/lib/snmp/myDEFAULTuser-snmpd',
           require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
+          before: 'Service[snmpd]',
         )
       }
     end
@@ -175,7 +175,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           authpass: 'myauthpass',
           authtype: 'MD5',
           privpass: 'myprivpass',
-          privtype: 'DES'
+          privtype: 'DES',
         }
       end
 
@@ -184,7 +184,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myALLuser MD5 \"myauthpass\" DES \"myprivpass\"" >>/var/lib/snmp/snmpd.conf && touch /var/lib/snmp/myALLuser-snmpd',
           creates: '/var/lib/snmp/myALLuser-snmpd',
           require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
+          before: 'Service[snmpd]',
         )
       }
     end
@@ -195,7 +195,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
       let :params do
         {
           authpass: 'myauthpass',
-          daemon: 'snmptrapd'
+          daemon: 'snmptrapd',
         }
       end
 
@@ -204,7 +204,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myTRAPuser SHA \"myauthpass\"" >>/var/lib/snmp/snmptrapd.conf && touch /var/lib/snmp/myTRAPuser-snmptrapd',
           creates: '/var/lib/snmp/myTRAPuser-snmptrapd',
           require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
+          before: 'Service[snmpd]',
         )
       }
     end
@@ -217,7 +217,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
         operatingsystem: 'SLES',
         operatingsystemrelease: '11.1',
         lsbmajdistrelease: '11',
-        operatingsystemmajrelease: '11'
+        operatingsystemmajrelease: '11',
       }
     end
 
@@ -226,7 +226,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
 
       let :params do
         {
-          authpass: 'myauthpass'
+          authpass: 'myauthpass',
         }
       end
 
@@ -235,7 +235,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myDEFAULTuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmpd.conf && touch /var/lib/net-snmp/myDEFAULTuser-snmpd',
           creates: '/var/lib/net-snmp/myDEFAULTuser-snmpd',
           require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
+          before: 'Service[snmpd]',
         )
       }
     end
@@ -248,7 +248,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           authpass: 'myauthpass',
           authtype: 'MD5',
           privpass: 'myprivpass',
-          privtype: 'DES'
+          privtype: 'DES',
         }
       end
 
@@ -257,7 +257,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myALLuser MD5 \"myauthpass\" DES \"myprivpass\"" >>/var/lib/net-snmp/snmpd.conf && touch /var/lib/net-snmp/myALLuser-snmpd',
           creates: '/var/lib/net-snmp/myALLuser-snmpd',
           require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
+          before: 'Service[snmpd]',
         )
       }
     end
@@ -268,7 +268,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
       let :params do
         {
           authpass: 'myauthpass',
-          daemon: 'snmptrapd'
+          daemon: 'snmptrapd',
         }
       end
 
@@ -277,7 +277,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
           command: 'service snmptrapd stop ; sleep 5 ; echo "createUser myTRAPuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmptrapd.conf && touch /var/lib/net-snmp/myTRAPuser-snmptrapd',
           creates: '/var/lib/net-snmp/myTRAPuser-snmptrapd',
           require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmptrapd]'
+          before: 'Service[snmptrapd]',
         )
       }
     end

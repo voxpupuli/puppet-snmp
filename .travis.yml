@@ -4,38 +4,35 @@ dist: trusty
 language: ruby
 cache: bundler
 before_install:
+  - bundle -v
   - rm -f Gemfile.lock
+  - gem update --system
+  - gem --version
+  - bundle -v
 script:
   - 'bundle exec rake $CHECK'
+bundler_args: --without system_tests
+rvm:
+  - 2.4.4
+env:
+  global:
+    - BEAKER_PUPPET_COLLECTION=puppet5 PUPPET_GEM_VERSION="~> 5.0"
 matrix:
   fast_finish: true
   include:
-  - rvm: 2.1.9
-    bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 4.0" CHECK=test PARALLEL_TEST_PROCESSORS=12
-  - rvm: 2.4.4
-    bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 5.0" CHECK=test
-  - rvm: 2.5.1
-    bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 5.0" CHECK=test_with_coveralls
-  - rvm: 2.4.4
-    bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 5.0" CHECK=rubocop
-  - rvm: 2.5.1
-    bundler_args: --without system_tests development release
-    env: PUPPET_VERSION="~> 5.0" CHECK=build DEPLOY_TO_FORGE=yes
+    -
+      env: CHECK="syntax lint metadata_lint check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop"
+    -
+      env: CHECK=parallel_spec
+    -
+      env: PUPPET_GEM_VERSION="~> 4.0" CHECK=parallel_spec
+      rvm: 2.1.9
 branches:
   only:
-  - master
-  - /^v\d/
+    - master
+    - /^v\d/
 notifications:
   email: false
-  irc:
-    on_success: always
-    on_failure: always
-    channels:
-      - "chat.freenode.org#voxpupuli-notifications"
 deploy:
   provider: puppetforge
   user: puppet
@@ -43,7 +40,5 @@ deploy:
     secure: "IdEJp5VThHh+3f+EKA1mRtJva+QPZLMJ/8t+y/xNfmOQzT7tx5z0JAON01GBwa9vfsu5uuI1mnnXIJzMJiY7TNl4ogejQoHK/IYKHHqxVq4lerIcCk/eZCpSy1gMOot6+yfoR42n6oiDbXxu638QtCO80KC/S+4TMA6I+QRHw/Y="
   on:
     tags: true
-    # all_branches is required to use tags
     all_branches: true
-    # Only publish the build marked with "DEPLOY_TO_FORGE"
     condition: "$DEPLOY_TO_FORGE = yes"
