@@ -60,6 +60,7 @@ rocommunity6 <%= c %> <%= n %>
 # ------------------------------------------------------------------------------
 # VACM Configuration
 #       sec.name       source        community
+<% if @snmpv2_enable -%>
 <% @com2sec.each do |c| -%>
 com2sec <%= c %>
 <% end -%>
@@ -73,16 +74,15 @@ com2sec6 <%= c %>
 group   <%= group %>
 <% end -%>
 
-#       name          incl/excl  subtree             mask(optional)
-<% @views.each do |view| -%>
-view    <%= view %>
-<% end -%>
-
 #       group          context sec.model sec.level prefix read       write notif
 <% @accesses.each do |access| -%>
 access  <%= access %>
 <% end -%>
-
+<% end -%>
+#       name          incl/excl  subtree             mask(optional)
+<% @views.each do |view| -%>
+view    <%= view %>
+<% end -%>
 # ------------------------------------------------------------------------------
 # Typed-View Configuration
 

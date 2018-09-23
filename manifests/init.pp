@@ -257,6 +257,11 @@
 #   Defines the number of retries for an AgentX request.
 #   Default: 5
 #
+# [*snmpv2_enable*]
+#   Disable com2sec, group, and access in snmpd.conf
+#  
+#   Default: true
+#
 # === Actions:
 #
 # Installs the Net-SNMP daemon package, service, and configuration.
@@ -353,6 +358,7 @@ class snmp (
   $agentx_socket                = $snmp::params::agentx_socket,
   $agentx_timeout               = $snmp::params::agentx_timeout,
   $agentx_retries               = $snmp::params::agentx_retries,
+  Boolean $snmpv2_enable        = $snmp::params::snmpv2_enable,
 ) inherits snmp::params {
   # Validate our booleans
   validate_bool($master)
