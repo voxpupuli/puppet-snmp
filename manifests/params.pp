@@ -404,6 +404,7 @@ class snmp::params {
     $safe_trap_service_hasrestart = $trap_service_hasrestart
   }
 
+  $snmpv2_enable =  true
   $template_snmpd_conf = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${::osfamily}.erb"
   $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
@@ -470,7 +471,7 @@ class snmp::params {
       $trap_service_name        = 'snmptrapd'
     }
     'Debian': {
-      if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease >= '9' {
+      if $::operatingsystem == 'Debian' and versioncmp($::operatingsystemmajrelease, '9') >= 0 {
         $varnetsnmp_owner = 'Debian-snmp'
         $varnetsnmp_group = 'Debian-snmp'
       } else {
