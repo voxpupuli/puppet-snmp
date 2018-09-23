@@ -11,7 +11,7 @@ describe 'snmp::client', type: 'class' do
     end
 
     it 'fails' do
-      expect do
+      expect.to do
         is_expected.to raise_error(Puppet::Error, %r{Module snmp is not supported on bar})
       end
     end
@@ -202,7 +202,7 @@ describe 'snmp::client', type: 'class' do
       let(:params) { { ensure: 'badvalue' } }
 
       it 'fails' do
-        expect do
+        expect.to do
           is_expected.to raise_error(Puppet::Error, %r{ensure parameter must be present or absent})
         end
       end
@@ -219,7 +219,7 @@ describe 'snmp::client', type: 'class' do
       let(:params) { { autoupgrade: 'badvalue' } }
 
       it 'fails' do
-        expect do
+        expect.to do
           is_expected.to raise_error(Puppet::Error, %r{"badvalue" is not a boolean.})
         end
       end

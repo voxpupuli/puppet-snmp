@@ -23,7 +23,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
       end
 
       it 'fails' do
-        expect do
+        expect.to do
           is_expected.to raise_error(Puppet::Error, %r{$authtype must be either SHA or MD5.})
         end
       end
@@ -40,7 +40,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
       end
 
       it 'fails' do
-        expect do
+        expect.to do
           is_expected.to raise_error(Puppet::Error, %r{$privtype must be either AES or DES.})
         end
       end
@@ -57,7 +57,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
       end
 
       it 'fails' do
-        expect do
+        expect.to do
           is_expected.to raise_error(Puppet::Error, %r{$daemon must be either snmpd or snmptrapd.})
         end
       end
