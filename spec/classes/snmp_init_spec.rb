@@ -6,7 +6,7 @@ describe 'snmp', type: 'class' do
     let :facts do
       {
         osfamily: 'foo',
-        operatingsystem: 'bar'
+        operatingsystem: 'bar',
       }
     end
 
@@ -32,14 +32,14 @@ describe 'snmp', type: 'class' do
           operatingsystemrelease: '5.9',
           fqdn: 'myhost.localdomain',
           lsbmajdistrelease: '5',
-          operatingsystemmajrelease: '5'
+          operatingsystemmajrelease: '5',
         }
       end
 
       it {
         is_expected.to contain_package('snmpd').with(
           ensure: 'present',
-          name: 'net-snmp'
+          name: 'net-snmp',
         )
       }
       it { is_expected.not_to contain_class('snmp::client') }
@@ -50,7 +50,7 @@ describe 'snmp', type: 'class' do
           owner: 'root',
           group: 'root',
           path: '/var/net-snmp',
-          require: 'Package[snmpd]'
+          require: 'Package[snmpd]',
         )
       }
 
@@ -62,7 +62,7 @@ describe 'snmp', type: 'class' do
           group: 'root',
           path: '/etc/snmp/snmpd.conf',
           require: 'Package[snmpd]',
-          notify: 'Service[snmpd]'
+          notify: 'Service[snmpd]',
         )
       }
       # TODO: add more contents for File[snmpd.conf]
@@ -82,7 +82,7 @@ describe 'snmp', type: 'class' do
                           'sysContact Unknown',
                           'sysServices 72',
                           'sysName myhost.localdomain',
-                          'dontLogTCPWrappersConnects no'
+                          'dontLogTCPWrappersConnects no',
                         ])
       end
       it {
@@ -93,12 +93,12 @@ describe 'snmp', type: 'class' do
           group: 'root',
           path: '/etc/sysconfig/snmpd.options',
           require: 'Package[snmpd]',
-          notify: 'Service[snmpd]'
+          notify: 'Service[snmpd]',
         )
       }
       it 'contains File[snmpd.sysconfig] with contents "OPTIONS="-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a""' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'OPTIONS="-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a"'
+                          'OPTIONS="-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a"',
                         ])
       end
       it {
@@ -108,7 +108,7 @@ describe 'snmp', type: 'class' do
           enable: true,
           hasstatus: true,
           hasrestart: true,
-          require: ['Package[snmpd]', 'File[var-net-snmp]']
+          require: ['Package[snmpd]', 'File[var-net-snmp]'],
         )
       }
 
@@ -120,7 +120,7 @@ describe 'snmp', type: 'class' do
           group: 'root',
           path: '/etc/snmp/snmptrapd.conf',
           require: 'Package[snmpd]',
-          notify: 'Service[snmptrapd]'
+          notify: 'Service[snmptrapd]',
         )
       }
       # TODO: add more contents for File[snmptrapd.conf]
@@ -128,7 +128,7 @@ describe 'snmp', type: 'class' do
         verify_contents(catalogue, 'snmptrapd.conf', [
                           'doNotLogTraps no',
                           'authCommunity log,execute,net public',
-                          'disableAuthorization no'
+                          'disableAuthorization no',
                         ])
       end
       it {
@@ -139,12 +139,12 @@ describe 'snmp', type: 'class' do
           group: 'root',
           path: '/etc/sysconfig/snmptrapd.options',
           require: 'Package[snmpd]',
-          notify: 'Service[snmptrapd]'
+          notify: 'Service[snmptrapd]',
         )
       }
       it 'contains File[snmptrapd.sysconfig] with contents "OPTIONS="-Lsd -p /var/run/snmptrapd.pid""' do
         verify_contents(catalogue, 'snmptrapd.sysconfig', [
-                          'OPTIONS="-Lsd -p /var/run/snmptrapd.pid"'
+                          'OPTIONS="-Lsd -p /var/run/snmptrapd.pid"',
                         ])
       end
       it {
@@ -154,7 +154,7 @@ describe 'snmp', type: 'class' do
           enable: false,
           hasstatus: true,
           hasrestart: true,
-          require: ['Package[snmpd]', 'File[var-net-snmp]']
+          require: ['Package[snmpd]', 'File[var-net-snmp]'],
         )
       }
     end
@@ -167,14 +167,14 @@ describe 'snmp', type: 'class' do
           operatingsystemrelease: '6.4',
           fqdn: 'myhost.localdomain',
           lsbmajdistrelease: '6',
-          operatingsystemmajrelease: '6'
+          operatingsystemmajrelease: '6',
         }
       end
 
       it {
         is_expected.to contain_package('snmpd').with(
           ensure: 'present',
-          name: 'net-snmp'
+          name: 'net-snmp',
         )
       }
       it { is_expected.not_to contain_class('snmp::client') }
@@ -185,7 +185,7 @@ describe 'snmp', type: 'class' do
           owner: 'root',
           group: 'root',
           path: '/var/lib/net-snmp',
-          require: 'Package[snmpd]'
+          require: 'Package[snmpd]',
         )
       }
 
@@ -197,7 +197,7 @@ describe 'snmp', type: 'class' do
           group: 'root',
           path: '/etc/snmp/snmpd.conf',
           require: 'Package[snmpd]',
-          notify: 'Service[snmpd]'
+          notify: 'Service[snmpd]',
         )
       }
       # TODO: add more contents for File[snmpd.conf]
@@ -217,7 +217,7 @@ describe 'snmp', type: 'class' do
                           'sysContact Unknown',
                           'sysServices 72',
                           'sysName myhost.localdomain',
-                          'dontLogTCPWrappersConnects no'
+                          'dontLogTCPWrappersConnects no',
                         ])
       end
       it {
@@ -228,12 +228,12 @@ describe 'snmp', type: 'class' do
           group: 'root',
           path: '/etc/sysconfig/snmpd',
           require: 'Package[snmpd]',
-          notify: 'Service[snmpd]'
+          notify: 'Service[snmpd]',
         )
       }
       it 'contains File[snmpd.sysconfig] with contents "OPTIONS="-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid""' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'OPTIONS="-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid"'
+                          'OPTIONS="-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid"',
                         ])
       end
       it {
@@ -243,7 +243,7 @@ describe 'snmp', type: 'class' do
           enable: true,
           hasstatus: true,
           hasrestart: true,
-          require: ['Package[snmpd]', 'File[var-net-snmp]']
+          require: ['Package[snmpd]', 'File[var-net-snmp]'],
         )
       }
 
@@ -255,7 +255,7 @@ describe 'snmp', type: 'class' do
           group: 'root',
           path: '/etc/snmp/snmptrapd.conf',
           require: 'Package[snmpd]',
-          notify: 'Service[snmptrapd]'
+          notify: 'Service[snmptrapd]',
         )
       }
       # TODO: add more contents for File[snmptrapd.conf]
@@ -263,7 +263,7 @@ describe 'snmp', type: 'class' do
         verify_contents(catalogue, 'snmptrapd.conf', [
                           'doNotLogTraps no',
                           'authCommunity log,execute,net public',
-                          'disableAuthorization no'
+                          'disableAuthorization no',
                         ])
       end
       it {
@@ -274,12 +274,12 @@ describe 'snmp', type: 'class' do
           group: 'root',
           path: '/etc/sysconfig/snmptrapd',
           require: 'Package[snmpd]',
-          notify: 'Service[snmptrapd]'
+          notify: 'Service[snmptrapd]',
         )
       }
       it 'contains File[snmptrapd.sysconfig] with contents "OPTIONS="-Lsd -p /var/run/snmptrapd.pid""' do
         verify_contents(catalogue, 'snmptrapd.sysconfig', [
-                          'OPTIONS="-Lsd -p /var/run/snmptrapd.pid"'
+                          'OPTIONS="-Lsd -p /var/run/snmptrapd.pid"',
                         ])
       end
       it {
@@ -289,7 +289,7 @@ describe 'snmp', type: 'class' do
           enable: false,
           hasstatus: true,
           hasrestart: true,
-          require: ['Package[snmpd]', 'File[var-net-snmp]']
+          require: ['Package[snmpd]', 'File[var-net-snmp]'],
         )
       }
     end
@@ -304,14 +304,14 @@ describe 'snmp', type: 'class' do
             operatingsystemrelease: '6.0.7',
             fqdn: 'myhost2.localdomain',
             lsbmajdistrelease: '6',
-            operatingsystemmajrelease: '6'
+            operatingsystemmajrelease: '6',
           }
         end
 
         it {
           is_expected.to contain_package('snmpd').with(
             ensure: 'present',
-            name: 'snmpd'
+            name: 'snmpd',
           )
         }
         it { is_expected.not_to contain_class('snmp::client') }
@@ -322,7 +322,7 @@ describe 'snmp', type: 'class' do
             owner: 'snmp',
             group: 'snmp',
             path: '/var/lib/snmp',
-            require: 'Package[snmpd]'
+            require: 'Package[snmpd]',
           )
         }
 
@@ -334,7 +334,7 @@ describe 'snmp', type: 'class' do
             group: 'root',
             path: '/etc/snmp/snmpd.conf',
             require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
+            notify: 'Service[snmpd]',
           )
         }
         # TODO: add more contents for File[snmpd.conf]
@@ -354,7 +354,7 @@ describe 'snmp', type: 'class' do
                             'sysContact Unknown',
                             'sysServices 72',
                             'sysName myhost2.localdomain',
-                            'dontLogTCPWrappersConnects no'
+                            'dontLogTCPWrappersConnects no',
                           ])
         end
         it {
@@ -365,13 +365,13 @@ describe 'snmp', type: 'class' do
             group: 'root',
             path: '/etc/default/snmpd',
             require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
+            notify: 'Service[snmpd]',
           )
         }
         it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'"' do
           verify_contents(catalogue, 'snmpd.sysconfig', [
                             'SNMPDRUN=yes',
-                            'SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\''
+                            'SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'',
                           ])
         end
         it {
@@ -381,7 +381,7 @@ describe 'snmp', type: 'class' do
             enable: true,
             hasstatus: true,
             hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
+            require: ['Package[snmpd]', 'File[var-net-snmp]'],
           )
         }
 
@@ -393,7 +393,7 @@ describe 'snmp', type: 'class' do
             group: 'root',
             path: '/etc/snmp/snmptrapd.conf',
             require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
+            notify: 'Service[snmpd]',
           )
         }
         # TODO: add more contents for File[snmptrapd.conf]
@@ -401,14 +401,14 @@ describe 'snmp', type: 'class' do
           verify_contents(catalogue, 'snmptrapd.conf', [
                             'doNotLogTraps no',
                             'authCommunity log,execute,net public',
-                            'disableAuthorization no'
+                            'disableAuthorization no',
                           ])
         end
         it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
         it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\'"' do
           verify_contents(catalogue, 'snmpd.sysconfig', [
                             'TRAPDRUN=no',
-                            'TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\''
+                            'TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\'',
                           ])
         end
         it { is_expected.not_to contain_service('snmptrapd') }
@@ -425,14 +425,14 @@ describe 'snmp', type: 'class' do
             operatingsystemrelease: '11.1',
             fqdn: 'myhost3.localdomain',
             lsbmajdistrelease: '6',
-            operatingsystemmajrelease: '6'
+            operatingsystemmajrelease: '6',
           }
         end
 
         it {
           is_expected.to contain_package('snmpd').with(
             ensure: 'present',
-            name: 'net-snmp'
+            name: 'net-snmp',
           )
         }
         it { is_expected.not_to contain_class('snmp::client') }
@@ -443,7 +443,7 @@ describe 'snmp', type: 'class' do
             owner: 'root',
             group: 'root',
             path: '/var/lib/net-snmp',
-            require: 'Package[snmpd]'
+            require: 'Package[snmpd]',
           )
         }
 
@@ -455,7 +455,7 @@ describe 'snmp', type: 'class' do
             group: 'root',
             path: '/etc/snmp/snmpd.conf',
             require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
+            notify: 'Service[snmpd]',
           )
         }
         # TODO: add more contents for File[snmpd.conf]
@@ -475,7 +475,7 @@ describe 'snmp', type: 'class' do
                             'sysContact Unknown',
                             'sysServices 72',
                             'sysName myhost3.localdomain',
-                            'dontLogTCPWrappersConnects no'
+                            'dontLogTCPWrappersConnects no',
                           ])
         end
         it {
@@ -486,12 +486,12 @@ describe 'snmp', type: 'class' do
             group: 'root',
             path: '/etc/sysconfig/net-snmp',
             require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
+            notify: 'Service[snmpd]',
           )
         }
         it 'contains File[snmpd.sysconfig] with contents "SNMPD_LOGLEVEL="d""' do
           verify_contents(catalogue, 'snmpd.sysconfig', [
-                            'SNMPD_LOGLEVEL="d"'
+                            'SNMPD_LOGLEVEL="d"',
                           ])
         end
         it {
@@ -501,7 +501,7 @@ describe 'snmp', type: 'class' do
             enable: true,
             hasstatus: true,
             hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
+            require: ['Package[snmpd]', 'File[var-net-snmp]'],
           )
         }
 
@@ -513,7 +513,7 @@ describe 'snmp', type: 'class' do
             group: 'root',
             path: '/etc/snmp/snmptrapd.conf',
             require: 'Package[snmpd]',
-            notify: 'Service[snmptrapd]'
+            notify: 'Service[snmptrapd]',
           )
         }
         # TODO: add more contents for File[snmptrapd.conf]
@@ -521,7 +521,7 @@ describe 'snmp', type: 'class' do
           verify_contents(catalogue, 'snmptrapd.conf', [
                             'doNotLogTraps no',
                             'authCommunity log,execute,net public',
-                            'disableAuthorization no'
+                            'disableAuthorization no',
                           ])
         end
         it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
@@ -529,7 +529,7 @@ describe 'snmp', type: 'class' do
           is_expected.to contain_exec('install /etc/init.d/snmptrapd').with(
             command: '/usr/bin/install -o 0 -g 0 -m0755 -p /usr/share/doc/packages/net-snmp/rc.snmptrapd /etc/init.d/snmptrapd',
             creates: '/etc/init.d/snmptrapd',
-            require: 'Package[snmpd]'
+            require: 'Package[snmpd]',
           )
         }
         it {
@@ -539,7 +539,7 @@ describe 'snmp', type: 'class' do
             enable: false,
             hasstatus: true,
             hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]', 'Exec[install /etc/init.d/snmptrapd]']
+            require: ['Package[snmpd]', 'File[var-net-snmp]', 'Exec[install /etc/init.d/snmptrapd]'],
           )
         }
       end
@@ -554,14 +554,14 @@ describe 'snmp', type: 'class' do
             operatingsystem: os,
             operatingsystemrelease: '9.2',
             fqdn: 'myhost4.localdomain',
-            operatingsystemmajrelease: '9'
+            operatingsystemmajrelease: '9',
           }
         end
 
         it {
           is_expected.to contain_package('snmpd').with(
             ensure: 'present',
-            name: 'net-mgmt/net-snmp'
+            name: 'net-mgmt/net-snmp',
           )
         }
         it { is_expected.not_to contain_class('snmp::client') }
@@ -572,7 +572,7 @@ describe 'snmp', type: 'class' do
             owner: 'root',
             group: 'wheel',
             path: '/var/net-snmp',
-            require: 'Package[snmpd]'
+            require: 'Package[snmpd]',
           )
         }
 
@@ -584,7 +584,7 @@ describe 'snmp', type: 'class' do
             group: 'wheel',
             path: '/usr/local/etc/snmp/snmpd.conf',
             require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
+            notify: 'Service[snmpd]',
           )
         }
         # TODO: add more contents for File[snmpd.conf]
@@ -604,7 +604,7 @@ describe 'snmp', type: 'class' do
                             'sysContact Unknown',
                             'sysServices 72',
                             'sysName myhost4.localdomain',
-                            'dontLogTCPWrappersConnects no'
+                            'dontLogTCPWrappersConnects no',
                           ])
         end
         it {
@@ -614,7 +614,7 @@ describe 'snmp', type: 'class' do
             enable: true,
             hasstatus: true,
             hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
+            require: ['Package[snmpd]', 'File[var-net-snmp]'],
           )
         }
 
@@ -626,7 +626,7 @@ describe 'snmp', type: 'class' do
             group: 'wheel',
             path: '/usr/local/etc/snmp/snmptrapd.conf',
             require: 'Package[snmpd]',
-            notify: 'Service[snmptrapd]'
+            notify: 'Service[snmptrapd]',
           )
         }
         # TODO: add more contents for File[snmptrapd.conf]
@@ -634,7 +634,7 @@ describe 'snmp', type: 'class' do
           verify_contents(catalogue, 'snmptrapd.conf', [
                             'doNotLogTraps no',
                             'authCommunity log,execute,net public',
-                            'disableAuthorization no'
+                            'disableAuthorization no',
                           ])
         end
         it {
@@ -644,7 +644,7 @@ describe 'snmp', type: 'class' do
             enable: false,
             hasstatus: true,
             hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
+            require: ['Package[snmpd]', 'File[var-net-snmp]'],
           )
         }
       end
@@ -659,14 +659,14 @@ describe 'snmp', type: 'class' do
             operatingsystem: os,
             operatingsystemrelease: '5.9',
             fqdn: 'myhost4.localdomain',
-            operatingsystemmajrelease: '5'
+            operatingsystemmajrelease: '5',
           }
         end
 
         it {
           is_expected.to contain_package('snmpd').with(
             ensure: 'present',
-            name: 'net-snmp'
+            name: 'net-snmp',
           )
         }
         it { is_expected.not_to contain_class('snmp::client') }
@@ -677,7 +677,7 @@ describe 'snmp', type: 'class' do
             owner: '_netsnmp',
             group: 'wheel',
             path: '/var/net-snmp',
-            require: 'Package[snmpd]'
+            require: 'Package[snmpd]',
           )
         }
 
@@ -689,7 +689,7 @@ describe 'snmp', type: 'class' do
             group: 'wheel',
             path: '/etc/snmp/snmpd.conf',
             require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
+            notify: 'Service[snmpd]',
           )
         }
         # TODO: add more contents for File[snmpd.conf]
@@ -709,7 +709,7 @@ describe 'snmp', type: 'class' do
                             'sysContact Unknown',
                             'sysServices 72',
                             'sysName myhost4.localdomain',
-                            'dontLogTCPWrappersConnects no'
+                            'dontLogTCPWrappersConnects no',
                           ])
         end
         it {
@@ -719,7 +719,7 @@ describe 'snmp', type: 'class' do
             enable: true,
             hasstatus: true,
             hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
+            require: ['Package[snmpd]', 'File[var-net-snmp]'],
           )
         }
 
@@ -731,7 +731,7 @@ describe 'snmp', type: 'class' do
             group: 'wheel',
             path: '/etc/snmp/snmptrapd.conf',
             require: 'Package[snmpd]',
-            notify: 'Service[snmptrapd]'
+            notify: 'Service[snmptrapd]',
           )
         }
         # TODO: add more contents for File[snmptrapd.conf]
@@ -739,7 +739,7 @@ describe 'snmp', type: 'class' do
           verify_contents(catalogue, 'snmptrapd.conf', [
                             'doNotLogTraps no',
                             'authCommunity log,execute,net public',
-                            'disableAuthorization no'
+                            'disableAuthorization no',
                           ])
         end
         it {
@@ -749,7 +749,7 @@ describe 'snmp', type: 'class' do
             enable: false,
             hasstatus: true,
             hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
+            require: ['Package[snmpd]', 'File[var-net-snmp]'],
           )
         }
       end
@@ -763,7 +763,7 @@ describe 'snmp', type: 'class' do
         operatingsystem: 'RedHat',
         operatingsystemrelease: '6.4',
         lsbmajdistrelease: '6',
-        operatingsystemmajrelease: '6'
+        operatingsystemmajrelease: '6',
       }
     end
 
@@ -846,7 +846,7 @@ describe 'snmp', type: 'class' do
         is_expected.to contain_class('snmp::client').with(
           ensure: 'present',
           autoupgrade: 'false',
-          snmp_config: []
+          snmp_config: [],
         )
       }
     end
@@ -858,7 +858,7 @@ describe 'snmp', type: 'class' do
         is_expected.to contain_class('snmp::client').with(
           ensure: 'present',
           autoupgrade: 'false',
-          snmp_config: []
+          snmp_config: [],
         )
       }
     end
@@ -869,7 +869,7 @@ describe 'snmp', type: 'class' do
           manage_client: true,
           ensure: 'absent',
           autoupgrade: true,
-          snmp_config: ['defVersion 2c', 'defCommunity public']
+          snmp_config: ['defVersion 2c', 'defCommunity public'],
         }
       end
 
@@ -877,7 +877,7 @@ describe 'snmp', type: 'class' do
         is_expected.to contain_class('snmp::client').with(
           ensure: 'absent',
           autoupgrade: 'true',
-          snmp_config: ['defVersion 2c', 'defCommunity public']
+          snmp_config: ['defVersion 2c', 'defCommunity public'],
         )
       }
     end
@@ -900,7 +900,7 @@ describe 'snmp', type: 'class' do
       let :params do
         {
           service_ensure: 'stopped',
-          trap_service_ensure: 'running'
+          trap_service_ensure: 'running',
         }
       end
 
@@ -914,7 +914,7 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmpd.sysconfig') }
       it 'contains File[snmpd.sysconfig] with contents "OPTIONS=\'blah\'"' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'OPTIONS="blah"'
+                          'OPTIONS="blah"',
                         ])
       end
     end
@@ -925,7 +925,7 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmptrapd.sysconfig') }
       it 'contains File[snmptrapd.sysconfig] with contents "OPTIONS=\'bleh\'"' do
         verify_contents(catalogue, 'snmptrapd.sysconfig', [
-                          'OPTIONS="bleh"'
+                          'OPTIONS="bleh"',
                         ])
       end
     end
@@ -935,7 +935,7 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "com2sec SomeString"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'com2sec SomeString'
+                          'com2sec SomeString',
                         ])
       end
     end
@@ -945,7 +945,7 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "com2sec6 SomeString"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'com2sec6 SomeString'
+                          'com2sec6 SomeString',
                         ])
       end
     end
@@ -955,29 +955,29 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "group SomeString"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'group   SomeString'
+                          'group   SomeString',
                         ])
       end
     end
 
     describe 'views => [ "SomeArray1", "SomeArray2" ]' do
-      let(:params) { { views: %w[SomeArray1 SomeArray2] } }
+      let(:params) { { views: ['SomeArray1', 'SomeArray2'] } }
 
       it 'contains File[snmpd.conf] with contents from array' do
         verify_contents(catalogue, 'snmpd.conf', [
                           'view    SomeArray1',
-                          'view    SomeArray2'
+                          'view    SomeArray2',
                         ])
       end
     end
 
     describe 'accesses => [ "SomeArray1", "SomeArray2" ]' do
-      let(:params) { { accesses: %w[SomeArray1 SomeArray2] } }
+      let(:params) { { accesses: ['SomeArray1', 'SomeArray2'] } }
 
       it 'contains File[snmpd.conf] with contents from array' do
         verify_contents(catalogue, 'snmpd.conf', [
                           'access  SomeArray1',
-                          'access  SomeArray2'
+                          'access  SomeArray2',
                         ])
       end
     end
@@ -987,18 +987,18 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "dlmod SomeString"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'dlmod SomeString'
+                          'dlmod SomeString',
                         ])
       end
     end
 
     describe 'extends => [ "SomeArray1", "SomeArray2" ]' do
-      let(:params) { { extends: %w[SomeArray1 SomeArray2] } }
+      let(:params) { { extends: ['SomeArray1', 'SomeArray2'] } }
 
       it 'contains File[snmpd.conf] with contents from array' do
         verify_contents(catalogue, 'snmpd.conf', [
                           'extend SomeArray1',
-                          'extend SomeArray2'
+                          'extend SomeArray2',
                         ])
       end
     end
@@ -1008,12 +1008,12 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "smuxpeer .1.3.6.1.4.1.674.10892.1"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'smuxpeer .1.3.6.1.4.1.674.10892.1'
+                          'smuxpeer .1.3.6.1.4.1.674.10892.1',
                         ])
       end
       it 'contains File[snmpd.conf] with contents "smuxpeer .1.3.6.1.4.1.674.10893.1"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'smuxpeer .1.3.6.1.4.1.674.10893.1'
+                          'smuxpeer .1.3.6.1.4.1.674.10893.1',
                         ])
       end
     end
@@ -1023,7 +1023,7 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "agentaddress 1.2.3.4,8.6.7.5:222"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'agentaddress 1.2.3.4,8.6.7.5:222'
+                          'agentaddress 1.2.3.4,8.6.7.5:222',
                         ])
       end
     end
@@ -1033,7 +1033,7 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "dontLogTCPWrappersConnects yes' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'dontLogTCPWrappersConnects yes'
+                          'dontLogTCPWrappersConnects yes',
                         ])
       end
     end
@@ -1043,7 +1043,7 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmptrapd.conf] with contents "snmpTrapdAddr 5.6.7.8,2.3.4.5:3333"' do
         verify_contents(catalogue, 'snmptrapd.conf', [
-                          'snmpTrapdAddr 5.6.7.8,2.3.4.5:3333'
+                          'snmpTrapdAddr 5.6.7.8,2.3.4.5:3333',
                         ])
       end
     end
@@ -1054,7 +1054,7 @@ describe 'snmp', type: 'class' do
       it 'contains File[snmpd.conf] with contents "option1" and "option 2"' do
         verify_contents(catalogue, 'snmpd.conf', [
                           'option 1',
-                          'option 2'
+                          'option 2',
                         ])
       end
     end
@@ -1065,7 +1065,7 @@ describe 'snmp', type: 'class' do
       it 'contains File[snmptrapd.conf] with contents "option 3" and "option 4"' do
         verify_contents(catalogue, 'snmptrapd.conf', [
                           'option 3',
-                          'option 4'
+                          'option 4',
                         ])
       end
     end
@@ -1076,7 +1076,7 @@ describe 'snmp', type: 'class' do
       it 'contains File[snmpd.conf] with contents "127.0.0.1" and "192.168.1.1/24"' do
         verify_contents(catalogue, 'snmpd.conf', [
                           'rocommunity public 127.0.0.1',
-                          'rocommunity public 192.168.1.1/24'
+                          'rocommunity public 192.168.1.1/24',
                         ])
       end
     end
@@ -1086,24 +1086,24 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "127.0.0.2"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'rocommunity public 127.0.0.2'
+                          'rocommunity public 127.0.0.2',
                         ])
       end
     end
 
     describe 'ro_community => [ "a", "b", ] and ro_network => "127.0.0.2"' do
-      let(:params) { { ro_community: %w[a b], ro_network: '127.0.0.2' } }
+      let(:params) { { ro_community: ['a', 'b'], ro_network: '127.0.0.2' } }
 
       it 'contains File[snmpd.conf] with contents "a 127.0.0.2" and "b 127.0.0.2"' do
         verify_contents(catalogue, 'snmpd.conf', [
                           'rocommunity a 127.0.0.2',
-                          'rocommunity b 127.0.0.2'
+                          'rocommunity b 127.0.0.2',
                         ])
       end
       it 'contains File[snmptrapd.conf] with contents "a" and "b"' do
         verify_contents(catalogue, 'snmptrapd.conf', [
                           'authCommunity log,execute,net a',
-                          'authCommunity log,execute,net b'
+                          'authCommunity log,execute,net b',
                         ])
       end
     end
@@ -1113,7 +1113,7 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "master agentx"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'master agentx'
+                          'master agentx',
                         ])
       end
     end
@@ -1126,7 +1126,7 @@ describe 'snmp', type: 'class' do
           agentx_ping_interval: '5',
           agentx_socket: 'unix:/var/agentx/master',
           agentx_timeout: '10',
-          agentx_retries: '10'
+          agentx_retries: '10',
         }
       end
 
@@ -1137,7 +1137,7 @@ describe 'snmp', type: 'class' do
                           'agentXPingInterval 5',
                           'agentXSocket unix:/var/agentx/master',
                           'agentXTimeout 10',
-                          'agentXRetries 10'
+                          'agentXRetries 10',
                         ])
       end
     end
@@ -1150,7 +1150,7 @@ describe 'snmp', type: 'class' do
           agentx_ping_interval: '5',
           agentx_socket: 'unix:/var/agentx/master',
           agentx_timeout: '10',
-          agentx_retries: '10'
+          agentx_retries: '10',
         }
       end
 
@@ -1170,7 +1170,7 @@ describe 'snmp', type: 'class' do
         operatingsystem: 'Debian',
         operatingsystemrelease: '7.0',
         lsbmajdistrelease: '7',
-        operatingsystemmajrelease: '7'
+        operatingsystemmajrelease: '7',
       }
     end
 
@@ -1178,7 +1178,7 @@ describe 'snmp', type: 'class' do
       let :params do
         {
           service_ensure: 'stopped',
-          trap_service_ensure: 'running'
+          trap_service_ensure: 'running',
         }
       end
 
@@ -1187,7 +1187,7 @@ describe 'snmp', type: 'class' do
       it 'contains File[snmpd.sysconfig] with contents "SNMPDRUN=no" and "TRAPDRUN=yes"' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
                           'SNMPDRUN=no',
-                          'TRAPDRUN=yes'
+                          'TRAPDRUN=yes',
                         ])
       end
     end
@@ -1198,7 +1198,7 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmpd.sysconfig') }
       it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'blah\'"' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'SNMPDOPTS=\'blah\''
+                          'SNMPDOPTS=\'blah\'',
                         ])
       end
     end
@@ -1209,7 +1209,7 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmpd.sysconfig') }
       it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'bleh\'"' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'TRAPDOPTS=\'bleh\''
+                          'TRAPDOPTS=\'bleh\'',
                         ])
       end
     end
@@ -1221,14 +1221,14 @@ describe 'snmp', type: 'class' do
         osfamily: 'Debian',
         operatingsystem: 'Debian',
         lsbmajdistrelease: '9',
-        operatingsystemmajrelease: '9'
+        operatingsystemmajrelease: '9',
       }
     end
 
     describe 'Debian-snmp as snmp user' do
       it 'contains File[snmpd.sysconfig] with contents "OPTIONS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\''
+                          'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\'',
                         ])
       end
     end
@@ -1241,7 +1241,7 @@ describe 'snmp', type: 'class' do
         operatingsystem: 'Suse',
         operatingsystemrelease: '11.1',
         lsbmajdistrelease: '11',
-        operatingsystemmajrelease: '11'
+        operatingsystemmajrelease: '11',
       }
     end
 
@@ -1263,7 +1263,7 @@ describe 'snmp', type: 'class' do
       let :params do
         {
           service_ensure: 'stopped',
-          trap_service_ensure: 'running'
+          trap_service_ensure: 'running',
         }
       end
 
@@ -1277,7 +1277,7 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmpd.sysconfig') }
       it 'contains File[snmpd.sysconfig] with contents "SNMPD_LOGLEVEL="blah""' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'SNMPD_LOGLEVEL="blah"'
+                          'SNMPD_LOGLEVEL="blah"',
                         ])
       end
     end
@@ -1300,7 +1300,7 @@ describe 'snmp', type: 'class' do
                             'group   notConfigGroup v2c           notConfigUser',
                             'view    systemview    included   .1.3.6.1.2.1.1',
                             'view    systemview    included   .1.3.6.1.2.1.25.1.1',
-                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none'
+                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
                           ])
         end
       end

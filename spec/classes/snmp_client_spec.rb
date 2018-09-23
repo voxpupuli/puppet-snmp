@@ -6,7 +6,7 @@ describe 'snmp::client', type: 'class' do
     let :facts do
       {
         osfamily: 'foo',
-        operatingsystem: 'bar'
+        operatingsystem: 'bar',
       }
     end
 
@@ -35,14 +35,14 @@ describe 'snmp::client', type: 'class' do
             operatingsystem: os,
             operatingsystemrelease: '6.4',
             lsbmajdistrelease: '6',
-            operatingsystemmajrelease: '6'
+            operatingsystemmajrelease: '6',
           }
         end
 
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
-            name: 'net-snmp-utils'
+            name: 'net-snmp-utils',
           )
         }
         it {
@@ -52,7 +52,7 @@ describe 'snmp::client', type: 'class' do
             owner: 'root',
             group: 'root',
             path: '/etc/snmp/snmp.conf',
-            require: ['Package[snmp-client]', 'File[/etc/snmp]']
+            require: ['Package[snmp-client]', 'File[/etc/snmp]'],
           )
         }
       end
@@ -67,14 +67,14 @@ describe 'snmp::client', type: 'class' do
             operatingsystem: os,
             operatingsystemrelease: '6.0.7',
             lsbmajdistrelease: '6',
-            operatingsystemmajrelease: '6'
+            operatingsystemmajrelease: '6',
           }
         end
 
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
-            name: 'snmp'
+            name: 'snmp',
           )
         }
         it {
@@ -84,7 +84,7 @@ describe 'snmp::client', type: 'class' do
             owner: 'root',
             group: 'root',
             path: '/etc/snmp/snmp.conf',
-            require: 'Package[snmp-client]'
+            require: 'Package[snmp-client]',
           )
         }
       end
@@ -99,7 +99,7 @@ describe 'snmp::client', type: 'class' do
             operatingsystem: os,
             operatingsystemrelease: '11.1',
             lsbmajdistrelease: '11',
-            operatingsystemmajrelease: '11'
+            operatingsystemmajrelease: '11',
           }
         end
 
@@ -111,7 +111,7 @@ describe 'snmp::client', type: 'class' do
             owner: 'root',
             group: 'root',
             path: '/etc/snmp/snmp.conf',
-            require: nil
+            require: nil,
           )
         }
       end
@@ -125,14 +125,14 @@ describe 'snmp::client', type: 'class' do
             osfamily: 'FreeBSD',
             operatingsystem: os,
             operatingsystemrelease: '9.2',
-            operatingsystemmajrelease: '9'
+            operatingsystemmajrelease: '9',
           }
         end
 
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
-            name: 'net-mgmt/net-snmp'
+            name: 'net-mgmt/net-snmp',
           )
         }
         it {
@@ -142,7 +142,7 @@ describe 'snmp::client', type: 'class' do
             owner: 'root',
             group: 'wheel',
             path: '/usr/local/etc/snmp/snmp.conf',
-            require: nil
+            require: nil,
           )
         }
       end
@@ -156,14 +156,14 @@ describe 'snmp::client', type: 'class' do
             osfamily: 'OpenBSD',
             operatingsystem: os,
             operatingsystemrelease: '5.9',
-            operatingsystemmajrelease: '5'
+            operatingsystemmajrelease: '5',
           }
         end
 
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
-            name: 'net-snmp'
+            name: 'net-snmp',
           )
         }
         it {
@@ -173,7 +173,7 @@ describe 'snmp::client', type: 'class' do
             owner: 'root',
             group: 'wheel',
             path: '/etc/snmp/snmp.conf',
-            require: nil
+            require: nil,
           )
         }
       end
@@ -187,7 +187,7 @@ describe 'snmp::client', type: 'class' do
         operatingsystem: 'RedHat',
         operatingsystemrelease: '6.4',
         lsbmajdistrelease: '6',
-        operatingsystemmajrelease: '6'
+        operatingsystemmajrelease: '6',
       }
     end
 
@@ -232,7 +232,7 @@ describe 'snmp::client', type: 'class' do
       it 'contains File[snmp.conf] with contents "defVersion 2c" and "defCommunity public"' do
         verify_contents(catalogue, 'snmp.conf', [
                           'defVersion 2c',
-                          'defCommunity public'
+                          'defCommunity public',
                         ])
       end
     end

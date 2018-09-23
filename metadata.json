@@ -4,10 +4,9 @@
   "author": "Vox Pupuli",
   "summary": "Simple Network Management Protocol is for monitoring network and computer equipment. Net-SNMP implements v1, v2c, and v3 on both IPv4 and IPv6.",
   "license": "Apache-2.0",
+  "source": "https://github.com/voxpupuli/puppet-snmp.git",
   "project_page": "https://github.com/voxpupuli/puppet-snmp",
   "issues_url": "https://github.com/voxpupuli/puppet-snmp/issues",
-  "source": "https://github.com/voxpupuli/puppet-snmp.git",
-  "tags": [ "snmp", "net-snmp", "monitoring" ],
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
@@ -75,5 +74,13 @@
       "name": "puppet",
       "version_requirement": ">= 4.10.0 < 6.0.0"
     }
-  ]
+  ],
+  "tags": [
+    "snmp",
+    "net-snmp",
+    "monitoring"
+  ],
+  "pdk-version": "1.7.0",
+  "template-url": "file://C:/Program Files/Puppet Labs/DevelopmentKit/share/cache/pdk-templates.git",
+  "template-ref": "1.7.0-0-g57412ed"
 }

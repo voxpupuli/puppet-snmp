@@ -1,92 +1,75 @@
 require 'puppetlabs_spec_helper/rake_tasks'
+require 'puppet-syntax/tasks/puppet-syntax'
+require 'puppet_blacksmith/rake_tasks' if Bundler.rubygems.find_name('puppet-blacksmith').any?
+require 'github_changelog_generator/task' if Bundler.rubygems.find_name('github_changelog_generator').any?
 
-# load optional tasks for releases
-# only available if gem group releases is installed
-begin
-  require 'puppet_blacksmith/rake_tasks'
-  require 'voxpupuli/release/rake_tasks'
-  require 'puppet-strings/tasks'
-rescue LoadError
+def changelog_user
+  return unless Rake.application.top_level_tasks.include? "changelog"
+  returnVal = nil || JSON.load(File.read('metadata.json'))['author']
+  raise "unable to find the changelog_user in .sync.yml, or the author in metadata.json" if returnVal.nil?
+  puts "GitHubChangelogGenerator user:#{returnVal}"
+  returnVal
 end
 
-PuppetLint.configuration.log_format = '%{path}:%{line}:%{check}:%{KIND}:%{message}'
-PuppetLint.configuration.fail_on_warnings = true
-PuppetLint.configuration.send('relative')
-PuppetLint.configuration.send('disable_140chars')
-PuppetLint.configuration.send('disable_class_inherits_from_params_class')
-PuppetLint.configuration.send('disable_documentation')
-PuppetLint.configuration.send('disable_single_quote_string_with_variables')
-
-exclude_paths = %w(
-  pkg/**/*
-  vendor/**/*
-  .vendor/**/*
-  spec/**/*
-)
-PuppetLint.configuration.ignore_paths = exclude_paths
-PuppetSyntax.exclude_paths = exclude_paths
-
-desc 'Auto-correct puppet-lint offenses'
-task 'lint:auto_correct' do
-  PuppetLint.configuration.fix = true
-  Rake::Task[:lint].invoke
+def changelog_project
+  return unless Rake.application.top_level_tasks.include? "changelog"
+  returnVal = nil || JSON.load(File.read('metadata.json'))['name']
+  raise "unable to find the changelog_project in .sync.yml or the name in metadata.json" if returnVal.nil?
+  puts "GitHubChangelogGenerator project:#{returnVal}"
+  returnVal
 end
 
-desc 'Run acceptance tests'
-RSpec::Core::RakeTask.new(:acceptance) do |t|
-  t.pattern = 'spec/acceptance'
+def changelog_future_release
+  return unless Rake.application.top_level_tasks.include? "changelog"
+  returnVal = JSON.load(File.read('metadata.json'))['version']
+  raise "unable to find the future_release (version) in metadata.json" if returnVal.nil?
+  puts "GitHubChangelogGenerator future_release:#{returnVal}"
+  returnVal
 end
 
-desc 'Run tests metadata_lint, release_checks'
-task test: [
-  :metadata_lint,
-  :release_checks,
-]
+PuppetLint.configuration.send('disable_relative')
 
-desc "Run main 'test' task and report merged results to coveralls"
-task test_with_coveralls: [:test] do
-  if Dir.exist?(File.expand_path('../lib', __FILE__))
-    require 'coveralls/rake/task'
-    Coveralls::RakeTask.new
-    Rake::Task['coveralls:push'].invoke
-  else
-    puts 'Skipping reporting to coveralls.  Module has no lib dir'
-  end
-end
-
-desc "Print supported beaker sets"
-task 'beaker_sets', [:directory] do |t, args|
-  directory = args[:directory]
-
-  metadata = JSON.load(File.read('metadata.json'))
-
-  (metadata['operatingsystem_support'] || []).each do |os|
-    (os['operatingsystemrelease'] || []).each do |release|
-      if directory
-        beaker_set = "#{directory}/#{os['operatingsystem'].downcase}-#{release}"
-      else
-        beaker_set = "#{os['operatingsystem'].downcase}-#{release}-x64"
-      end
-
-      filename = "spec/acceptance/nodesets/#{beaker_set}.yml"
-
-      puts beaker_set if File.exists? filename
-    end
-  end
-end
-
-begin
-  require 'github_changelog_generator/task'
+if Bundler.rubygems.find_name('github_changelog_generator').any?
   GitHubChangelogGenerator::RakeTask.new :changelog do |config|
-    version = (Blacksmith::Modulefile.new).version
-    config.future_release = "v#{version}" if version =~ /^\d+\.\d+.\d+$/
-    config.header = "# Changelog\n\nAll notable changes to this project will be documented in this file.\nEach new release typically also includes the latest modulesync defaults.\nThese should not affect the functionality of the module."
-    config.exclude_labels = %w{duplicate question invalid wontfix wont-fix modulesync skip-changelog}
-    config.user = 'voxpupuli'
-    metadata_json = File.join(File.dirname(__FILE__), 'metadata.json')
-    metadata = JSON.load(File.read(metadata_json))
-    config.project = metadata['name']
+    raise "Set CHANGELOG_GITHUB_TOKEN environment variable eg 'export CHANGELOG_GITHUB_TOKEN=valid_token_here'" if Rake.application.top_level_tasks.include? "changelog" and ENV['CHANGELOG_GITHUB_TOKEN'].nil?
+    config.user = "#{changelog_user}"
+    config.project = "#{changelog_project}"
+    config.future_release = "#{changelog_future_release}"
+    config.exclude_labels = ['maintenance']
+    config.header = "# Change log\n\nAll notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org)."
+    config.add_pr_wo_labels = true
+    config.issues = false
+    config.merge_prefix = "### UNCATEGORIZED PRS; GO LABEL THEM"
+    config.configure_sections = {
+      "Changed" => {
+        "prefix" => "### Changed",
+        "labels" => ["backwards-incompatible"],
+      },
+      "Added" => {
+        "prefix" => "### Added",
+        "labels" => ["feature", "enhancement"],
+      },
+      "Fixed" => {
+        "prefix" => "### Fixed",
+        "labels" => ["bugfix"],
+      },
+    }
   end
-rescue LoadError
+else
+  desc 'Generate a Changelog from GitHub'
+  task :changelog do
+    raise <<EOM
+The changelog tasks depends on unreleased features of the github_changelog_generator gem.
+Please manually add it to your .sync.yml for now, and run `pdk update`:
+---
+Gemfile:
+  optional:
+    ':development':
+      - gem: 'github_changelog_generator'
+        git: 'https://github.com/skywinder/github-changelog-generator'
+        ref: '20ee04ba1234e9e83eb2ffb5056e23d641c7a018'
+        condition: "Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.2.2')"
+EOM
+  end
 end
-# vim: syntax=ruby
+
