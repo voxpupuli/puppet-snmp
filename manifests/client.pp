@@ -46,17 +46,14 @@
 # Copyright (C) 2012 Mike Arnold, unless otherwise noted.
 #
 class snmp::client (
-  $snmp_config        = $snmp::params::snmp_config,
-  $ensure             = $snmp::params::ensure,
-  $autoupgrade        = $snmp::params::safe_autoupgrade,
-  $package_name       = $snmp::params::client_package_name
+  $snmp_config         = $snmp::params::snmp_config,
+  $ensure              = $snmp::params::ensure,
+  Boolean $autoupgrade = $snmp::params::safe_autoupgrade,
+  $package_name        = $snmp::params::client_package_name
 ) inherits snmp::params {
-  # Validate our booleans
-  validate_bool($autoupgrade)
-
   case $ensure {
     /(present)/: {
-      if $autoupgrade == true {
+      if $autoupgrade {
         $package_ensure = 'latest'
       } else {
         $package_ensure = 'present'
