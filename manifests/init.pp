@@ -327,7 +327,6 @@ class snmp (
   $trap_handlers                = $snmp::params::trap_handlers,
   $trap_forwards                = $snmp::params::trap_forwards,
   $snmptrapd_config             = $snmp::params::snmptrapd_config,
-  $install_client               = $snmp::params::install_client,
   $manage_client                = $snmp::params::safe_manage_client,
   $snmp_config                  = $snmp::params::snmp_config,
   $ensure                       = $snmp::params::ensure,
@@ -400,15 +399,6 @@ class snmp (
   validate_re($do_not_log_traps, $states, '$do_not_log_traps must be either yes or no.')
   validate_re($do_not_log_tcpwrappers, $states, '$do_not_log_tcpwrappers must be either yes or no.')
 
-  # Deprecated backwards-compatibility
-  if $install_client != undef {
-    validate_bool($install_client)
-    warning('snmp: parameter install_client is deprecated; please use manage_client')
-    $real_manage_client = $install_client
-  } else {
-    $real_manage_client = $manage_client
-  }
-
   case $ensure {
     /(present)/: {
       if $autoupgrade == true {
@@ -467,7 +457,7 @@ class snmp (
     $snmptrapd_conf_notify = Service['snmpd']
   }
 
-  if $real_manage_client {
+  if $manage_client {
     class { 'snmp::client':
       ensure      => $ensure,
       autoupgrade => $autoupgrade,

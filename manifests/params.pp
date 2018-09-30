@@ -313,13 +313,6 @@ class snmp::params {
     $safe_autoupgrade = $autoupgrade
   }
 
-  $snmp_install_client = getvar('::snmp_install_client')
-  if $snmp_install_client {
-    $install_client =  $::snmp_install_client
-  } else {
-    $install_client =  undef
-  }
-
   $snmp_manage_client = getvar('::snmp_manage_client')
   if $snmp_manage_client {
     $manage_client =  $::snmp_manage_client
