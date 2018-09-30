@@ -346,17 +346,17 @@ class snmp (
   $trap_service_enable          = $snmp::params::trap_service_enable,
   $trap_service_hasstatus       = $snmp::params::trap_service_hasstatus,
   $trap_service_hasrestart      = $snmp::params::trap_service_hasrestart,
-  $template_snmpd_conf          = $snmp::params::template_snmpd_conf,
-  $template_snmpd_sysconfig     = $snmp::params::template_snmpd_sysconfig,
-  $template_snmptrapd           = $snmp::params::template_snmptrapd,
-  $template_snmptrapd_sysconfig = $snmp::params::template_snmptrapd_sysconfig,
+  String[1] $template_snmpd_conf          = $snmp::params::template_snmpd_conf,
+  String[1] $template_snmpd_sysconfig     = $snmp::params::template_snmpd_sysconfig,
+  String[1] $template_snmptrapd           = $snmp::params::template_snmptrapd,
+  String[1] $template_snmptrapd_sysconfig = $snmp::params::template_snmptrapd_sysconfig,
   Boolean $openmanage_enable    = $snmp::params::openmanage_enable,
   Boolean $master               = $snmp::params::master,
   $agentx_perms                 = $snmp::params::agentx_perms,
   $agentx_ping_interval         = $snmp::params::agentx_ping_interval,
   $agentx_socket                = $snmp::params::agentx_socket,
-  $agentx_timeout               = $snmp::params::agentx_timeout,
-  $agentx_retries               = $snmp::params::agentx_retries,
+  Integer[0] $agentx_timeout    = $snmp::params::agentx_timeout,
+  Integer[0] $agentx_retries    = $snmp::params::agentx_retries,
   Boolean $snmpv2_enable        = $snmp::params::snmpv2_enable,
 ) inherits snmp::params {
   # Validate our arrays
@@ -373,16 +373,6 @@ class snmp (
   validate_array($extends)
   validate_array($snmpd_config)
   validate_array($snmptrapd_config)
-
-  # Validate our strings
-  validate_string($template_snmpd_conf)
-  validate_string($template_snmpd_sysconfig)
-  validate_string($template_snmptrapd)
-  validate_string($template_snmptrapd_sysconfig)
-
-  # Validate our numbers
-  validate_numeric($agentx_retries)
-  validate_numeric($agentx_timeout)
 
   # Validate our regular expressions
   $states = [ '^yes$', '^no$' ]

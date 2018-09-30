@@ -1113,8 +1113,8 @@ describe 'snmp', type: 'class' do
           agentx_perms: '0644',
           agentx_ping_interval: '5',
           agentx_socket: 'unix:/var/agentx/master',
-          agentx_timeout: '10',
-          agentx_retries: '10'
+          agentx_timeout: 10,
+          agentx_retries: 10
         }
       end
 
@@ -1137,8 +1137,8 @@ describe 'snmp', type: 'class' do
           agentx_perms: '0644',
           agentx_ping_interval: '5',
           agentx_socket: 'unix:/var/agentx/master',
-          agentx_timeout: '10',
-          agentx_retries: '10'
+          agentx_timeout: 10,
+          agentx_retries: 10
         }
       end
 
