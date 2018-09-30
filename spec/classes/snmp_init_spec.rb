@@ -839,18 +839,6 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmptrapd.conf').with_group('anothergroup') }
     end
 
-    describe 'install_client => true' do
-      let(:params) { { install_client: true } }
-
-      it {
-        is_expected.to contain_class('snmp::client').with(
-          ensure: 'present',
-          autoupgrade: 'false',
-          snmp_config: []
-        )
-      }
-    end
-
     describe 'manage_client => true' do
       let(:params) { { manage_client: true } }
 
