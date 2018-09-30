@@ -1,5 +1,6 @@
 # Net-SNMP
 
+[![License](https://img.shields.io/github/license/voxpupuli/puppet-snmp.svg)](https://github.com/voxpupuli/puppet-snmp/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/voxpupuli/puppet-snmp.svg?branch=master)](https://travis-ci.org/voxpupuli/puppet-snmp)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/snmp.svg)](https://forge.puppetlabs.com/puppet/snmp)
 [![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/snmp.svg)](https://forge.puppetlabs.com/puppet/snmp)
@@ -51,7 +52,7 @@ Only platforms that have Net-SNMP available are supported.  This module will not
 This declaration will get you the SNMP daemon listening on the loopback IPv4 and IPv6 addresses with a v1 and v2c read-only community of 'public'.
 
 ```puppet
-include ::snmp
+include snmp
 ```
 
 ### Upgrading
