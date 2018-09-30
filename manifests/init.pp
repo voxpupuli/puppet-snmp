@@ -327,19 +327,19 @@ class snmp (
   $trap_handlers                = $snmp::params::trap_handlers,
   $trap_forwards                = $snmp::params::trap_forwards,
   $snmptrapd_config             = $snmp::params::snmptrapd_config,
-  $manage_client                = $snmp::params::safe_manage_client,
+  Boolean $manage_client        = $snmp::params::safe_manage_client,
   $snmp_config                  = $snmp::params::snmp_config,
   $ensure                       = $snmp::params::ensure,
-  $autoupgrade                  = $snmp::params::safe_autoupgrade,
+  Boolean $autoupgrade          = $snmp::params::safe_autoupgrade,
   $package_name                 = $snmp::params::package_name,
   $snmpd_options                = $snmp::params::snmpd_options,
   $service_config_perms         = $snmp::params::service_config_perms,
   $service_config_dir_group     = $snmp::params::service_config_dir_group,
   $service_ensure               = $snmp::params::service_ensure,
   $service_name                 = $snmp::params::service_name,
-  $service_enable               = $snmp::params::service_enable,
-  $service_hasstatus            = $snmp::params::service_hasstatus,
-  $service_hasrestart           = $snmp::params::service_hasrestart,
+  Boolean $service_enable       = $snmp::params::service_enable,
+  Boolean $service_hasstatus    = $snmp::params::service_hasstatus,
+  Boolean $service_hasrestart   = $snmp::params::service_hasrestart,
   $snmptrapd_options            = $snmp::params::snmptrapd_options,
   $trap_service_ensure          = $snmp::params::trap_service_ensure,
   $trap_service_name            = $snmp::params::trap_service_name,
@@ -350,8 +350,8 @@ class snmp (
   $template_snmpd_sysconfig     = $snmp::params::template_snmpd_sysconfig,
   $template_snmptrapd           = $snmp::params::template_snmptrapd,
   $template_snmptrapd_sysconfig = $snmp::params::template_snmptrapd_sysconfig,
-  $openmanage_enable            = $snmp::params::openmanage_enable,
-  $master                       = $snmp::params::master,
+  Boolean $openmanage_enable    = $snmp::params::openmanage_enable,
+  Boolean $master               = $snmp::params::master,
   $agentx_perms                 = $snmp::params::agentx_perms,
   $agentx_ping_interval         = $snmp::params::agentx_ping_interval,
   $agentx_socket                = $snmp::params::agentx_socket,
@@ -359,15 +359,6 @@ class snmp (
   $agentx_retries               = $snmp::params::agentx_retries,
   Boolean $snmpv2_enable        = $snmp::params::snmpv2_enable,
 ) inherits snmp::params {
-  # Validate our booleans
-  validate_bool($master)
-  validate_bool($manage_client)
-  validate_bool($autoupgrade)
-  validate_bool($service_enable)
-  validate_bool($service_hasstatus)
-  validate_bool($service_hasrestart)
-  validate_bool($openmanage_enable)
-
   # Validate our arrays
   validate_array($snmptrapdaddr)
   validate_array($trap_handlers)
@@ -401,7 +392,7 @@ class snmp (
 
   case $ensure {
     /(present)/: {
-      if $autoupgrade == true {
+      if $autoupgrade {
         $package_ensure = 'latest'
       } else {
         $package_ensure = 'present'
