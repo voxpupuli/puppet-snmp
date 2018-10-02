@@ -53,14 +53,14 @@ class snmp::params {
 
   $snmp_agentx_timeout = getvar('::snmp_agentx_timeout')
   if $snmp_agentx_timeout {
-    $agentx_timeout = $::snmp_agentx_timeout
+    $agentx_timeout = 0 + $::snmp_agentx_timeout
   } else {
     $agentx_timeout = 1
   }
 
   $snmp_agentx_retries = getvar('::snmp_agentx_retries')
   if $snmp_agentx_retries {
-    $agentx_retries = $::snmp_agentx_retries
+    $agentx_retries = 0 + $::snmp_agentx_retries
   } else {
     $agentx_retries = 5
   }
