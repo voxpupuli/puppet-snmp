@@ -48,7 +48,7 @@
 class snmp::client (
   $snmp_config         = $snmp::params::snmp_config,
   $ensure              = $snmp::params::ensure,
-  Boolean $autoupgrade = $snmp::params::safe_autoupgrade,
+  Boolean $autoupgrade = $snmp::params::autoupgrade,
   $package_name        = $snmp::params::client_package_name
 ) inherits snmp::params {
   case $ensure {
