@@ -321,9 +321,9 @@ class snmp (
   $dlmod                        = $snmp::params::dlmod,
   $extends                      = $snmp::params::extends,
   $snmpd_config                 = $snmp::params::snmpd_config,
-  $disable_authorization        = $snmp::params::disable_authorization,
-  $do_not_log_traps             = $snmp::params::do_not_log_traps,
-  $do_not_log_tcpwrappers       = $snmp::params::do_not_log_tcpwrappers,
+  Enum['yes','no'] $disable_authorization  = $snmp::params::disable_authorization,
+  Enum['yes','no'] $do_not_log_traps       = $snmp::params::do_not_log_traps,
+  Enum['yes','no'] $do_not_log_tcpwrappers = $snmp::params::do_not_log_tcpwrappers,
   $trap_handlers                = $snmp::params::trap_handlers,
   $trap_forwards                = $snmp::params::trap_forwards,
   $snmptrapd_config             = $snmp::params::snmptrapd_config,
@@ -373,12 +373,6 @@ class snmp (
   validate_array($extends)
   validate_array($snmpd_config)
   validate_array($snmptrapd_config)
-
-  # Validate our regular expressions
-  $states = [ '^yes$', '^no$' ]
-  validate_re($disable_authorization, $states, '$disable_authorization must be either yes or no.')
-  validate_re($do_not_log_traps, $states, '$do_not_log_traps must be either yes or no.')
-  validate_re($do_not_log_tcpwrappers, $states, '$do_not_log_tcpwrappers must be either yes or no.')
 
   case $ensure {
     /(present)/: {
