@@ -259,7 +259,7 @@
 #
 # [*snmpv2_enable*]
 #   Disable com2sec, group, and access in snmpd.conf
-#  
+#
 #   Default: true
 #
 # === Actions:
@@ -300,7 +300,7 @@
 #
 class snmp (
   $agentaddress                 = $snmp::params::agentaddress,
-  $snmptrapdaddr                = $snmp::params::snmptrapdaddr,
+  Array[String[1]] $snmptrapdaddr = $snmp::params::snmptrapdaddr,
   $ro_community                 = $snmp::params::ro_community,
   $ro_community6                = $snmp::params::ro_community6,
   $rw_community                 = $snmp::params::rw_community,
@@ -313,20 +313,20 @@ class snmp (
   $location                     = $snmp::params::location,
   $sysname                      = $snmp::params::sysname,
   $services                     = $snmp::params::services,
-  $com2sec                      = $snmp::params::com2sec,
-  $com2sec6                     = $snmp::params::com2sec6,
-  $groups                       = $snmp::params::groups,
-  $views                        = $snmp::params::views,
-  $accesses                     = $snmp::params::accesses,
-  $dlmod                        = $snmp::params::dlmod,
-  $extends                      = $snmp::params::extends,
-  $snmpd_config                 = $snmp::params::snmpd_config,
+  Array[String[1]] $com2sec     = $snmp::params::com2sec,
+  Array[String[1]] $com2sec6    = $snmp::params::com2sec6,
+  Array[String[1]] $groups      = $snmp::params::groups,
+  Array[String[1]] $views       = $snmp::params::views,
+  Array[String[1]] $accesses    = $snmp::params::accesses,
+  Array[String[1]] $dlmod       = $snmp::params::dlmod,
+  Array[String[1]] $extends     = $snmp::params::extends,
+  Array[String] $snmpd_config   = $snmp::params::snmpd_config,
   Enum['yes','no'] $disable_authorization  = $snmp::params::disable_authorization,
   Enum['yes','no'] $do_not_log_traps       = $snmp::params::do_not_log_traps,
   Enum['yes','no'] $do_not_log_tcpwrappers = $snmp::params::do_not_log_tcpwrappers,
-  $trap_handlers                = $snmp::params::trap_handlers,
-  $trap_forwards                = $snmp::params::trap_forwards,
-  $snmptrapd_config             = $snmp::params::snmptrapd_config,
+  Array[String[1]] $trap_handlers = $snmp::params::trap_handlers,
+  Array[String[1]] $trap_forwards = $snmp::params::trap_forwards,
+  Array[String] $snmptrapd_config = $snmp::params::snmptrapd_config,
   Boolean $manage_client        = $snmp::params::manage_client,
   $snmp_config                  = $snmp::params::snmp_config,
   $ensure                       = $snmp::params::ensure,
@@ -359,20 +359,6 @@ class snmp (
   Integer[0] $agentx_retries    = $snmp::params::agentx_retries,
   Boolean $snmpv2_enable        = $snmp::params::snmpv2_enable,
 ) inherits snmp::params {
-  # Validate our arrays
-  validate_array($snmptrapdaddr)
-  validate_array($trap_handlers)
-  validate_array($trap_forwards)
-  validate_array($snmp_config)
-  validate_array($com2sec)
-  validate_array($com2sec6)
-  validate_array($groups)
-  validate_array($views)
-  validate_array($accesses)
-  validate_array($dlmod)
-  validate_array($extends)
-  validate_array($snmpd_config)
-  validate_array($snmptrapd_config)
 
   case $ensure {
     /(present)/: {
