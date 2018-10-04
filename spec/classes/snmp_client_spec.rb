@@ -51,9 +51,8 @@ describe 'snmp::client', type: 'class' do
             mode: '0644',
             owner: 'root',
             group: 'root',
-            path: '/etc/snmp/snmp.conf',
-            require: ['Package[snmp-client]', 'File[/etc/snmp]']
-          )
+            path: '/etc/snmp/snmp.conf'
+          ).that_requires(['Package[snmp-client]', 'File[/etc/snmp]'])
         }
       end
     end
@@ -83,9 +82,8 @@ describe 'snmp::client', type: 'class' do
             mode: '0644',
             owner: 'root',
             group: 'root',
-            path: '/etc/snmp/snmp.conf',
-            require: 'Package[snmp-client]'
-          )
+            path: '/etc/snmp/snmp.conf'
+          ).that_requires('Package[snmp-client]')
         }
       end
     end
@@ -141,8 +139,7 @@ describe 'snmp::client', type: 'class' do
             mode: '0755',
             owner: 'root',
             group: 'wheel',
-            path: '/usr/local/etc/snmp/snmp.conf',
-            require: nil
+            path: '/usr/local/etc/snmp/snmp.conf'
           )
         }
       end

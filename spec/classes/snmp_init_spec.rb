@@ -49,9 +49,8 @@ describe 'snmp', type: 'class' do
           mode: '0700',
           owner: 'root',
           group: 'root',
-          path: '/var/net-snmp',
-          require: 'Package[snmpd]'
-        )
+          path: '/var/net-snmp'
+        ).that_requires('Package[snmpd]')
       }
 
       it {
@@ -60,10 +59,8 @@ describe 'snmp', type: 'class' do
           mode: '0644',
           owner: 'root',
           group: 'root',
-          path: '/etc/snmp/snmpd.conf',
-          require: 'Package[snmpd]',
-          notify: 'Service[snmpd]'
-        )
+          path: '/etc/snmp/snmpd.conf'
+        ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
       }
       # TODO: add more contents for File[snmpd.conf]
       it 'contains File[snmpd.conf] with expected contents' do
@@ -91,10 +88,8 @@ describe 'snmp', type: 'class' do
           mode: '0644',
           owner: 'root',
           group: 'root',
-          path: '/etc/sysconfig/snmpd.options',
-          require: 'Package[snmpd]',
-          notify: 'Service[snmpd]'
-        )
+          path: '/etc/sysconfig/snmpd.options'
+        ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
       }
       it 'contains File[snmpd.sysconfig] with contents "OPTIONS="-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a""' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
@@ -107,9 +102,8 @@ describe 'snmp', type: 'class' do
           name: 'snmpd',
           enable: true,
           hasstatus: true,
-          hasrestart: true,
-          require: ['Package[snmpd]', 'File[var-net-snmp]']
-        )
+          hasrestart: true
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
       }
 
       it {
@@ -118,10 +112,8 @@ describe 'snmp', type: 'class' do
           mode: '0644',
           owner: 'root',
           group: 'root',
-          path: '/etc/snmp/snmptrapd.conf',
-          require: 'Package[snmpd]',
-          notify: 'Service[snmptrapd]'
-        )
+          path: '/etc/snmp/snmptrapd.conf'
+        ).that_requires('Package[snmpd]').that_notifies('Service[snmptrapd]')
       }
       # TODO: add more contents for File[snmptrapd.conf]
       it 'contains File[snmptrapd.conf] with correct contents' do
@@ -137,10 +129,8 @@ describe 'snmp', type: 'class' do
           mode: '0644',
           owner: 'root',
           group: 'root',
-          path: '/etc/sysconfig/snmptrapd.options',
-          require: 'Package[snmpd]',
-          notify: 'Service[snmptrapd]'
-        )
+          path: '/etc/sysconfig/snmptrapd.options'
+        ).that_requires('Package[snmpd]').that_notifies('Service[snmptrapd]')
       }
       it 'contains File[snmptrapd.sysconfig] with contents "OPTIONS="-Lsd -p /var/run/snmptrapd.pid""' do
         verify_contents(catalogue, 'snmptrapd.sysconfig', [
@@ -153,9 +143,8 @@ describe 'snmp', type: 'class' do
           name: 'snmptrapd',
           enable: false,
           hasstatus: true,
-          hasrestart: true,
-          require: ['Package[snmpd]', 'File[var-net-snmp]']
-        )
+          hasrestart: true
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
       }
     end
     describe 'for osfamily RedHat, operatingsystem RedHat, operatingsystemrelease 6.4' do
@@ -184,9 +173,8 @@ describe 'snmp', type: 'class' do
           mode: '0755',
           owner: 'root',
           group: 'root',
-          path: '/var/lib/net-snmp',
-          require: 'Package[snmpd]'
-        )
+          path: '/var/lib/net-snmp'
+        ).that_requires('Package[snmpd]')
       }
 
       it {
@@ -195,10 +183,8 @@ describe 'snmp', type: 'class' do
           mode: '0600',
           owner: 'root',
           group: 'root',
-          path: '/etc/snmp/snmpd.conf',
-          require: 'Package[snmpd]',
-          notify: 'Service[snmpd]'
-        )
+          path: '/etc/snmp/snmpd.conf'
+        ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
       }
       # TODO: add more contents for File[snmpd.conf]
       it 'contains File[snmpd.conf] with expected contents' do
@@ -226,10 +212,8 @@ describe 'snmp', type: 'class' do
           mode: '0644',
           owner: 'root',
           group: 'root',
-          path: '/etc/sysconfig/snmpd',
-          require: 'Package[snmpd]',
-          notify: 'Service[snmpd]'
-        )
+          path: '/etc/sysconfig/snmpd'
+        ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
       }
       it 'contains File[snmpd.sysconfig] with contents "OPTIONS="-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid""' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
@@ -242,9 +226,8 @@ describe 'snmp', type: 'class' do
           name: 'snmpd',
           enable: true,
           hasstatus: true,
-          hasrestart: true,
-          require: ['Package[snmpd]', 'File[var-net-snmp]']
-        )
+          hasrestart: true
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
       }
 
       it {
@@ -253,10 +236,8 @@ describe 'snmp', type: 'class' do
           mode: '0600',
           owner: 'root',
           group: 'root',
-          path: '/etc/snmp/snmptrapd.conf',
-          require: 'Package[snmpd]',
-          notify: 'Service[snmptrapd]'
-        )
+          path: '/etc/snmp/snmptrapd.conf'
+        ).that_requires('Package[snmpd]').that_notifies('Service[snmptrapd]')
       }
       # TODO: add more contents for File[snmptrapd.conf]
       it 'contains File[snmptrapd.conf] with correct contents' do
@@ -272,10 +253,8 @@ describe 'snmp', type: 'class' do
           mode: '0644',
           owner: 'root',
           group: 'root',
-          path: '/etc/sysconfig/snmptrapd',
-          require: 'Package[snmpd]',
-          notify: 'Service[snmptrapd]'
-        )
+          path: '/etc/sysconfig/snmptrapd'
+        ).that_requires('Package[snmpd]').that_notifies('Service[snmptrapd]')
       }
       it 'contains File[snmptrapd.sysconfig] with contents "OPTIONS="-Lsd -p /var/run/snmptrapd.pid""' do
         verify_contents(catalogue, 'snmptrapd.sysconfig', [
@@ -288,9 +267,8 @@ describe 'snmp', type: 'class' do
           name: 'snmptrapd',
           enable: false,
           hasstatus: true,
-          hasrestart: true,
-          require: ['Package[snmpd]', 'File[var-net-snmp]']
-        )
+          hasrestart: true
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
       }
     end
 
@@ -321,9 +299,8 @@ describe 'snmp', type: 'class' do
             mode: '0755',
             owner: 'snmp',
             group: 'snmp',
-            path: '/var/lib/snmp',
-            require: 'Package[snmpd]'
-          )
+            path: '/var/lib/snmp'
+          ).that_requires('Package[snmpd]')
         }
 
         it {
@@ -332,10 +309,8 @@ describe 'snmp', type: 'class' do
             mode: '0600',
             owner: 'root',
             group: 'root',
-            path: '/etc/snmp/snmpd.conf',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
-          )
+            path: '/etc/snmp/snmpd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         # TODO: add more contents for File[snmpd.conf]
         it 'contains File[snmpd.conf] with expected contents' do
@@ -363,10 +338,8 @@ describe 'snmp', type: 'class' do
             mode: '0644',
             owner: 'root',
             group: 'root',
-            path: '/etc/default/snmpd',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
-          )
+            path: '/etc/default/snmpd'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'"' do
           verify_contents(catalogue, 'snmpd.sysconfig', [
@@ -380,9 +353,8 @@ describe 'snmp', type: 'class' do
             name: 'snmpd',
             enable: true,
             hasstatus: true,
-            hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
-          )
+            hasrestart: true
+          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
         }
 
         it {
@@ -391,10 +363,8 @@ describe 'snmp', type: 'class' do
             mode: '0600',
             owner: 'root',
             group: 'root',
-            path: '/etc/snmp/snmptrapd.conf',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
-          )
+            path: '/etc/snmp/snmptrapd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         # TODO: add more contents for File[snmptrapd.conf]
         it 'contains File[snmptrapd.conf] with correct contents' do
@@ -442,9 +412,8 @@ describe 'snmp', type: 'class' do
             mode: '0755',
             owner: 'root',
             group: 'root',
-            path: '/var/lib/net-snmp',
-            require: 'Package[snmpd]'
-          )
+            path: '/var/lib/net-snmp'
+          ).that_requires('Package[snmpd]')
         }
 
         it {
@@ -453,10 +422,8 @@ describe 'snmp', type: 'class' do
             mode: '0600',
             owner: 'root',
             group: 'root',
-            path: '/etc/snmp/snmpd.conf',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
-          )
+            path: '/etc/snmp/snmpd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         # TODO: add more contents for File[snmpd.conf]
         it 'contains File[snmpd.conf] with expected contents' do
@@ -484,10 +451,8 @@ describe 'snmp', type: 'class' do
             mode: '0644',
             owner: 'root',
             group: 'root',
-            path: '/etc/sysconfig/net-snmp',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
-          )
+            path: '/etc/sysconfig/net-snmp'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         it 'contains File[snmpd.sysconfig] with contents "SNMPD_LOGLEVEL="d""' do
           verify_contents(catalogue, 'snmpd.sysconfig', [
@@ -500,9 +465,8 @@ describe 'snmp', type: 'class' do
             name: 'snmpd',
             enable: true,
             hasstatus: true,
-            hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
-          )
+            hasrestart: true
+          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
         }
 
         it {
@@ -511,10 +475,8 @@ describe 'snmp', type: 'class' do
             mode: '0600',
             owner: 'root',
             group: 'root',
-            path: '/etc/snmp/snmptrapd.conf',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmptrapd]'
-          )
+            path: '/etc/snmp/snmptrapd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmptrapd]')
         }
         # TODO: add more contents for File[snmptrapd.conf]
         it 'contains File[snmptrapd.conf] with correct contents' do
@@ -526,11 +488,12 @@ describe 'snmp', type: 'class' do
         end
         it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
         it {
-          is_expected.to contain_exec('install /etc/init.d/snmptrapd').with(
-            command: '/usr/bin/install -o 0 -g 0 -m0755 -p /usr/share/doc/packages/net-snmp/rc.snmptrapd /etc/init.d/snmptrapd',
-            creates: '/etc/init.d/snmptrapd',
-            require: 'Package[snmpd]'
-          )
+          is_expected.to contain_file('/etc/init.d/snmptrapd').with(
+            source: '/usr/share/doc/packages/net-snmp/rc.snmptrapd',
+            owner: 'root',
+            group: 'root',
+            mode: '0755'
+          ).that_requires('Package[snmpd]').that_comes_before('Service[snmptrapd]')
         }
         it {
           is_expected.to contain_service('snmptrapd').with(
@@ -538,9 +501,8 @@ describe 'snmp', type: 'class' do
             name: 'snmptrapd',
             enable: false,
             hasstatus: true,
-            hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]', 'Exec[install /etc/init.d/snmptrapd]']
-          )
+            hasrestart: true
+          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]', 'File[/etc/init.d/snmptrapd]'])
         }
       end
     end
@@ -571,9 +533,8 @@ describe 'snmp', type: 'class' do
             mode: '0600',
             owner: 'root',
             group: 'wheel',
-            path: '/var/net-snmp',
-            require: 'Package[snmpd]'
-          )
+            path: '/var/net-snmp'
+          ).that_requires('Package[snmpd]')
         }
 
         it {
@@ -582,10 +543,8 @@ describe 'snmp', type: 'class' do
             mode: '0755',
             owner: 'root',
             group: 'wheel',
-            path: '/usr/local/etc/snmp/snmpd.conf',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
-          )
+            path: '/usr/local/etc/snmp/snmpd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         # TODO: add more contents for File[snmpd.conf]
         it 'contains File[snmpd.conf] with expected contents' do
@@ -613,9 +572,8 @@ describe 'snmp', type: 'class' do
             name: 'snmpd',
             enable: true,
             hasstatus: true,
-            hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
-          )
+            hasrestart: true
+          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
         }
 
         it {
@@ -624,10 +582,8 @@ describe 'snmp', type: 'class' do
             mode: '0755',
             owner: 'root',
             group: 'wheel',
-            path: '/usr/local/etc/snmp/snmptrapd.conf',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmptrapd]'
-          )
+            path: '/usr/local/etc/snmp/snmptrapd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmptrapd]')
         }
         # TODO: add more contents for File[snmptrapd.conf]
         it 'contains File[snmptrapd.conf] with correct contents' do
@@ -643,9 +599,8 @@ describe 'snmp', type: 'class' do
             name: 'snmptrapd',
             enable: false,
             hasstatus: true,
-            hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
-          )
+            hasrestart: true
+          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
         }
       end
     end
@@ -676,9 +631,8 @@ describe 'snmp', type: 'class' do
             mode: '0600',
             owner: '_netsnmp',
             group: 'wheel',
-            path: '/var/net-snmp',
-            require: 'Package[snmpd]'
-          )
+            path: '/var/net-snmp'
+          ).that_requires('Package[snmpd]')
         }
 
         it {
@@ -687,10 +641,8 @@ describe 'snmp', type: 'class' do
             mode: '0755',
             owner: 'root',
             group: 'wheel',
-            path: '/etc/snmp/snmpd.conf',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmpd]'
-          )
+            path: '/etc/snmp/snmpd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         # TODO: add more contents for File[snmpd.conf]
         it 'contains File[snmpd.conf] with expected contents' do
@@ -718,9 +670,8 @@ describe 'snmp', type: 'class' do
             name: 'netsnmpd',
             enable: true,
             hasstatus: true,
-            hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
-          )
+            hasrestart: true
+          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
         }
 
         it {
@@ -729,10 +680,8 @@ describe 'snmp', type: 'class' do
             mode: '0755',
             owner: 'root',
             group: 'wheel',
-            path: '/etc/snmp/snmptrapd.conf',
-            require: 'Package[snmpd]',
-            notify: 'Service[snmptrapd]'
-          )
+            path: '/etc/snmp/snmptrapd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmptrapd]')
         }
         # TODO: add more contents for File[snmptrapd.conf]
         it 'contains File[snmptrapd.conf] with correct contents' do
@@ -748,9 +697,8 @@ describe 'snmp', type: 'class' do
             name: 'netsnmptrapd',
             enable: false,
             hasstatus: true,
-            hasrestart: true,
-            require: ['Package[snmpd]', 'File[var-net-snmp]']
-          )
+            hasrestart: true
+          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
         }
       end
     end

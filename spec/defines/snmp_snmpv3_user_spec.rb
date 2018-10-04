@@ -87,10 +87,8 @@ describe 'snmp::snmpv3_user', type: 'define' do
       it {
         is_expected.to contain_exec('create-snmpv3-user-myDEFAULTuser').with(
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myDEFAULTuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmpd.conf && touch /var/lib/net-snmp/myDEFAULTuser-snmpd',
-          creates: '/var/lib/net-snmp/myDEFAULTuser-snmpd',
-          require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
-        )
+          creates: '/var/lib/net-snmp/myDEFAULTuser-snmpd'
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]']).that_comes_before('Service[snmpd]')
       }
     end
 
@@ -109,10 +107,8 @@ describe 'snmp::snmpv3_user', type: 'define' do
       it {
         is_expected.to contain_exec('create-snmpv3-user-myALLuser').with(
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myALLuser MD5 \"myauthpass\" DES \"myprivpass\"" >>/var/lib/net-snmp/snmpd.conf && touch /var/lib/net-snmp/myALLuser-snmpd',
-          creates: '/var/lib/net-snmp/myALLuser-snmpd',
-          require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
-        )
+          creates: '/var/lib/net-snmp/myALLuser-snmpd'
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]']).that_comes_before('Service[snmpd]')
       }
     end
 
@@ -129,10 +125,8 @@ describe 'snmp::snmpv3_user', type: 'define' do
       it {
         is_expected.to contain_exec('create-snmpv3-user-myTRAPuser').with(
           command: 'service snmptrapd stop ; sleep 5 ; echo "createUser myTRAPuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmptrapd.conf && touch /var/lib/net-snmp/myTRAPuser-snmptrapd',
-          creates: '/var/lib/net-snmp/myTRAPuser-snmptrapd',
-          require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmptrapd]'
-        )
+          creates: '/var/lib/net-snmp/myTRAPuser-snmptrapd'
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]']).that_comes_before('Service[snmptrapd]')
       }
     end
   end
@@ -160,10 +154,8 @@ describe 'snmp::snmpv3_user', type: 'define' do
       it {
         is_expected.to contain_exec('create-snmpv3-user-myDEFAULTuser').with(
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myDEFAULTuser SHA \"myauthpass\"" >>/var/lib/snmp/snmpd.conf && touch /var/lib/snmp/myDEFAULTuser-snmpd',
-          creates: '/var/lib/snmp/myDEFAULTuser-snmpd',
-          require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
-        )
+          creates: '/var/lib/snmp/myDEFAULTuser-snmpd'
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]']).that_comes_before('Service[snmpd]')
       }
     end
 
@@ -182,10 +174,8 @@ describe 'snmp::snmpv3_user', type: 'define' do
       it {
         is_expected.to contain_exec('create-snmpv3-user-myALLuser').with(
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myALLuser MD5 \"myauthpass\" DES \"myprivpass\"" >>/var/lib/snmp/snmpd.conf && touch /var/lib/snmp/myALLuser-snmpd',
-          creates: '/var/lib/snmp/myALLuser-snmpd',
-          require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
-        )
+          creates: '/var/lib/snmp/myALLuser-snmpd'
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]']).that_comes_before('Service[snmpd]')
       }
     end
 
@@ -202,10 +192,8 @@ describe 'snmp::snmpv3_user', type: 'define' do
       it {
         is_expected.to contain_exec('create-snmpv3-user-myTRAPuser').with(
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myTRAPuser SHA \"myauthpass\"" >>/var/lib/snmp/snmptrapd.conf && touch /var/lib/snmp/myTRAPuser-snmptrapd',
-          creates: '/var/lib/snmp/myTRAPuser-snmptrapd',
-          require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
-        )
+          creates: '/var/lib/snmp/myTRAPuser-snmptrapd'
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]']).that_comes_before('Service[snmpd]')
       }
     end
   end
@@ -233,10 +221,8 @@ describe 'snmp::snmpv3_user', type: 'define' do
       it {
         is_expected.to contain_exec('create-snmpv3-user-myDEFAULTuser').with(
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myDEFAULTuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmpd.conf && touch /var/lib/net-snmp/myDEFAULTuser-snmpd',
-          creates: '/var/lib/net-snmp/myDEFAULTuser-snmpd',
-          require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
-        )
+          creates: '/var/lib/net-snmp/myDEFAULTuser-snmpd'
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]']).that_comes_before('Service[snmpd]')
       }
     end
 
@@ -255,10 +241,8 @@ describe 'snmp::snmpv3_user', type: 'define' do
       it {
         is_expected.to contain_exec('create-snmpv3-user-myALLuser').with(
           command: 'service snmpd stop ; sleep 5 ; echo "createUser myALLuser MD5 \"myauthpass\" DES \"myprivpass\"" >>/var/lib/net-snmp/snmpd.conf && touch /var/lib/net-snmp/myALLuser-snmpd',
-          creates: '/var/lib/net-snmp/myALLuser-snmpd',
-          require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmpd]'
-        )
+          creates: '/var/lib/net-snmp/myALLuser-snmpd'
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]']).that_comes_before('Service[snmpd]')
       }
     end
 
@@ -275,10 +259,8 @@ describe 'snmp::snmpv3_user', type: 'define' do
       it {
         is_expected.to contain_exec('create-snmpv3-user-myTRAPuser').with(
           command: 'service snmptrapd stop ; sleep 5 ; echo "createUser myTRAPuser SHA \"myauthpass\"" >>/var/lib/net-snmp/snmptrapd.conf && touch /var/lib/net-snmp/myTRAPuser-snmptrapd',
-          creates: '/var/lib/net-snmp/myTRAPuser-snmptrapd',
-          require: ['Package[snmpd]', 'File[var-net-snmp]'],
-          before: 'Service[snmptrapd]'
-        )
+          creates: '/var/lib/net-snmp/myTRAPuser-snmptrapd'
+        ).that_requires(['Package[snmpd]', 'File[var-net-snmp]']).that_comes_before('Service[snmptrapd]')
       }
     end
   end

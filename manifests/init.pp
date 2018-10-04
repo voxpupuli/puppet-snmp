@@ -399,12 +399,6 @@ class snmp (
     $trapdrun = 'no'
   }
 
-  if $::osfamily != 'Debian' {
-    $snmptrapd_conf_notify = Service['snmptrapd']
-  } else {
-    $snmptrapd_conf_notify = Service['snmpd']
-  }
-
   if $manage_client {
     class { 'snmp::client':
       ensure      => $ensure,
@@ -413,6 +407,7 @@ class snmp (
     }
   }
 
+  # Install
   package { 'snmpd':
     ensure => $package_ensure,
     name   => $package_name,
@@ -437,6 +432,18 @@ class snmp (
     }
   }
 
+  if $::osfamily == 'Suse' {
+    file { '/etc/init.d/snmptrapd':
+      source  => '/usr/share/doc/packages/net-snmp/rc.snmptrapd',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      require => Package['snmpd'],
+      before  => Service['snmptrapd'],
+    }
+  }
+
+  # Config
   file { 'snmpd.conf':
     ensure  => $file_ensure,
     mode    => $service_config_perms,
@@ -445,20 +452,6 @@ class snmp (
     path    => $snmp::params::service_config,
     content => template($template_snmpd_conf),
     require => Package['snmpd'],
-    notify  => Service['snmpd'],
-  }
-
-  if $::osfamily != 'FreeBSD' and $::osfamily != 'OpenBSD' {
-    file { 'snmpd.sysconfig':
-      ensure  => $file_ensure,
-      mode    => '0644',
-      owner   => 'root',
-      group   => 'root',
-      path    => $snmp::params::sysconfig,
-      content => template($template_snmpd_sysconfig),
-      require => Package['snmpd'],
-      notify  => Service['snmpd'],
-    }
   }
 
   file { 'snmptrapd.conf':
@@ -469,7 +462,20 @@ class snmp (
     path    => $snmp::params::trap_service_config,
     content => template($template_snmptrapd),
     require => Package['snmpd'],
-    notify  => $snmptrapd_conf_notify,
+  }
+
+
+  unless $::osfamily == 'FreeBSD' or $::osfamily == 'OpenBSD' {
+    file { 'snmpd.sysconfig':
+      ensure  => $file_ensure,
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      path    => $snmp::params::sysconfig,
+      content => template($template_snmpd_sysconfig),
+      require => Package['snmpd'],
+      notify  => Service['snmpd'],
+    }
   }
 
   if $::osfamily == 'RedHat' {
@@ -483,45 +489,18 @@ class snmp (
       require => Package['snmpd'],
       notify  => Service['snmptrapd'],
     }
+  }
 
+  # Services
+  unless $::osfamily == 'Debian' {
     service { 'snmptrapd':
       ensure     => $trap_service_ensure_real,
       name       => $trap_service_name,
       enable     => $trap_service_enable_real,
       hasstatus  => $trap_service_hasstatus,
       hasrestart => $trap_service_hasrestart,
-      require    => [ Package['snmpd'], File['var-net-snmp'], ],
-    }
-  } elsif $::osfamily == 'Suse' {
-    exec { 'install /etc/init.d/snmptrapd':
-      command => '/usr/bin/install -o 0 -g 0 -m0755 -p /usr/share/doc/packages/net-snmp/rc.snmptrapd /etc/init.d/snmptrapd',
-      creates => '/etc/init.d/snmptrapd',
-      require => Package['snmpd'],
-    }
-
-    service { 'snmptrapd':
-      ensure     => $trap_service_ensure_real,
-      name       => $trap_service_name,
-      enable     => $trap_service_enable_real,
-      hasstatus  => $trap_service_hasstatus,
-      hasrestart => $trap_service_hasrestart,
-      require    => [
-        Package['snmpd'],
-        File['var-net-snmp'],
-        Exec['install /etc/init.d/snmptrapd'],
-      ],
-    }
-  } elsif $::osfamily == 'FreeBSD'  or $::osfamily == 'OpenBSD' {
-    service { 'snmptrapd':
-      ensure     => $trap_service_ensure_real,
-      name       => $trap_service_name,
-      enable     => $trap_service_enable_real,
-      hasstatus  => $trap_service_hasstatus,
-      hasrestart => $trap_service_hasrestart,
-      require    => [
-        Package['snmpd'],
-        File['var-net-snmp'],
-      ],
+      require    => File['var-net-snmp'],
+      subscribe  => File['snmptrapd.conf'],
     }
   }
 
@@ -531,6 +510,11 @@ class snmp (
     enable     => $service_enable_real,
     hasstatus  => $service_hasstatus,
     hasrestart => $service_hasrestart,
-    require    => [ Package['snmpd'], File['var-net-snmp'], ],
+    require    => File['var-net-snmp'],
+    subscribe  => File['snmpd.conf'],
+  }
+
+  if $::osfamily == 'Debian' {
+    File['snmptrapd.conf'] ~> Service['snmpd']
   }
 }
