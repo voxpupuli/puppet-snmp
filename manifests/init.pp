@@ -299,6 +299,7 @@
 # Copyright (C) 2012 Mike Arnold, unless otherwise noted.
 #
 class snmp (
+  Enum['present','absent'] $ensure = $snmp::params::ensure,
   $agentaddress                 = $snmp::params::agentaddress,
   Array[String[1]] $snmptrapdaddr = $snmp::params::snmptrapdaddr,
   $ro_community                 = $snmp::params::ro_community,
@@ -329,19 +330,18 @@ class snmp (
   Array[String] $snmptrapd_config = $snmp::params::snmptrapd_config,
   Boolean $manage_client        = $snmp::params::manage_client,
   $snmp_config                  = $snmp::params::snmp_config,
-  $ensure                       = $snmp::params::ensure,
   Boolean $autoupgrade          = $snmp::params::autoupgrade,
   $package_name                 = $snmp::params::package_name,
   $snmpd_options                = $snmp::params::snmpd_options,
   $service_config_perms         = $snmp::params::service_config_perms,
   $service_config_dir_group     = $snmp::params::service_config_dir_group,
-  $service_ensure               = $snmp::params::service_ensure,
+  Stdlib::Ensure::Service $service_ensure = $snmp::params::service_ensure,
   $service_name                 = $snmp::params::service_name,
   Boolean $service_enable       = $snmp::params::service_enable,
   Boolean $service_hasstatus    = $snmp::params::service_hasstatus,
   Boolean $service_hasrestart   = $snmp::params::service_hasrestart,
   $snmptrapd_options            = $snmp::params::snmptrapd_options,
-  $trap_service_ensure          = $snmp::params::trap_service_ensure,
+  Stdlib::Ensure::Service $trap_service_ensure = $snmp::params::trap_service_ensure,
   $trap_service_name            = $snmp::params::trap_service_name,
   $trap_service_enable          = $snmp::params::trap_service_enable,
   $trap_service_hasstatus       = $snmp::params::trap_service_hasstatus,
@@ -360,45 +360,32 @@ class snmp (
   Boolean $snmpv2_enable        = $snmp::params::snmpv2_enable,
 ) inherits snmp::params {
 
-  case $ensure {
-    /(present)/: {
-      if $autoupgrade {
-        $package_ensure = 'latest'
-      } else {
-        $package_ensure = 'present'
-      }
-      $file_ensure = 'present'
-      if $trap_service_ensure in [ running, stopped ] {
-        $trap_service_ensure_real = $trap_service_ensure
-        $trap_service_enable_real = $trap_service_enable
-      } else {
-        fail('trap_service_ensure parameter must be running or stopped')
-      }
-      if $service_ensure in [ running, stopped ] {
-        # Make sure that if $trap_service_ensure == 'running' that
-        # $service_ensure_real == 'running' on Debian.
-        if ($::osfamily == 'Debian') and ($trap_service_ensure_real == 'running') {
-          $service_ensure_real = $trap_service_ensure_real
-          $service_enable_real = $trap_service_enable_real
-        } else {
-          $service_ensure_real = $service_ensure
-          $service_enable_real = $service_enable
-        }
-      } else {
-        fail('service_ensure parameter must be running or stopped')
-      }
+  if $ensure == 'present' {
+    if $autoupgrade {
+      $package_ensure = 'latest'
+    } else {
+      $package_ensure = 'present'
     }
-    /(absent)/: {
-      $package_ensure = 'absent'
-      $file_ensure = 'absent'
-      $service_ensure_real = 'stopped'
-      $service_enable_real = false
-      $trap_service_ensure_real = 'stopped'
-      $trap_service_enable_real = false
+    $file_ensure = 'present'
+    $trap_service_ensure_real = $trap_service_ensure
+    $trap_service_enable_real = $trap_service_enable
+
+    # Make sure that if $trap_service_ensure == 'running' that
+    # $service_ensure_real == 'running' on Debian.
+    if ($::osfamily == 'Debian') and ($trap_service_ensure_real == 'running') {
+      $service_ensure_real = $trap_service_ensure_real
+      $service_enable_real = $trap_service_enable_real
+    } else {
+      $service_ensure_real = $service_ensure
+      $service_enable_real = $service_enable
     }
-    default: {
-      fail('ensure parameter must be present or absent')
-    }
+  } else {
+    $package_ensure = 'absent'
+    $file_ensure = 'absent'
+    $service_ensure_real = 'stopped'
+    $service_enable_real = false
+    $trap_service_ensure_real = 'stopped'
+    $trap_service_enable_real = false
   }
 
   if $service_ensure == 'running' {
