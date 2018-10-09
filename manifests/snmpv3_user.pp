@@ -54,19 +54,13 @@
 #
 define snmp::snmpv3_user (
   $authpass,
-  $authtype = 'SHA',
-  $privpass = undef,
-  $privtype = 'AES',
-  $daemon   = 'snmpd'
-) {
-  # Validate our regular expressions
-  $hash_options = [ '^SHA$', '^MD5$' ]
-  validate_re($authtype, $hash_options, '$authtype must be either SHA or MD5.')
-  $enc_options = [ '^AES$', '^DES$' ]
-  validate_re($privtype, $enc_options, '$privtype must be either AES or DES.')
-  $daemon_options = [ '^snmpd$', '^snmptrapd$' ]
-  validate_re($daemon, $daemon_options, '$daemon must be either snmpd or snmptrapd.')
+  Enum['SHA','MD5'] $authtype = 'SHA',
 
+  $privpass = undef,
+  Enum['AES','DES'] $privtype = 'AES',
+
+  Enum['snmpd','snmptrapd'] $daemon = 'snmpd'
+) {
   include ::snmp
 
   if ($daemon == 'snmptrapd') and ($::osfamily != 'Debian') {

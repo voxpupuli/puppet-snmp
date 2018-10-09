@@ -14,396 +14,65 @@
 # Copyright (C) 2012 Mike Arnold, unless otherwise noted.
 #
 class snmp::params {
-  # If we have a top scope variable defined, use it, otherwise fall back to a
-  # hardcoded value.
-  $snmp_agentaddress = getvar('::snmp_agentaddress')
-  if $snmp_agentaddress {
-    $agentaddress = $::snmp_agentaddress
-  } else {
-    $agentaddress = [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ]
-  }
+  $agentaddress = [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ]
+  $master = false
+  $agentx_perms = undef
+  $agentx_ping_interval = undef
+  $agentx_socket = undef
+  $agentx_timeout = 1
+  $agentx_retries = 5
+  $snmptrapdaddr = [ 'udp:127.0.0.1:162', 'udp6:[::1]:162' ]
+  $ro_community = 'public'
+  $ro_community6 = 'public'
+  $rw_community = undef
+  $rw_community6 = undef
+  $ro_network = '127.0.0.1'
+  $ro_network6 = '::1'
+  $rw_network = '127.0.0.1'
+  $rw_network6 = '::1'
+  $contact = 'Unknown'
+  $location = 'Unknown'
+  $sysname = $::fqdn
+  $com2sec = [ 'notConfigUser  default       public', ]
+  $com2sec6 = [ 'notConfigUser  default       public', ]
+  $groups = [
+    'notConfigGroup v1            notConfigUser',
+    'notConfigGroup v2c           notConfigUser',
+  ]
+  $services = 72
+  $openmanage_enable = false
+  $views = [
+    'systemview    included   .1.3.6.1.2.1.1',
+    'systemview    included   .1.3.6.1.2.1.25.1.1',
+  ]
+  $accesses = [
+    'notConfigGroup ""      any       noauth    exact  systemview none  none',
+  ]
+  $dlmod = []
+  $extends = []
+  $disable_authorization = 'no'
+  $do_not_log_traps = 'no'
+  $do_not_log_tcpwrappers = 'no'
+  $trap_handlers = []
+  $trap_forwards = []
+  $snmp_config = []
+  $snmpd_config = []
+  $snmptrapd_config = []
 
-  $snmp_master = getvar('::snmp_master')
-  if $snmp_master {
-    $master = $::snmp_master
-  } else {
-    $master = false
-  }
+  ### The following parameters should not need to be changed.
 
-  $snmp_agentx_perms = getvar('::snmp_agentx_perms')
-  if $snmp_agentx_perms {
-    $agentx_perms = $::snmp_agentx_perms
-  } else {
-    $agentx_perms = undef
-  }
-
-  $snmp_agentx_ping_interval = getvar('::snmp_agentx_ping_interval')
-  if $snmp_agentx_ping_interval {
-    $agentx_ping_interval = $::snmp_agentx_ping_interval
-  } else {
-    $agentx_ping_interval = undef
-  }
-
-  $snmp_agentx_socket = getvar('::snmp_agentx_socket')
-  if $snmp_agentx_socket {
-    $agentx_socket = $::snmp_agentx_socket
-  } else {
-    $agentx_socket = undef
-  }
-
-  $snmp_agentx_timeout = getvar('::snmp_agentx_timeout')
-  if $snmp_agentx_timeout {
-    $agentx_timeout = $::snmp_agentx_timeout
-  } else {
-    $agentx_timeout = 1
-  }
-
-  $snmp_agentx_retries = getvar('::snmp_agentx_retries')
-  if $snmp_agentx_retries {
-    $agentx_retries = $::snmp_agentx_retries
-  } else {
-    $agentx_retries = 5
-  }
-
-  $snmp_snmptrapdaddr = getvar('::snmp_snmptrapdaddr')
-  if $snmp_snmptrapdaddr {
-    $snmptrapdaddr = $::snmp_snmptrapdaddr
-  } else {
-    $snmptrapdaddr =  [ 'udp:127.0.0.1:162', 'udp6:[::1]:162' ]
-  }
-
-  $snmp_ro_community = getvar('::snmp_ro_community')
-  if $snmp_ro_community {
-    $ro_community = $::snmp_ro_community
-  } else {
-    $ro_community =  'public'
-  }
-
-  $snmp_ro_community6 = getvar('::snmp_ro_community6')
-  if $snmp_ro_community6 {
-    $ro_community6 = $::snmp_ro_community6
-  } else {
-    $ro_community6 =  'public'
-  }
-
-  $snmp_rw_community = getvar('::snmp_rw_community')
-  if $snmp_rw_community {
-    $rw_community = $::snmp_rw_community
-  } else {
-    $rw_community =  undef
-  }
-
-  $snmp_rw_community6 = getvar('::snmp_rw_community6')
-  if $snmp_rw_community6 {
-    $rw_community6 =  $::snmp_rw_community6
-  } else {
-    $rw_community6 =  undef
-  }
-
-  $snmp_ro_network = getvar('::snmp_ro_network')
-  if $snmp_ro_network {
-    $ro_network =  $::snmp_ro_network
-  } else {
-    $ro_network =  '127.0.0.1'
-  }
-
-  $snmp_ro_network6 = getvar('::snmp_ro_network6')
-  if $snmp_ro_network6 {
-    $ro_network6 =  $::snmp_ro_network6
-  } else {
-    $ro_network6 =  '::1'
-  }
-
-  $snmp_rw_network = getvar('::snmp_rw_network')
-  if $snmp_rw_network {
-    $rw_network =  $::snmp_rw_network
-  } else {
-    $rw_network =  '127.0.0.1'
-  }
-
-  $snmp_rw_network6 = getvar('::snmp_rw_network6')
-  if $snmp_rw_network6 {
-    $rw_network6 =  $::snmp_rw_network6
-  } else {
-    $rw_network6 =  '::1'
-  }
-
-  $snmp_contact = getvar('::snmp_contact')
-  if $snmp_contact {
-    $contact =  $::snmp_contact
-  } else {
-    $contact =  'Unknown'
-  }
-
-  $snmp_location = getvar('::snmp_location')
-  if $snmp_location {
-    $location =  $::snmp_location
-  } else {
-    $location =  'Unknown'
-  }
-
-  $snmp_sysname = getvar('::snmp_sysname')
-  if $snmp_sysname {
-    $sysname =  $::snmp_sysname
-  } else {
-    $sysname =  $::fqdn
-  }
-
-  $snmp_com2sec = getvar('::snmp_com2sec')
-  if $snmp_com2sec {
-    $com2sec =  $::snmp_com2sec
-  } else {
-    $com2sec =  [ 'notConfigUser  default       public', ]
-  }
-
-  $snmp_com2sec6 = getvar('::snmp_com2sec6')
-  if $snmp_com2sec6 {
-    $com2sec6 =  $::snmp_com2sec6
-  } else {
-    $com2sec6 =  [ 'notConfigUser  default       public', ]
-  }
-
-  $snmp_groups = getvar('::snmp_groups')
-  if $snmp_groups {
-    $groups =  $::snmp_groups
-  } else {
-    $groups =  [
-      'notConfigGroup v1            notConfigUser',
-      'notConfigGroup v2c           notConfigUser',
-    ]
-  }
-
-  $snmp_services = getvar('::snmp_services')
-  if $snmp_services {
-    $services =  $::snmp_services
-  } else {
-    $services =  72
-  }
-
-  $snmp_openmanage_enable = getvar('::openmanage_enable')
-  if $snmp_openmanage_enable {
-    $openmanage_enable =  $snmp_openmanage_enable
-  } else {
-    $openmanage_enable =  false
-  }
-
-  $snmp_views = getvar('::snmp_views')
-  if $snmp_views {
-    $views =  $::snmp_views
-  } else {
-    $views =  [
-      'systemview    included   .1.3.6.1.2.1.1',
-      'systemview    included   .1.3.6.1.2.1.25.1.1',
-    ]
-  }
-
-  $snmp_accesses = getvar('::snmp_accesses')
-  if $snmp_accesses {
-    $accesses =  $::snmp_accesses
-  } else {
-    $accesses =  [
-      'notConfigGroup ""      any       noauth    exact  systemview none  none',
-    ]
-  }
-
-  $snmp_dlmod = getvar('::snmp_dlmod')
-  if $snmp_dlmod {
-    $dlmod =  $::snmp_dlmod
-  } else {
-    $dlmod =  []
-  }
-
-  $snmp_extends = getvar('::snmp_extends')
-  if $snmp_extends {
-    $extemds =  $::snmp_extends
-  } else {
-    $extends =  []
-  }
-
-  $snmp_disable_authorization = getvar('::snmp_disable_authorization')
-  if $snmp_disable_authorization {
-    $disable_authorization =  $::snmp_disable_authorization
-  } else {
-    $disable_authorization =  'no'
-  }
-
-  $snmp_do_not_log_traps = getvar('::snmp_do_not_log_traps')
-  if $snmp_do_not_log_traps {
-    $do_not_log_traps =  $::snmp_do_not_log_traps
-  } else {
-    $do_not_log_traps =  'no'
-  }
-
-  $snmp_do_not_log_tcpwrappers = getvar('::snmp_do_not_log_tcpwrappers')
-  if $snmp_do_not_log_tcpwrappers {
-    $do_not_log_tcpwrappers =  $::snmp_do_not_log_tcpwrappers
-  } else {
-    $do_not_log_tcpwrappers =  'no'
-  }
-
-  $snmp_trap_handlers = getvar('::snmp_trap_handlers')
-  if $snmp_trap_handlers {
-    $trap_handlers =  $::snmp_trap_handlers
-  } else {
-    $trap_handlers =  []
-  }
-
-  $snmp_trap_forwards = getvar('::snmp_trap_forwards')
-  if $snmp_trap_forwards {
-    $trap_forwards =  $::snmp_trap_forwards
-  } else {
-    $trap_forwards =  []
-  }
-
-  $snmp_snmp_config = getvar('::snmp_snmp_config')
-  if $snmp_snmp_config {
-    $snmp_config =  $::snmp_snmp_config
-  } else {
-    $snmp_config =  []
-  }
-
-  $snmp_snmpd_config = getvar('::snmp_snmpd_config')
-  if $snmp_snmpd_config {
-    $snmpd_config =  $::snmp_snmpd_config
-  } else {
-    $snmpd_config =  []
-  }
-
-  $snmp_snmptrapd_config = getvar('::snmp_snmptrapd_config')
-  if $snmp_snmptrapd_config {
-    $snmptrapd_config =  $::snmp_snmptrapd_config
-  } else {
-    $snmptrapd_config =  []
-  }
-
-### The following parameters should not need to be changed.
-
-  $snmp_ensure = getvar('::snmp_ensure')
-  if $snmp_ensure {
-    $ensure =  $::snmp_ensure
-  } else {
-    $ensure =  'present'
-  }
-
-  $snmp_service_ensure = getvar('::snmp_service_ensure')
-  if $snmp_service_ensure {
-    $service_ensure =  $::snmp_service_ensure
-  } else {
-    $service_ensure =  'running'
-  }
-
-  $snmp_trap_service_ensure = getvar('::snmp_trap_service_ensure')
-  if $snmp_trap_service_ensure {
-    $trap_service_ensure =  $::snmp_trap_service_ensure
-  } else {
-    $trap_service_ensure =  'stopped'
-  }
-
-  # Since the top scope variable could be a string (if from an ENC), we might
-  # need to convert it to a boolean.
-  $snmp_autoupgrade = getvar('::snmp_autoupgrade')
-  if $snmp_autoupgrade {
-    $autoupgrade =  $::snmp_autoupgrade
-  } else {
-    $autoupgrade =  false
-  }
-  if is_string($autoupgrade) {
-    $safe_autoupgrade = str2bool($autoupgrade)
-  } else {
-    $safe_autoupgrade = $autoupgrade
-  }
-
-  $snmp_install_client = getvar('::snmp_install_client')
-  if $snmp_install_client {
-    $install_client =  $::snmp_install_client
-  } else {
-    $install_client =  undef
-  }
-
-  $snmp_manage_client = getvar('::snmp_manage_client')
-  if $snmp_manage_client {
-    $manage_client =  $::snmp_manage_client
-  } else {
-    $manage_client =  false
-  }
-  if is_string($manage_client) {
-    $safe_manage_client = str2bool($manage_client)
-  } else {
-    $safe_manage_client = $manage_client
-  }
-
-  $snmp_service_enable = getvar('::snmp_service_enable')
-  if $snmp_service_enable {
-    $service_enable =  $::snmp_service_enable
-  } else {
-    $service_enable =  true
-  }
-  if is_string($service_enable) {
-    $safe_service_enable = str2bool($service_enable)
-  } else {
-    $safe_service_enable = $service_enable
-  }
-
-  $snmp_service_hasstatus = getvar('::snmp_service_hasstatus')
-  if $snmp_service_hasstatus {
-    $service_hasstatus =  $::snmp_service_hasstatus
-  } else {
-    $service_hasstatus =  true
-  }
-  if is_string($service_hasstatus) {
-    $safe_service_hasstatus = str2bool($service_hasstatus)
-  } else {
-    $safe_service_hasstatus = $service_hasstatus
-  }
-
-  $snmp_service_hasrestart = getvar('::snmp_service_hasrestart')
-  if $snmp_service_hasrestart {
-    $service_hasrestart =  $::snmp_service_hasrestart
-  } else {
-    $service_hasrestart =  true
-  }
-  if is_string($service_hasrestart) {
-    $safe_service_hasrestart = str2bool($service_hasrestart)
-  } else {
-    $safe_service_hasrestart = $service_hasrestart
-  }
-
-  $snmp_trap_service_enable = getvar('::snmp_trap_service_enable')
-  if $snmp_trap_service_enable {
-    $trap_service_enable =  $::snmp_trap_service_enable
-  } else {
-    $trap_service_enable =  false
-  }
-  if is_string($trap_service_enable) {
-    $safe_trap_service_enable = str2bool($trap_service_enable)
-  } else {
-    $safe_trap_service_enable = $trap_service_enable
-  }
-
-  $snmp_trap_service_hasstatus = getvar('::snmp_trap_service_hasstatus')
-  if $snmp_trap_service_hasstatus {
-    $trap_service_hasstatus =  $::snmp_trap_service_hasstatus
-  } else {
-    $trap_service_hasstatus =  true
-  }
-  if is_string($trap_service_hasstatus) {
-    $safe_trap_service_hasstatus = str2bool($trap_service_hasstatus)
-  } else {
-    $safe_trap_service_hasstatus = $trap_service_hasstatus
-  }
-
-  $snmp_trap_service_hasrestart = getvar('::snmp_trap_service_hasrestart')
-  if $snmp_trap_service_hasrestart {
-    $trap_service_hasrestart =  $::snmp_trap_service_hasrestart
-  } else {
-    $trap_service_hasrestart =  true
-  }
-  if is_string($trap_service_hasrestart) {
-    $safe_trap_service_hasrestart = str2bool($trap_service_hasrestart)
-  } else {
-    $safe_trap_service_hasrestart = $trap_service_hasrestart
-  }
-
+  $ensure = 'present'
+  $service_ensure = 'running'
+  $trap_service_ensure = 'stopped'
+  $autoupgrade = false
+  $manage_client = false
+  $service_enable = true
+  $service_hasstatus = true
+  $service_hasrestart = true
+  $trap_service_enable = false
+  $trap_service_hasstatus = true
+  $trap_service_hasrestart = true
+  $snmpv2_enable = true
   $template_snmpd_conf = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${::osfamily}.erb"
   $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
@@ -470,7 +139,7 @@ class snmp::params {
       $trap_service_name        = 'snmptrapd'
     }
     'Debian': {
-      if $::operatingsystem == 'Debian' and $::operatingsystemmajrelease >= '9' {
+      if $::operatingsystem == 'Debian' and versioncmp($::operatingsystemmajrelease, '9') >= 0 {
         $varnetsnmp_owner = 'Debian-snmp'
         $varnetsnmp_group = 'Debian-snmp'
       } else {

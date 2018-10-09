@@ -46,30 +46,22 @@
 # Copyright (C) 2012 Mike Arnold, unless otherwise noted.
 #
 class snmp::client (
-  $snmp_config        = $snmp::params::snmp_config,
-  $ensure             = $snmp::params::ensure,
-  $autoupgrade        = $snmp::params::safe_autoupgrade,
-  $package_name       = $snmp::params::client_package_name
+  $snmp_config         = $snmp::params::snmp_config,
+  Enum['present', 'absent'] $ensure = $snmp::params::ensure,
+  Boolean $autoupgrade = $snmp::params::autoupgrade,
+  $package_name        = $snmp::params::client_package_name
 ) inherits snmp::params {
-  # Validate our booleans
-  validate_bool($autoupgrade)
 
-  case $ensure {
-    /(present)/: {
-      if $autoupgrade == true {
-        $package_ensure = 'latest'
-      } else {
-        $package_ensure = 'present'
-      }
-      $file_ensure = 'present'
+  if $ensure == 'present' {
+    if $autoupgrade {
+      $package_ensure = 'latest'
+    } else {
+      $package_ensure = 'present'
     }
-    /(absent)/: {
-      $package_ensure = 'absent'
-      $file_ensure = 'absent'
-    }
-    default: {
-      fail('ensure parameter must be present or absent')
-    }
+    $file_ensure = 'present'
+  } else {
+    $package_ensure = 'absent'
+    $file_ensure = 'absent'
   }
 
   if $::osfamily != 'Suse' {
