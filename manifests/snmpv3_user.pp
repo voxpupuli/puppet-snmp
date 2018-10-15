@@ -61,7 +61,7 @@ define snmp::snmpv3_user (
 
   Enum['snmpd','snmptrapd'] $daemon = 'snmpd'
 ) {
-  include ::snmp
+  include snmp
 
   if ($daemon == 'snmptrapd') and ($::osfamily != 'Debian') {
     $service_name   = 'snmptrapd'

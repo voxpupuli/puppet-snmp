@@ -112,7 +112,7 @@ class { 'snmp':
 If you just want to install the SNMP client:
 
 ```puppet
-include ::snmp::client
+include snmp::client
 ```
 
 To install the SNMP service and the client:

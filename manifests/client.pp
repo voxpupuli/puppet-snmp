@@ -64,10 +64,11 @@ class snmp::client (
     $file_ensure = 'absent'
   }
 
-  if $::osfamily != 'Suse' {
+  unless $::osfamily == 'Suse' {
     package { 'snmp-client':
       ensure => $package_ensure,
       name   => $package_name,
+      before => File['snmp.conf'],
     }
   }
 
@@ -77,12 +78,6 @@ class snmp::client (
     }
   }
 
-  $req = $::osfamily ? {
-    'RedHat' => [Package['snmp-client'], File['/etc/snmp']],
-    'Suse'   => undef,
-    default  => Package['snmp-client'],
-  }
-
   file { 'snmp.conf':
     ensure  => $file_ensure,
     mode    => '0644',
@@ -90,6 +85,5 @@ class snmp::client (
     group   => 'root',
     path    => $snmp::params::client_config,
     content => template('snmp/snmp.conf.erb'),
-    require => $req,
   }
 }
