@@ -1,0 +1,10 @@
+[Service]
+ExecStart=
+ExecStart=/usr/sbin/snmpd <%= @snmpd_options %>
+<% if @snmpd_options.split(' ').include?('-f') -%>
+Type=
+Type=simple
+<% else -%>
+Type=
+Type=forking
+<% end -%>

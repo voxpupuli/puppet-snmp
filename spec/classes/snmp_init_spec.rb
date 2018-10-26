@@ -273,115 +273,224 @@ describe 'snmp', type: 'class' do
     end
 
     debianish.each do |os|
-      describe "for osfamily Debian, operatingsystem #{os}" do
+      context "on osfamily Debian (#{os})" do
         let(:params) { {} }
-        let :facts do
+        let(:debfacts) do
           {
             osfamily: 'Debian',
             operatingsystem: os,
-            operatingsystemrelease: '6.0.7',
+            operatingsystemrelease: '9.4',
             fqdn: 'myhost2.localdomain',
-            lsbmajdistrelease: '6',
-            operatingsystemmajrelease: '6'
+            lsbmajdistrelease: '9',
+            operatingsystemmajrelease: '9',
           }
         end
 
-        it {
-          is_expected.to contain_package('snmpd').with(
-            ensure: 'present',
-            name: 'snmpd'
-          )
-        }
-        it { is_expected.not_to contain_class('snmp::client') }
-        it {
-          is_expected.to contain_file('var-net-snmp').with(
-            ensure: 'directory',
-            mode: '0755',
-            owner: 'snmp',
-            group: 'snmp',
-            path: '/var/lib/snmp'
-          ).that_requires('Package[snmpd]')
-        }
+        describe 'snmpd / snmptrapd configuration' do
+          let(:facts) { debfacts }
+          it {
+            is_expected.to contain_package('snmpd').with(
+              ensure: 'present',
+              name: 'snmpd'
+            )
+          }
+          it {
+            is_expected.to contain_package('snmptrapd').with(
+              ensure: 'present',
+              name: 'snmptrapd',
+            )
+          }
+          it { is_expected.not_to contain_class('snmp::client') }
 
-        it {
-          is_expected.to contain_file('snmpd.conf').with(
-            ensure: 'present',
-            mode: '0600',
-            owner: 'root',
-            group: 'root',
-            path: '/etc/snmp/snmpd.conf'
-          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
-        }
-        # TODO: add more contents for File[snmpd.conf]
-        it 'contains File[snmpd.conf] with expected contents' do
-          verify_contents(catalogue, 'snmpd.conf', [
-                            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
-                            'rocommunity public 127.0.0.1',
-                            'rocommunity6 public ::1',
-                            'com2sec notConfigUser  default       public',
-                            'com2sec6 notConfigUser  default       public',
-                            'group   notConfigGroup v1            notConfigUser',
-                            'group   notConfigGroup v2c           notConfigUser',
-                            'view    systemview    included   .1.3.6.1.2.1.1',
-                            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
-                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
-                            'sysLocation Unknown',
-                            'sysContact Unknown',
-                            'sysServices 72',
-                            'sysName myhost2.localdomain',
-                            'dontLogTCPWrappersConnects no'
-                          ])
+          it {
+            is_expected.to contain_file('var-net-snmp').with(
+              ensure: 'directory',
+              mode: '0755',
+              owner: 'Debian-snmp',
+              group: 'Debian-snmp',
+              path: '/var/lib/snmp'
+            ).that_requires('Package[snmpd]')
+          }
+
+          it {
+            is_expected.to contain_file('snmpd.conf').with(
+              ensure: 'present',
+              mode: '0600',
+              owner: 'root',
+              group: 'root',
+              path: '/etc/snmp/snmpd.conf'
+            ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
+          }
+          # TODO: add more contents for File[snmpd.conf]
+          it 'contains File[snmpd.conf] with expected contents' do
+            verify_contents(catalogue, 'snmpd.conf', [
+              'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
+              'rocommunity public 127.0.0.1',
+              'rocommunity6 public ::1',
+              'com2sec notConfigUser  default       public',
+              'com2sec6 notConfigUser  default       public',
+              'group   notConfigGroup v1            notConfigUser',
+              'group   notConfigGroup v2c           notConfigUser',
+              'view    systemview    included   .1.3.6.1.2.1.1',
+              'view    systemview    included   .1.3.6.1.2.1.25.1.1',
+              'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
+              'sysLocation Unknown',
+              'sysContact Unknown',
+              'sysServices 72',
+              'sysName myhost2.localdomain',
+              'dontLogTCPWrappersConnects no'
+            ])
+          end
+
+          it {
+            is_expected.to contain_file('snmptrapd.conf').with(
+              ensure: 'present',
+              mode: '0600',
+              owner: 'root',
+              group: 'root',
+              path: '/etc/snmp/snmptrapd.conf'
+            ).that_requires('Package[snmptrapd]').that_notifies('Service[snmptrapd]')
+          }
+          # TODO: add more contents for File[snmptrapd.conf]
+          it 'contains File[snmptrapd.conf] with correct contents' do
+            verify_contents(catalogue, 'snmptrapd.conf', [
+              'doNotLogTraps no',
+              'authCommunity log,execute,net public',
+              'disableAuthorization no'
+            ])
+          end
         end
-        it {
-          is_expected.to contain_file('snmpd.sysconfig').with(
-            ensure: 'present',
-            mode: '0644',
-            owner: 'root',
-            group: 'root',
-            path: '/etc/default/snmpd'
-          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
-        }
-        it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'"' do
-          verify_contents(catalogue, 'snmpd.sysconfig', [
+
+        context "for osfamily Debian, operatingsystem #{os} without systemd" do
+          let(:facts) { debfacts.merge({service_provider: 'debian'}) }
+          describe 'default params' do
+            let(:params) { {} }
+            it {
+              is_expected.to contain_file('snmpd.sysconfig').with(
+                ensure: 'present',
+                mode: '0644',
+                owner: 'root',
+                group: 'root',
+                path: '/etc/default/snmpd'
+              ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
+            }
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'"' do
+              verify_contents(catalogue, 'snmpd.sysconfig', [
                             'SNMPDRUN=yes',
-                            'SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\''
+                            'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\''
                           ])
-        end
-        it {
-          is_expected.to contain_service('snmpd').with(
-            ensure: 'running',
-            name: 'snmpd',
-            enable: true,
-            hasstatus: true,
-            hasrestart: true
-          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
-        }
+            end
+            it 'contains File[snmptrapd.sysconfig] with contents "TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\'"' do
+              verify_contents(catalogue, 'snmptrapd.sysconfig', [
+                'TRAPDRUN=yes',
+                'TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\''
+              ])
+            end
 
-        it {
-          is_expected.to contain_file('snmptrapd.conf').with(
-            ensure: 'present',
-            mode: '0600',
-            owner: 'root',
-            group: 'root',
-            path: '/etc/snmp/snmptrapd.conf'
-          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
-        }
-        # TODO: add more contents for File[snmptrapd.conf]
-        it 'contains File[snmptrapd.conf] with correct contents' do
-          verify_contents(catalogue, 'snmptrapd.conf', [
-                            'doNotLogTraps no',
-                            'authCommunity log,execute,net public',
-                            'disableAuthorization no'
-                          ])
+          end
+
+          describe 'service_ensure => stopped and trap_service_ensure => running' do
+            let(:params) do
+              {
+                service_ensure: 'stopped',
+                trap_service_ensure: 'running'
+              }
+            end
+            it { is_expected.to contain_service('snmpd').with_ensure('stopped') }
+            it { is_expected.to contain_service('snmptrapd').with_ensure('running') }
+          end
+
+          describe 'snmpd_options => blah' do
+            let(:params) { { snmpd_options: 'blah' } }
+            it { is_expected.to contain_file('snmpd.sysconfig') }
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'blah\'"' do
+              verify_contents(catalogue, 'snmpd.sysconfig', ['SNMPDOPTS=\'blah\''])
+            end
+          end
+
+          describe 'snmptrapd_options => bleh' do
+            let(:params) { { snmptrapd_options: 'bleh' } }
+            it { is_expected.to contain_file('snmptrapd.sysconfig') }
+            it 'contains File[snmptrapd.sysconfig] with contents "TRAPDOPTS=\'bleh\'"' do
+              verify_contents(catalogue, 'snmptrapd.sysconfig', ['TRAPDOPTS=\'bleh\''])
+            end
+          end
+
         end
-        it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
-        it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\'"' do
-          verify_contents(catalogue, 'snmpd.sysconfig', [
-                            'TRAPDRUN=no',
-                            'TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\''
-                          ])
+
+        context "for osfamily Debian, operatingsystem #{os} with systemd" do
+          let(:facts) do
+            debfacts.merge({service_provider: 'systemd', path: '/bin:/sbin:/usr/bin' })
+          end
+
+          it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
+          it { is_expected.not_to contain_file('snmpd.sysconfig') }
+
+          it {
+            is_expected.to contain_service('snmpd').with(
+              ensure: 'running',
+              name: 'snmpd',
+              enable: true,
+              hasstatus: true,
+              hasrestart: true
+            ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
+          }
+
+          describe 'default params' do
+            let(:params) { {} }
+            it 'contains systemd dropin file for snmpd with execstart' do
+              is_expected.to contain_file('/etc/systemd/system/snmpd.service.d/local.conf').with(
+                ensure: 'file',
+                mode: '0644',
+                owner: 'root',
+                group: 'root',
+                path: '/etc/systemd/system/snmpd.service.d/local.conf'
+              ).that_requires('Package[snmpd]').that_notifies(['Service[snmpd]', 'Exec[systemctl-daemon-reload]'])
+
+              expected_lines =  [
+                '[Service]',
+                'ExecStart=',
+                'ExecStart=/usr/sbin/snmpd -Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid',
+                'Type=',
+                'Type=forking',
+              ]
+              verify_contents(catalogue, '/etc/systemd/system/snmpd.service.d/local.conf', expected_lines)
+            end
+          end
+          describe 'ensure_service => stopped, trap_service_ensure => running' do
+            let :params do
+              {
+                service_ensure: 'stopped',
+                trap_service_ensure: 'running'
+              }
+            end
+
+            it { is_expected.to contain_service('snmpd').with_ensure('stopped') }
+            it { is_expected.to contain_service('snmptrapd').with_ensure('running') }
+          end
+
+          describe 'snmpd_options => blah' do
+            let(:params) { { snmpd_options: 'blah' } }
+
+            it { is_expected.to contain_file('/etc/systemd/system/snmpd.service.d/local.conf') }
+            it 'contains systemd drop-in file with contents ExecStart' do
+              verify_contents(catalogue, '/etc/systemd/system/snmpd.service.d/local.conf', [
+                'ExecStart=/usr/sbin/snmpd blah'
+              ])
+            end
+          end
+
+          describe 'snmptrapd_options => bleh' do
+            let(:params) { { snmptrapd_options: 'bleh' } }
+
+            it { is_expected.to contain_file('/etc/systemd/system/snmptrapd.service.d/local.conf') }
+            it 'contains systemd drop-in file with contents ExecStart' do
+              verify_contents(catalogue, '/etc/systemd/system/snmptrapd.service.d/local.conf', [
+                'ExecStart=/usr/sbin/snmptrapd bleh'
+              ])
+            end
+          end
         end
-        it { is_expected.not_to contain_service('snmptrapd') }
       end
     end
 
@@ -428,22 +537,22 @@ describe 'snmp', type: 'class' do
         # TODO: add more contents for File[snmpd.conf]
         it 'contains File[snmpd.conf] with expected contents' do
           verify_contents(catalogue, 'snmpd.conf', [
-                            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
-                            'rocommunity public 127.0.0.1',
-                            'rocommunity6 public ::1',
-                            'com2sec notConfigUser  default       public',
-                            'com2sec6 notConfigUser  default       public',
-                            'group   notConfigGroup v1            notConfigUser',
-                            'group   notConfigGroup v2c           notConfigUser',
-                            'view    systemview    included   .1.3.6.1.2.1.1',
-                            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
-                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
-                            'sysLocation Unknown',
-                            'sysContact Unknown',
-                            'sysServices 72',
-                            'sysName myhost3.localdomain',
-                            'dontLogTCPWrappersConnects no'
-                          ])
+            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
+            'rocommunity public 127.0.0.1',
+            'rocommunity6 public ::1',
+            'com2sec notConfigUser  default       public',
+            'com2sec6 notConfigUser  default       public',
+            'group   notConfigGroup v1            notConfigUser',
+            'group   notConfigGroup v2c           notConfigUser',
+            'view    systemview    included   .1.3.6.1.2.1.1',
+            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
+            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
+            'sysLocation Unknown',
+            'sysContact Unknown',
+            'sysServices 72',
+            'sysName myhost3.localdomain',
+            'dontLogTCPWrappersConnects no'
+          ])
         end
         it {
           is_expected.to contain_file('snmpd.sysconfig').with(
@@ -456,8 +565,8 @@ describe 'snmp', type: 'class' do
         }
         it 'contains File[snmpd.sysconfig] with contents "SNMPD_LOGLEVEL="d""' do
           verify_contents(catalogue, 'snmpd.sysconfig', [
-                            'SNMPD_LOGLEVEL="d"'
-                          ])
+            'SNMPD_LOGLEVEL="d"'
+          ])
         end
         it {
           is_expected.to contain_service('snmpd').with(
@@ -481,10 +590,10 @@ describe 'snmp', type: 'class' do
         # TODO: add more contents for File[snmptrapd.conf]
         it 'contains File[snmptrapd.conf] with correct contents' do
           verify_contents(catalogue, 'snmptrapd.conf', [
-                            'doNotLogTraps no',
-                            'authCommunity log,execute,net public',
-                            'disableAuthorization no'
-                          ])
+            'doNotLogTraps no',
+            'authCommunity log,execute,net public',
+            'disableAuthorization no'
+          ])
         end
         it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
         it {
@@ -549,22 +658,22 @@ describe 'snmp', type: 'class' do
         # TODO: add more contents for File[snmpd.conf]
         it 'contains File[snmpd.conf] with expected contents' do
           verify_contents(catalogue, 'snmpd.conf', [
-                            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
-                            'rocommunity public 127.0.0.1',
-                            'rocommunity6 public ::1',
-                            'com2sec notConfigUser  default       public',
-                            'com2sec6 notConfigUser  default       public',
-                            'group   notConfigGroup v1            notConfigUser',
-                            'group   notConfigGroup v2c           notConfigUser',
-                            'view    systemview    included   .1.3.6.1.2.1.1',
-                            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
-                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
-                            'sysLocation Unknown',
-                            'sysContact Unknown',
-                            'sysServices 72',
-                            'sysName myhost4.localdomain',
-                            'dontLogTCPWrappersConnects no'
-                          ])
+            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
+            'rocommunity public 127.0.0.1',
+            'rocommunity6 public ::1',
+            'com2sec notConfigUser  default       public',
+            'com2sec6 notConfigUser  default       public',
+            'group   notConfigGroup v1            notConfigUser',
+            'group   notConfigGroup v2c           notConfigUser',
+            'view    systemview    included   .1.3.6.1.2.1.1',
+            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
+            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
+            'sysLocation Unknown',
+            'sysContact Unknown',
+            'sysServices 72',
+            'sysName myhost4.localdomain',
+            'dontLogTCPWrappersConnects no'
+          ])
         end
         it {
           is_expected.to contain_service('snmpd').with(
@@ -588,10 +697,10 @@ describe 'snmp', type: 'class' do
         # TODO: add more contents for File[snmptrapd.conf]
         it 'contains File[snmptrapd.conf] with correct contents' do
           verify_contents(catalogue, 'snmptrapd.conf', [
-                            'doNotLogTraps no',
-                            'authCommunity log,execute,net public',
-                            'disableAuthorization no'
-                          ])
+            'doNotLogTraps no',
+            'authCommunity log,execute,net public',
+            'disableAuthorization no'
+          ])
         end
         it {
           is_expected.to contain_service('snmptrapd').with(
@@ -647,22 +756,22 @@ describe 'snmp', type: 'class' do
         # TODO: add more contents for File[snmpd.conf]
         it 'contains File[snmpd.conf] with expected contents' do
           verify_contents(catalogue, 'snmpd.conf', [
-                            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
-                            'rocommunity public 127.0.0.1',
-                            'rocommunity6 public ::1',
-                            'com2sec notConfigUser  default       public',
-                            'com2sec6 notConfigUser  default       public',
-                            'group   notConfigGroup v1            notConfigUser',
-                            'group   notConfigGroup v2c           notConfigUser',
-                            'view    systemview    included   .1.3.6.1.2.1.1',
-                            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
-                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
-                            'sysLocation Unknown',
-                            'sysContact Unknown',
-                            'sysServices 72',
-                            'sysName myhost4.localdomain',
-                            'dontLogTCPWrappersConnects no'
-                          ])
+            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
+            'rocommunity public 127.0.0.1',
+            'rocommunity6 public ::1',
+            'com2sec notConfigUser  default       public',
+            'com2sec6 notConfigUser  default       public',
+            'group   notConfigGroup v1            notConfigUser',
+            'group   notConfigGroup v2c           notConfigUser',
+            'view    systemview    included   .1.3.6.1.2.1.1',
+            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
+            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
+            'sysLocation Unknown',
+            'sysContact Unknown',
+            'sysServices 72',
+            'sysName myhost4.localdomain',
+            'dontLogTCPWrappersConnects no'
+          ])
         end
         it {
           is_expected.to contain_service('snmpd').with(
@@ -686,10 +795,10 @@ describe 'snmp', type: 'class' do
         # TODO: add more contents for File[snmptrapd.conf]
         it 'contains File[snmptrapd.conf] with correct contents' do
           verify_contents(catalogue, 'snmptrapd.conf', [
-                            'doNotLogTraps no',
-                            'authCommunity log,execute,net public',
-                            'disableAuthorization no'
-                          ])
+            'doNotLogTraps no',
+            'authCommunity log,execute,net public',
+            'disableAuthorization no'
+          ])
         end
         it {
           is_expected.to contain_service('snmptrapd').with(
@@ -850,8 +959,8 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmpd.sysconfig') }
       it 'contains File[snmpd.sysconfig] with contents "OPTIONS=\'blah\'"' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'OPTIONS="blah"'
-                        ])
+          'OPTIONS="blah"'
+        ])
       end
     end
 
@@ -861,8 +970,8 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmptrapd.sysconfig') }
       it 'contains File[snmptrapd.sysconfig] with contents "OPTIONS=\'bleh\'"' do
         verify_contents(catalogue, 'snmptrapd.sysconfig', [
-                          'OPTIONS="bleh"'
-                        ])
+          'OPTIONS="bleh"'
+        ])
       end
     end
 
@@ -871,8 +980,8 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "com2sec SomeString"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'com2sec SomeString'
-                        ])
+          'com2sec SomeString'
+        ])
       end
     end
 
@@ -881,8 +990,8 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "com2sec6 SomeString"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'com2sec6 SomeString'
-                        ])
+          'com2sec6 SomeString'
+        ])
       end
     end
 
@@ -891,8 +1000,8 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "group SomeString"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'group   SomeString'
-                        ])
+          'group   SomeString'
+        ])
       end
     end
 
@@ -901,9 +1010,9 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents from array' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'view    SomeArray1',
-                          'view    SomeArray2'
-                        ])
+          'view    SomeArray1',
+          'view    SomeArray2'
+        ])
       end
     end
 
@@ -912,9 +1021,9 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents from array' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'access  SomeArray1',
-                          'access  SomeArray2'
-                        ])
+          'access  SomeArray1',
+          'access  SomeArray2'
+        ])
       end
     end
 
@@ -923,8 +1032,8 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "dlmod SomeString"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'dlmod SomeString'
-                        ])
+          'dlmod SomeString'
+        ])
       end
     end
 
@@ -933,9 +1042,9 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents from array' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'extend SomeArray1',
-                          'extend SomeArray2'
-                        ])
+          'extend SomeArray1',
+          'extend SomeArray2'
+        ])
       end
     end
 
@@ -944,13 +1053,13 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "smuxpeer .1.3.6.1.4.1.674.10892.1"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'smuxpeer .1.3.6.1.4.1.674.10892.1'
-                        ])
+          'smuxpeer .1.3.6.1.4.1.674.10892.1'
+        ])
       end
       it 'contains File[snmpd.conf] with contents "smuxpeer .1.3.6.1.4.1.674.10893.1"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'smuxpeer .1.3.6.1.4.1.674.10893.1'
-                        ])
+          'smuxpeer .1.3.6.1.4.1.674.10893.1'
+        ])
       end
     end
 
@@ -959,8 +1068,8 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "agentaddress 1.2.3.4,8.6.7.5:222"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'agentaddress 1.2.3.4,8.6.7.5:222'
-                        ])
+          'agentaddress 1.2.3.4,8.6.7.5:222'
+        ])
       end
     end
 
@@ -969,8 +1078,8 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "dontLogTCPWrappersConnects yes' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'dontLogTCPWrappersConnects yes'
-                        ])
+          'dontLogTCPWrappersConnects yes'
+        ])
       end
     end
 
@@ -979,8 +1088,8 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmptrapd.conf] with contents "snmpTrapdAddr 5.6.7.8,2.3.4.5:3333"' do
         verify_contents(catalogue, 'snmptrapd.conf', [
-                          'snmpTrapdAddr 5.6.7.8,2.3.4.5:3333'
-                        ])
+          'snmpTrapdAddr 5.6.7.8,2.3.4.5:3333'
+        ])
       end
     end
 
@@ -989,9 +1098,9 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "option1" and "option 2"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'option 1',
-                          'option 2'
-                        ])
+          'option 1',
+          'option 2'
+        ])
       end
     end
 
@@ -1000,9 +1109,9 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmptrapd.conf] with contents "option 3" and "option 4"' do
         verify_contents(catalogue, 'snmptrapd.conf', [
-                          'option 3',
-                          'option 4'
-                        ])
+          'option 3',
+          'option 4'
+        ])
       end
     end
 
@@ -1011,9 +1120,9 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "127.0.0.1" and "192.168.1.1/24"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'rocommunity public 127.0.0.1',
-                          'rocommunity public 192.168.1.1/24'
-                        ])
+          'rocommunity public 127.0.0.1',
+          'rocommunity public 192.168.1.1/24'
+        ])
       end
     end
 
@@ -1022,8 +1131,8 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "127.0.0.2"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'rocommunity public 127.0.0.2'
-                        ])
+          'rocommunity public 127.0.0.2'
+        ])
       end
     end
 
@@ -1032,15 +1141,15 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "a 127.0.0.2" and "b 127.0.0.2"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'rocommunity a 127.0.0.2',
-                          'rocommunity b 127.0.0.2'
-                        ])
+          'rocommunity a 127.0.0.2',
+          'rocommunity b 127.0.0.2'
+        ])
       end
       it 'contains File[snmptrapd.conf] with contents "a" and "b"' do
         verify_contents(catalogue, 'snmptrapd.conf', [
-                          'authCommunity log,execute,net a',
-                          'authCommunity log,execute,net b'
-                        ])
+          'authCommunity log,execute,net a',
+          'authCommunity log,execute,net b'
+        ])
       end
     end
 
@@ -1049,8 +1158,8 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with contents "master agentx"' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'master agentx'
-                        ])
+          'master agentx'
+        ])
       end
     end
 
@@ -1068,13 +1177,13 @@ describe 'snmp', type: 'class' do
 
       it 'contains File[snmpd.conf] with correct contents' do
         verify_contents(catalogue, 'snmpd.conf', [
-                          'master agentx',
-                          'agentXPerms 0644',
-                          'agentXPingInterval 5',
-                          'agentXSocket unix:/var/agentx/master',
-                          'agentXTimeout 10',
-                          'agentXRetries 10'
-                        ])
+          'master agentx',
+          'agentXPerms 0644',
+          'agentXPingInterval 5',
+          'agentXSocket unix:/var/agentx/master',
+          'agentXTimeout 10',
+          'agentXRetries 10'
+        ])
       end
     end
 
@@ -1096,77 +1205,6 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmpd.conf').without_content('/agentXSocket unix:/var/agentx/master/') }
       it { is_expected.to contain_file('snmpd.conf').without_content('/agentXTimeout 10/') }
       it { is_expected.to contain_file('snmpd.conf').without_content('/agentXRetries 10/') }
-    end
-  end
-
-  context 'on a supported osfamily (Debian), custom parameters' do
-    let :facts do
-      {
-        osfamily: 'Debian',
-        operatingsystem: 'Debian',
-        operatingsystemrelease: '7.0',
-        lsbmajdistrelease: '7',
-        operatingsystemmajrelease: '7'
-      }
-    end
-
-    describe 'service_ensure => stopped and trap_service_ensure => running' do
-      let :params do
-        {
-          service_ensure: 'stopped',
-          trap_service_ensure: 'running'
-        }
-      end
-
-      it { is_expected.to contain_service('snmpd').with_ensure('running') }
-      it { is_expected.not_to contain_service('snmptrapd') }
-      it 'contains File[snmpd.sysconfig] with contents "SNMPDRUN=no" and "TRAPDRUN=yes"' do
-        verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'SNMPDRUN=no',
-                          'TRAPDRUN=yes'
-                        ])
-      end
-    end
-
-    describe 'snmpd_options => blah' do
-      let(:params) { { snmpd_options: 'blah' } }
-
-      it { is_expected.to contain_file('snmpd.sysconfig') }
-      it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'blah\'"' do
-        verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'SNMPDOPTS=\'blah\''
-                        ])
-      end
-    end
-
-    describe 'snmptrapd_options => bleh' do
-      let(:params) { { snmptrapd_options: 'bleh' } }
-
-      it { is_expected.to contain_file('snmpd.sysconfig') }
-      it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'bleh\'"' do
-        verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'TRAPDOPTS=\'bleh\''
-                        ])
-      end
-    end
-  end
-
-  context 'on a supported osfamily (Debian Stretch), custom parameters' do
-    let :facts do
-      {
-        osfamily: 'Debian',
-        operatingsystem: 'Debian',
-        lsbmajdistrelease: '9',
-        operatingsystemmajrelease: '9'
-      }
-    end
-
-    describe 'Debian-snmp as snmp user' do
-      it 'contains File[snmpd.sysconfig] with contents "OPTIONS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
-        verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\''
-                        ])
-      end
     end
   end
 
@@ -1213,8 +1251,8 @@ describe 'snmp', type: 'class' do
       it { is_expected.to contain_file('snmpd.sysconfig') }
       it 'contains File[snmpd.sysconfig] with contents "SNMPD_LOGLEVEL="blah""' do
         verify_contents(catalogue, 'snmpd.sysconfig', [
-                          'SNMPD_LOGLEVEL="blah"'
-                        ])
+          'SNMPD_LOGLEVEL="blah"'
+        ])
       end
     end
   end
@@ -1230,14 +1268,14 @@ describe 'snmp', type: 'class' do
 
         it 'contains File[snmpd.conf] with expected contents' do
           verify_contents(catalogue, 'snmpd.conf', [
-                            'com2sec notConfigUser  default       public',
-                            'com2sec6 notConfigUser  default       public',
-                            'group   notConfigGroup v1            notConfigUser',
-                            'group   notConfigGroup v2c           notConfigUser',
-                            'view    systemview    included   .1.3.6.1.2.1.1',
-                            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
-                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none'
-                          ])
+            'com2sec notConfigUser  default       public',
+            'com2sec6 notConfigUser  default       public',
+            'group   notConfigGroup v1            notConfigUser',
+            'group   notConfigGroup v2c           notConfigUser',
+            'view    systemview    included   .1.3.6.1.2.1.1',
+            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
+            'access  notConfigGroup ""      any       noauth    exact  systemview none  none'
+          ])
         end
       end
       describe 'snmpv2_enable => badvalue' do

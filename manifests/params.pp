@@ -75,8 +75,12 @@ class snmp::params {
   $snmpv2_enable = true
   $template_snmpd_conf = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${::osfamily}.erb"
+  $template_snmpd_systemd_override   = 'snmp/snmpd.systemd_override.erb'
   $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
   $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${::osfamily}.erb"
+  $template_snmptrapd_systemd_override = 'snmp/snmptrapd.systemd_override.erb'
+
+
 
   case $::osfamily {
     'RedHat': {
@@ -125,6 +129,7 @@ class snmp::params {
           }
         }
       }
+      $snmptrapd_package_name   = undef
       $package_name             = 'net-snmp'
       $service_config           = '/etc/snmp/snmpd.conf'
       $service_config_dir_group = 'root'
@@ -146,16 +151,26 @@ class snmp::params {
         $varnetsnmp_owner = 'Debian-snmp'
         $varnetsnmp_group = 'Debian-snmp'
       } else {
-        $varnetsnmp_owner       = 'snmp'
-        $varnetsnmp_group       = 'snmp'
+        $varnetsnmp_owner = 'snmp'
+        $varnetsnmp_group = 'snmp'
       }
+
+      if $::facts['service_provider'] == 'systemd' {
+        $sysconfig      = undef
+        $trap_sysconfig = undef
+      } else {
+        $sysconfig      = '/etc/default/snmpd'
+        $trap_sysconfig = '/etc/default/snmptrapd'
+      }
+
       $package_name             = 'snmpd'
+      $snmptrapd_package_name   = 'snmptrapd'
       $service_config           = '/etc/snmp/snmpd.conf'
       $service_config_perms     = '0600'
       $service_config_dir_group = 'root'
       $service_name             = 'snmpd'
       $snmpd_options            = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid"
-      $sysconfig                = '/etc/default/snmpd'
+      $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
       $var_net_snmp             = '/var/lib/snmp'
       $varnetsnmp_perms         = '0755'
 
@@ -163,17 +178,18 @@ class snmp::params {
       $client_config            = '/etc/snmp/snmp.conf'
 
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
-      $trap_service_name        = undef
-      $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
+      $trap_service_name        = 'snmptrapd'
     }
     'Suse': {
       $package_name             = 'net-snmp'
+      $snmptrapd_package_name   = undef
       $service_config           = '/etc/snmp/snmpd.conf'
       $service_config_perms     = '0600'
       $service_config_dir_group = 'root'
       $service_name             = 'snmpd'
       $snmpd_options            = 'd'
       $sysconfig                = '/etc/sysconfig/net-snmp'
+      $trap_sysconfig           = undef
       $var_net_snmp             = '/var/lib/net-snmp'
       $varnetsnmp_perms         = '0755'
       $varnetsnmp_owner         = 'root'
@@ -188,6 +204,7 @@ class snmp::params {
     }
     'FreeBSD': {
       $package_name             = 'net-mgmt/net-snmp'
+      $snmptrapd_package_name   = undef
       $service_config_dir_path  = '/usr/local/etc/snmp'
       $service_config_dir_perms = '0755'
       $service_config_dir_owner = 'root'
@@ -206,10 +223,13 @@ class snmp::params {
 
       $trap_service_config      = '/usr/local/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
+      $sysconfig                = undef
+      $trap_sysconfig           = undef
       $snmptrapd_options        = undef
     }
     'OpenBSD': {
       $package_name             = 'net-snmp'
+      $snmptrapd_package_name   = undef
       $service_config_dir_path  = '/etc/snmp'
       $service_config_dir_perms = '0755'
       $service_config_dir_owner = 'root'
@@ -228,6 +248,8 @@ class snmp::params {
 
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'netsnmptrapd'
+      $sysconfig                = undef
+      $trap_sysconfig           = undef
       $snmptrapd_options        = undef
     }
     default: {

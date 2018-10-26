@@ -166,6 +166,12 @@
 #   doing.
 #   Default: auto-set, platform specific
 #
+# [*snmptrapd_package_name*]
+#   Name of the snmptrapd package, if there is one.
+#   Only set thi sif your platform is not supported or you know what you are
+#   doing.
+#   Default: auto-set, platform specific
+#
 # [*snmpd_options*]
 #   Commandline options passed to snmpd via init script.
 #   Default: auto-set, platform specific
@@ -299,7 +305,43 @@
 # Copyright (C) 2012 Mike Arnold, unless otherwise noted.
 #
 class snmp (
+  # Package settings
   Enum['present','absent'] $ensure = $snmp::params::ensure,
+  Boolean $autoupgrade          = $snmp::params::autoupgrade,
+  String $package_name          = $snmp::params::package_name,
+  Optional[String] $snmptrapd_package_name = $snmp::params::snmptrapd_package_name,
+
+  # Services start configuration
+  Optional[String] $snmpd_options     = $snmp::params::snmpd_options,
+  Optional[String] $snmptrapd_options = $snmp::params::snmptrapd_options,
+
+  Stdlib::Ensure::Service $service_ensure = $snmp::params::service_ensure,
+  String $service_name                 = $snmp::params::service_name,
+  Boolean $service_enable       = $snmp::params::service_enable,
+  Boolean $service_hasstatus    = $snmp::params::service_hasstatus,
+  Boolean $service_hasrestart   = $snmp::params::service_hasrestart,
+
+  Stdlib::Ensure::Service $trap_service_ensure = $snmp::params::trap_service_ensure,
+  $trap_service_name            = $snmp::params::trap_service_name,
+  $trap_service_enable          = $snmp::params::trap_service_enable,
+  $trap_service_hasstatus       = $snmp::params::trap_service_hasstatus,
+  $trap_service_hasrestart      = $snmp::params::trap_service_hasrestart,
+
+  # override templates
+  String[1] $template_snmpd_conf          = $snmp::params::template_snmpd_conf,
+  String[1] $template_snmpd_sysconfig     = $snmp::params::template_snmpd_sysconfig,
+  String[1] $template_snmpd_systemd_override = $snmp::params::template_snmpd_systemd_override,
+
+  String[1] $template_snmptrapd           = $snmp::params::template_snmptrapd,
+  String[1] $template_snmptrapd_sysconfig = $snmp::params::template_snmptrapd_sysconfig,
+  String[1] $template_snmptrapd_systemd_override   = $snmp::params::template_snmptrapd_systemd_override,
+
+  Stdlib::Filemode $service_config_perms         = $snmp::params::service_config_perms,
+  String[1] $service_config_dir_group     = $snmp::params::service_config_dir_group,
+
+  ## snmp* configuration
+  Array[String] $snmpd_config   = $snmp::params::snmpd_config,
+  Array[String] $snmptrapd_config = $snmp::params::snmptrapd_config,
   $agentaddress                 = $snmp::params::agentaddress,
   Array[String[1]] $snmptrapdaddr = $snmp::params::snmptrapdaddr,
   $ro_community                 = $snmp::params::ro_community,
@@ -321,35 +363,15 @@ class snmp (
   Array[String[1]] $accesses    = $snmp::params::accesses,
   Array[String[1]] $dlmod       = $snmp::params::dlmod,
   Array[String[1]] $extends     = $snmp::params::extends,
-  Array[String] $snmpd_config   = $snmp::params::snmpd_config,
   Enum['yes','no'] $disable_authorization  = $snmp::params::disable_authorization,
   Enum['yes','no'] $do_not_log_traps       = $snmp::params::do_not_log_traps,
   Enum['yes','no'] $do_not_log_tcpwrappers = $snmp::params::do_not_log_tcpwrappers,
   Array[String[1]] $trap_handlers = $snmp::params::trap_handlers,
   Array[String[1]] $trap_forwards = $snmp::params::trap_forwards,
-  Array[String] $snmptrapd_config = $snmp::params::snmptrapd_config,
   Boolean $manage_client        = $snmp::params::manage_client,
-  $snmp_config                  = $snmp::params::snmp_config,
-  Boolean $autoupgrade          = $snmp::params::autoupgrade,
-  $package_name                 = $snmp::params::package_name,
-  $snmpd_options                = $snmp::params::snmpd_options,
-  $service_config_perms         = $snmp::params::service_config_perms,
-  $service_config_dir_group     = $snmp::params::service_config_dir_group,
-  Stdlib::Ensure::Service $service_ensure = $snmp::params::service_ensure,
-  $service_name                 = $snmp::params::service_name,
-  Boolean $service_enable       = $snmp::params::service_enable,
-  Boolean $service_hasstatus    = $snmp::params::service_hasstatus,
-  Boolean $service_hasrestart   = $snmp::params::service_hasrestart,
-  $snmptrapd_options            = $snmp::params::snmptrapd_options,
-  Stdlib::Ensure::Service $trap_service_ensure = $snmp::params::trap_service_ensure,
-  $trap_service_name            = $snmp::params::trap_service_name,
-  $trap_service_enable          = $snmp::params::trap_service_enable,
-  $trap_service_hasstatus       = $snmp::params::trap_service_hasstatus,
-  $trap_service_hasrestart      = $snmp::params::trap_service_hasrestart,
-  String[1] $template_snmpd_conf          = $snmp::params::template_snmpd_conf,
-  String[1] $template_snmpd_sysconfig     = $snmp::params::template_snmpd_sysconfig,
-  String[1] $template_snmptrapd           = $snmp::params::template_snmptrapd,
-  String[1] $template_snmptrapd_sysconfig = $snmp::params::template_snmptrapd_sysconfig,
+  Array[String] $snmp_config    = $snmp::params::snmp_config,
+
+
   Boolean $openmanage_enable    = $snmp::params::openmanage_enable,
   Boolean $master               = $snmp::params::master,
   $agentx_perms                 = $snmp::params::agentx_perms,
@@ -369,16 +391,8 @@ class snmp (
     $file_ensure = 'present'
     $trap_service_ensure_real = $trap_service_ensure
     $trap_service_enable_real = $trap_service_enable
-
-    # Make sure that if $trap_service_ensure == 'running' that
-    # $service_ensure_real == 'running' on Debian.
-    if ($::osfamily == 'Debian') and ($trap_service_ensure_real == 'running') {
-      $service_ensure_real = $trap_service_ensure_real
-      $service_enable_real = $trap_service_enable_real
-    } else {
-      $service_ensure_real = $service_ensure
-      $service_enable_real = $service_enable
-    }
+    $service_ensure_real = $service_ensure
+    $service_enable_real = $service_enable
   } else {
     $package_ensure = 'absent'
     $file_ensure = 'absent'
@@ -386,17 +400,6 @@ class snmp (
     $service_enable_real = false
     $trap_service_ensure_real = 'stopped'
     $trap_service_enable_real = false
-  }
-
-  if $service_ensure == 'running' {
-    $snmpdrun = 'yes'
-  } else {
-    $snmpdrun = 'no'
-  }
-  if $trap_service_ensure == 'running' {
-    $trapdrun = 'yes'
-  } else {
-    $trapdrun = 'no'
   }
 
   if $manage_client {
@@ -411,6 +414,14 @@ class snmp (
   package { 'snmpd':
     ensure => $package_ensure,
     name   => $package_name,
+  }
+
+  if $snmptrapd_package_name {
+    package {'snmptrapd':
+      ensure => $package_ensure,
+      name   => $snmptrapd_package_name,
+      notify => Service['snmptrapd'],
+    }
   }
 
   file { 'var-net-snmp':
@@ -443,6 +454,47 @@ class snmp (
     }
   }
 
+  if $::osfamily == 'Debian' {
+    if $::facts['service_provider'] == 'systemd' {
+      include 'systemd::systemctl::daemon_reload'
+      file {[
+          '/etc/systemd/system/snmpd.service.d',
+          '/etc/systemd/system/snmptrapd.service.d/'
+        ]:
+        ensure => 'directory',
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0755',
+      }
+      file {'/etc/systemd/system/snmpd.service.d/local.conf':
+        ensure  => 'file',
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        content => template($template_snmpd_systemd_override),
+        require => Package['snmpd'],
+        notify  => [
+          Exec['systemctl-daemon-reload'],
+          Service['snmpd'],
+        ],
+      }
+      file {'/etc/systemd/system/snmptrapd.service.d/local.conf':
+        ensure  => 'file',
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0644',
+        content => template($template_snmptrapd_systemd_override),
+        require => Package['snmptrapd'],
+        notify  => [
+          Exec['systemctl-daemon-reload'],
+          Service['snmptrapd'],
+        ],
+      }
+    } else {
+      # not sure we want to support this.
+    }
+  }
+
   # Config
   file { 'snmpd.conf':
     ensure  => $file_ensure,
@@ -454,6 +506,11 @@ class snmp (
     require => Package['snmpd'],
   }
 
+  $require_snmptrapd_package = $snmptrapd_package_name ? {
+    undef   => 'snmpd',
+    default => 'snmptrapd',
+  }
+
   file { 'snmptrapd.conf':
     ensure  => $file_ensure,
     mode    => $service_config_perms,
@@ -461,11 +518,10 @@ class snmp (
     group   => $service_config_dir_group,
     path    => $snmp::params::trap_service_config,
     content => template($template_snmptrapd),
-    require => Package['snmpd'],
+    require => Package[$require_snmptrapd_package],
   }
 
-
-  unless $::osfamily == 'FreeBSD' or $::osfamily == 'OpenBSD' {
+  if $snmp::params::sysconfig {
     file { 'snmpd.sysconfig':
       ensure  => $file_ensure,
       mode    => '0644',
@@ -478,7 +534,17 @@ class snmp (
     }
   }
 
-  if $::osfamily == 'RedHat' {
+  # If your os has a sysconfig style config for trap, it will be
+  # created here (if there is a separate package for snmptrapd, we'll
+  # depend on that!)
+  if $snmp::params::trap_sysconfig {
+    if $snmp::params::snmptrapd_package_name {
+      $snmptrapd_sysconfig_require = Package['snmptrapd']
+    }
+    else {
+      $snmptrapd_sysconfig_require = Package['snmpd']
+    }
+
     file { 'snmptrapd.sysconfig':
       ensure  => $file_ensure,
       mode    => '0644',
@@ -486,22 +552,28 @@ class snmp (
       group   => 'root',
       path    => $snmp::params::trap_sysconfig,
       content => template($template_snmptrapd_sysconfig),
-      require => Package['snmpd'],
+      require => $snmptrapd_sysconfig_require,
       notify  => Service['snmptrapd'],
     }
   }
 
+  # If options change on debian with systemd, we need to reload the systemd daemon
+  # before restarting the service.
+  if $::osfamily == 'Debian' and $::facts['service_provider'] == 'systemd' {
+    $service_requires = [File['var-net-snmp'], Exec['systemctl-daemon-reload']]
+  } else {
+    $service_requires = File['var-net-snmp']
+  }
+
   # Services
-  unless $::osfamily == 'Debian' {
-    service { 'snmptrapd':
-      ensure     => $trap_service_ensure_real,
-      name       => $trap_service_name,
-      enable     => $trap_service_enable_real,
-      hasstatus  => $trap_service_hasstatus,
-      hasrestart => $trap_service_hasrestart,
-      require    => File['var-net-snmp'],
-      subscribe  => File['snmptrapd.conf'],
-    }
+  service { 'snmptrapd':
+    ensure     => $trap_service_ensure_real,
+    name       => $trap_service_name,
+    enable     => $trap_service_enable_real,
+    hasstatus  => $trap_service_hasstatus,
+    hasrestart => $trap_service_hasrestart,
+    require    => $service_requires,
+    subscribe  => File['snmptrapd.conf'],
   }
 
   service { 'snmpd':
@@ -510,11 +582,8 @@ class snmp (
     enable     => $service_enable_real,
     hasstatus  => $service_hasstatus,
     hasrestart => $service_hasrestart,
-    require    => File['var-net-snmp'],
+    require    => $service_requires,
     subscribe  => File['snmpd.conf'],
   }
 
-  if $::osfamily == 'Debian' {
-    File['snmptrapd.conf'] ~> Service['snmpd']
-  }
 }
