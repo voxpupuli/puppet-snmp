@@ -1,0 +1,32 @@
+---
+HOSTS:
+  debian-9-x64:
+    platform: debian-9-amd64
+    hypervisor: docker
+    image: debian:stretch
+    docker_preserve_image: true
+    docker_cmd: '["/sbin/init"]'
+    docker_image_commands:
+      - 'apt-get update && apt-get install -y sysvinit-core cron psmisc procps net-tools wget locales strace lsof && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen'
+      - 'apt-get remove -y --purge --auto-remove systemd'
+      - 'update-rc.d -f hwclock.sh remove || true'
+      - 'update-rc.d -f mountall-bootclean.sh remove || true'
+      - 'update-rc.d -f mountall.sh remove || true'
+      - 'update-rc.d -f checkfs.sh remove || true'
+      - 'update-rc.d -f checkroot.sh remove || true'
+      - 'update-rc.d -f motd remove || true'
+      - 'update-rc.d -f bootlogs remove || true'
+      - 'update-rc.d -f mountdevsubfs.sh remove || true'
+      - 'update-rc.d -f procps remove || true'
+      - 'update-rc.d -f hostname.sh remove || true'
+      - 'update-rc.d -f mountkernfs.sh remove || true'
+      - 'update-rc.d -f urandom remove || true'
+      - 'update-rc.d -f mountnfs-bootclean.sh remove || true'
+      - 'update-rc.d -f mountnfs.sh remove || true'
+      - 'update-rc.d -f umountnfs.sh remove || true'
+      - 'update-rc.d -f umountfs remove || true'
+      - 'update-rc.d -f umountroot remove || true'
+
+CONFIG:
+  trace_limit: 200
+  type: aio

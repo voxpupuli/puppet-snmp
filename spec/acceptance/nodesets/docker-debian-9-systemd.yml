@@ -1,0 +1,16 @@
+---
+HOSTS:
+  debian-9-x64:
+    platform: debian-9-amd64
+    hypervisor: docker
+    image: debian:stretch
+    docker_preserve_image: true
+    docker_cmd: '["/lib/systemd/systemd"]'
+    docker_image_commands:
+      - 'apt-get update && apt-get install -y systemd cron net-tools wget locales strace lsof && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen'
+      - 'rm -rf /usr/sbin/policy-rc.d'
+      - 'systemctl mask -- tmp.mount etc-hostname.mount etc-hosts.mount  etc-resolv.conf.mount -.mount swap.target dev-mqueue.mount cgproxy.service getty@tty1.service getty-static.service systemd-udev-trigger.service systemd-tmpfiles-setup-dev.service systemd-remount-fs.service systemd-ask-password-wall.path systemd-logind.service && systemctl set-default multi-user.target || true'
+
+CONFIG:
+  trace_limit: 200
+  type: aio
