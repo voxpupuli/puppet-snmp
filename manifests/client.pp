@@ -64,7 +64,7 @@ class snmp::client (
     $file_ensure = 'absent'
   }
 
-  unless $::osfamily == 'Suse' {
+  unless $facts['os']['family'] == 'Suse' {
     package { 'snmp-client':
       ensure => $package_ensure,
       name   => $package_name,
@@ -72,7 +72,7 @@ class snmp::client (
     }
   }
 
-  if $::osfamily == 'RedHat' {
+  if $facts['os']['family'] == 'RedHat' {
     file { '/etc/snmp':
       ensure => directory,
     }

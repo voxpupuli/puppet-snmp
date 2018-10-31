@@ -32,7 +32,7 @@ class snmp::params {
   $rw_network6 = '::1'
   $contact = 'Unknown'
   $location = 'Unknown'
-  $sysname = $::fqdn
+  $sysname = $facts['networking']['fqdn']
   $com2sec = [ 'notConfigUser  default       public', ]
   $com2sec6 = [ 'notConfigUser  default       public', ]
   $groups = [
@@ -74,20 +74,15 @@ class snmp::params {
   $trap_service_hasrestart = true
   $snmpv2_enable = true
   $template_snmpd_conf = 'snmp/snmpd.conf.erb'
-  $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${::osfamily}.erb"
+  $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${facts['os']['family']}.erb"
   $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
-  $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${::osfamily}.erb"
+  $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${facts['os']['family']}.erb"
 
-  case $::osfamily {
+  $majordistrelease = $facts['os']['release']['major']
+
+  case $facts['os']['family'] {
     'RedHat': {
-      if $::operatingsystemmajrelease { # facter 1.7+
-        $majdistrelease = $::operatingsystemmajrelease
-      } elsif $::lsbmajdistrelease {    # requires LSB to already be installed
-        $majdistrelease = $::lsbmajdistrelease
-      } else {
-        $majdistrelease = regsubst($::operatingsystemrelease,'^(\d+)\.(\d+)','\1')
-      }
-      case $::operatingsystem {
+      case $facts['os']['name'] {
         'Fedora': {
           $snmpd_options        = '-LS0-6d'
           $snmptrapd_options    = '-Lsd'
@@ -98,7 +93,7 @@ class snmp::params {
           $service_config_perms = '0600'
         }
         default: {
-          if versioncmp($majdistrelease, '5') <= 0 {
+          if versioncmp($majordistrelease, '5') <= 0 {
             $snmpd_options        = '-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a'
             $sysconfig            = '/etc/sysconfig/snmpd.options'
             $trap_sysconfig       = '/etc/sysconfig/snmptrapd.options'
@@ -106,7 +101,7 @@ class snmp::params {
             $varnetsnmp_perms     = '0700'
             $snmptrapd_options    = '-Lsd -p /var/run/snmptrapd.pid'
             $service_config_perms = '0644'
-          } elsif $majdistrelease == '6' {
+          } elsif $majordistrelease == '6' {
             $snmpd_options        = '-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid'
             $sysconfig            = '/etc/sysconfig/snmpd'
             $trap_sysconfig       = '/etc/sysconfig/snmptrapd'
@@ -139,10 +134,10 @@ class snmp::params {
       $trap_service_name        = 'snmptrapd'
     }
     'Debian': {
-      if $::operatingsystem == 'Debian' and versioncmp($::operatingsystemmajrelease, '9') >= 0 {
+      if $facts['os']['name'] == 'Debian' and versioncmp($majordistrelease, '9') >= 0 {
         $varnetsnmp_owner = 'Debian-snmp'
         $varnetsnmp_group = 'Debian-snmp'
-      } elsif $::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemmajrelease, '18.04') >= 0 {
+      } elsif $facts['os']['name'] == 'Ubuntu' and versioncmp($majordistrelease, '18.04') >= 0 {
         $varnetsnmp_owner = 'Debian-snmp'
         $varnetsnmp_group = 'Debian-snmp'
       } else {
@@ -231,7 +226,7 @@ class snmp::params {
       $snmptrapd_options        = undef
     }
     default: {
-      fail("Module ${::module} is not supported on ${::operatingsystem}")
+      fail("Module does not support ${facts['os']['family']}.")
     }
   }
 }
