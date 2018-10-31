@@ -63,7 +63,7 @@ define snmp::snmpv3_user (
 ) {
   include snmp
 
-  if ($daemon == 'snmptrapd') and ($::osfamily != 'Debian') {
+  if ($daemon == 'snmptrapd') and ($facts['os']['family'] != 'Debian') {
     $service_name   = 'snmptrapd'
     $service_before = Service['snmptrapd']
   } else {

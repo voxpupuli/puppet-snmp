@@ -4,11 +4,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
   context 'on a supported osfamily' do
     let :facts do
       {
-        osfamily: 'RedHat',
-        operatingsystem: 'CentOS',
-        operatingsystemrelease: '6.4',
-        lsbmajdistrelease: '6',
-        operatingsystemmajrelease: '6'
+        os: { 'release' => { 'full' => '6.4', 'major' => '6' }, 'name' => 'CentOS', 'family' => 'RedHat' }
       }
     end
 
@@ -67,11 +63,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
   context 'on a supported osfamily, RedHat' do
     let :facts do
       {
-        osfamily: 'RedHat',
-        operatingsystem: 'CentOS',
-        operatingsystemrelease: '6.4',
-        lsbmajdistrelease: '6',
-        operatingsystemmajrelease: '6'
+        os: { 'release' => { 'full' => '6.4', 'major' => '6' }, 'name' => 'CentOS', 'family' => 'RedHat' }
       }
     end
 
@@ -134,11 +126,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
   context 'on a supported osfamily, Debian' do
     let :facts do
       {
-        osfamily: 'Debian',
-        operatingsystem: 'Ubuntu',
-        operatingsystemrelease: '12.04',
-        lsbmajdistrelease: '12',
-        operatingsystemmajrelease: '12'
+        os: { 'release' => { 'full' => '14.01.1', 'major' => '14.04' }, 'name' => 'Ubuntu', 'family' => 'Debian' }
       }
     end
 
@@ -201,11 +189,7 @@ describe 'snmp::snmpv3_user', type: 'define' do
   context 'on a supported osfamily, Suse' do
     let :facts do
       {
-        osfamily: 'Suse',
-        operatingsystem: 'SLES',
-        operatingsystemrelease: '11.1',
-        lsbmajdistrelease: '11',
-        operatingsystemmajrelease: '11'
+        os: { 'release' => { 'full' => '11.1', 'major' => '11' }, 'name' => 'SLES', 'family' => 'Suse' }
       }
     end
 

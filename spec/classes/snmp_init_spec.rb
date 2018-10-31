@@ -5,8 +5,7 @@ describe 'snmp', type: 'class' do
     let(:params) { {} }
     let :facts do
       {
-        osfamily: 'foo',
-        operatingsystem: 'bar'
+        os: { 'release' => { 'full' => '42', 'major' => '42' }, 'name' => 'bar', 'family' => 'foo' }
       }
     end
 
@@ -27,12 +26,8 @@ describe 'snmp', type: 'class' do
       let(:params) { {} }
       let :facts do
         {
-          osfamily: 'RedHat',
-          operatingsystem: 'RedHat',
-          operatingsystemrelease: '5.9',
-          fqdn: 'myhost.localdomain',
-          lsbmajdistrelease: '5',
-          operatingsystemmajrelease: '5'
+          os: { 'release' => { 'full' => '5.9', 'major' => '5' }, 'name' => 'CentOS', 'family' => 'RedHat' },
+          networking: { 'fqdn' => 'myhost.localdomain' }
         }
       end
 
@@ -151,12 +146,8 @@ describe 'snmp', type: 'class' do
       let(:params) { {} }
       let :facts do
         {
-          osfamily: 'RedHat',
-          operatingsystem: 'RedHat',
-          operatingsystemrelease: '6.4',
-          fqdn: 'myhost.localdomain',
-          lsbmajdistrelease: '6',
-          operatingsystemmajrelease: '6'
+          os: { 'release' => { 'full' => '6.4', 'major' => '6' }, 'name' => 'CentOS', 'family' => 'RedHat' },
+          networking: { 'fqdn' => 'myhost.localdomain' }
         }
       end
 
@@ -277,12 +268,8 @@ describe 'snmp', type: 'class' do
         let(:params) { {} }
         let :facts do
           {
-            osfamily: 'Debian',
-            operatingsystem: os,
-            operatingsystemrelease: '6.0.7',
-            fqdn: 'myhost2.localdomain',
-            lsbmajdistrelease: '6',
-            operatingsystemmajrelease: '6'
+            os: { 'release' => { 'full' => '6.0.7', 'major' => '6' }, 'name' => 'Debian', 'family' => 'Debian' },
+            networking: { 'fqdn' => 'myhost2.localdomain' }
           }
         end
 
@@ -390,12 +377,8 @@ describe 'snmp', type: 'class' do
         let(:params) { {} }
         let :facts do
           {
-            osfamily: 'Suse',
-            operatingsystem: os,
-            operatingsystemrelease: '11.1',
-            fqdn: 'myhost3.localdomain',
-            lsbmajdistrelease: '6',
-            operatingsystemmajrelease: '6'
+            os: { 'release' => { 'full' => '11.1', 'major' => '11' }, 'name' => 'SLES', 'family' => 'Suse' },
+            networking: { 'fqdn' => 'myhost3.localdomain' }
           }
         end
 
@@ -512,11 +495,8 @@ describe 'snmp', type: 'class' do
         let(:params) { {} }
         let :facts do
           {
-            osfamily: 'FreeBSD',
-            operatingsystem: os,
-            operatingsystemrelease: '9.2',
-            fqdn: 'myhost4.localdomain',
-            operatingsystemmajrelease: '9'
+            os: { 'release' => { 'full' => '9.2', 'major' => '9' }, 'name' => 'FreeBSD', 'family' => 'FreeBSD' },
+            networking: { 'fqdn' => 'myhost4.localdomain' }
           }
         end
 
@@ -610,11 +590,8 @@ describe 'snmp', type: 'class' do
         let(:params) { {} }
         let :facts do
           {
-            osfamily: 'OpenBSD',
-            operatingsystem: os,
-            operatingsystemrelease: '5.9',
-            fqdn: 'myhost4.localdomain',
-            operatingsystemmajrelease: '5'
+            os: { 'release' => { 'full' => '5.9', 'major' => '5' }, 'name' => 'OpenBSD', 'family' => 'OpenBSD' },
+            networking: { 'fqdn' => 'myhost4.localdomain' }
           }
         end
 
@@ -707,11 +684,7 @@ describe 'snmp', type: 'class' do
   context 'on a supported osfamily (RedHat), custom parameters' do
     let :facts do
       {
-        osfamily: 'RedHat',
-        operatingsystem: 'RedHat',
-        operatingsystemrelease: '6.4',
-        lsbmajdistrelease: '6',
-        operatingsystemmajrelease: '6'
+        os: { 'release' => { 'full' => '6.4', 'major' => '6' }, 'name' => 'CentOS', 'family' => 'RedHat' }
       }
     end
 
@@ -1102,11 +1075,7 @@ describe 'snmp', type: 'class' do
   context 'on a supported osfamily (Debian), custom parameters' do
     let :facts do
       {
-        osfamily: 'Debian',
-        operatingsystem: 'Debian',
-        operatingsystemrelease: '7.0',
-        lsbmajdistrelease: '7',
-        operatingsystemmajrelease: '7'
+        os: { 'release' => { 'full' => '7.0', 'major' => '7' }, 'name' => 'Debian', 'family' => 'Debian' }
       }
     end
 
@@ -1154,10 +1123,7 @@ describe 'snmp', type: 'class' do
   context 'on a supported osfamily (Debian Stretch), custom parameters' do
     let :facts do
       {
-        osfamily: 'Debian',
-        operatingsystem: 'Debian',
-        lsbmajdistrelease: '9',
-        operatingsystemmajrelease: '9'
+        os: { 'release' => { 'full' => '9.0', 'major' => '9' }, 'name' => 'Debian', 'family' => 'Debian' }
       }
     end
 
@@ -1173,11 +1139,7 @@ describe 'snmp', type: 'class' do
   context 'on a supported osfamily (Suse), custom parameters' do
     let :facts do
       {
-        osfamily: 'Suse',
-        operatingsystem: 'Suse',
-        operatingsystemrelease: '11.1',
-        lsbmajdistrelease: '11',
-        operatingsystemmajrelease: '11'
+        os: { 'release' => { 'full' => '11.1', 'major' => '11' }, 'name' => 'SLES', 'family' => 'Suse' }
       }
     end
 
