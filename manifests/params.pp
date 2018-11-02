@@ -111,8 +111,8 @@ class snmp::params {
         $varnetsnmp_owner = 'Debian-snmp'
         $varnetsnmp_group = 'Debian-snmp'
       } else {
-        $varnetsnmp_owner       = 'snmp'
-        $varnetsnmp_group       = 'snmp'
+        $varnetsnmp_owner = 'snmp'
+        $varnetsnmp_group = 'snmp'
       }
 
       if $::facts['service_provider'] == 'systemd' {
