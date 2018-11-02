@@ -112,6 +112,10 @@ class snmp::params {
         $varnetsnmp_owner       = 'snmp'
         $varnetsnmp_group       = 'snmp'
       }
+
+      $sysconfig      = '/etc/default/snmpd'
+      $trap_sysconfig = '/etc/default/snmptrapd'
+
       $package_name             = 'snmpd'
       $snmptrapd_package_name   = 'snmptrapd'
       $service_config           = '/etc/snmp/snmpd.conf'
@@ -119,7 +123,7 @@ class snmp::params {
       $service_config_dir_group = 'root'
       $service_name             = 'snmpd'
       $snmpd_options            = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid"
-      $sysconfig                = '/etc/default/snmpd'
+      $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
       $var_net_snmp             = '/var/lib/snmp'
       $varnetsnmp_perms         = '0755'
 
@@ -127,8 +131,7 @@ class snmp::params {
       $client_config            = '/etc/snmp/snmp.conf'
 
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
-      $trap_service_name        = undef
-      $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
+      $trap_service_name        = 'snmptrapd'
     }
     'Suse': {
       $package_name             = 'net-snmp'
@@ -139,6 +142,7 @@ class snmp::params {
       $service_name             = 'snmpd'
       $snmpd_options            = 'd'
       $sysconfig                = '/etc/sysconfig/net-snmp'
+      $trap_sysconfig           = undef
       $var_net_snmp             = '/var/lib/net-snmp'
       $varnetsnmp_perms         = '0755'
       $varnetsnmp_owner         = 'root'
@@ -172,6 +176,8 @@ class snmp::params {
 
       $trap_service_config      = '/usr/local/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
+      $sysconfig                = undef
+      $trap_sysconfig           = undef
       $snmptrapd_options        = undef
     }
     'OpenBSD': {
@@ -195,6 +201,8 @@ class snmp::params {
 
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'netsnmptrapd'
+      $sysconfig                = undef
+      $trap_sysconfig           = undef
       $snmptrapd_options        = undef
     }
     default: {
