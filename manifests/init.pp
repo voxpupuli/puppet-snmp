@@ -261,10 +261,12 @@ class snmp (
   $trap_service_enable          = $snmp::params::trap_service_enable,
   $trap_service_hasstatus       = $snmp::params::trap_service_hasstatus,
   $trap_service_hasrestart      = $snmp::params::trap_service_hasrestart,
-  String[1] $template_snmpd_conf          = $snmp::params::template_snmpd_conf,
-  String[1] $template_snmpd_sysconfig     = $snmp::params::template_snmpd_sysconfig,
-  String[1] $template_snmptrapd           = $snmp::params::template_snmptrapd,
-  String[1] $template_snmptrapd_sysconfig = $snmp::params::template_snmptrapd_sysconfig,
+  String[1] $template_snmpd_conf               = $snmp::params::template_snmpd_conf,
+  String[1] $template_snmpd_sysconfig          = $snmp::params::template_snmpd_sysconfig,
+  String[1] $template_snmpd_systemd_dropin     = $snmp::params::template_snmpd_systemd_dropin,
+  String[1] $template_snmptrapd                = $snmp::params::template_snmptrapd,
+  String[1] $template_snmptrapd_sysconfig      = $snmp::params::template_snmptrapd_sysconfig,
+  String[1] $template_snmptrapd_systemd_dropin = $snmp::params::template_snmptrapd_systemd_dropin,
   Boolean $openmanage_enable    = $snmp::params::openmanage_enable,
   Boolean $master               = $snmp::params::master,
   $agentx_perms                 = $snmp::params::agentx_perms,
@@ -347,6 +349,21 @@ class snmp (
     }
   }
 
+  if $facts['os']['family'] == 'Debian' and $facts['service_provider'] == 'systemd' {
+    systemd::dropin_file { 'snmpd.conf':
+      unit    => 'snmpd.service',
+      content => epp($template_snmpd_systemd_dropin, { 'snmpd_options' => $snmpd_options, }),
+      require => Package['snmpd'],
+      notify  => Service['snmpd'],
+    }
+    systemd::dropin_file {'snmptrapd.conf':
+      unit    => 'snmptrapd.service',
+      content => epp($template_snmptrapd_systemd_dropin, { 'snmptrapd_options' => $snmptrapd_options, }),
+      require => Package['snmptrapd'],
+      notify  => Service['snmptrapd'],
+    }
+  }
+
   # Config
   file { 'snmpd.conf':
     ensure  => $file_ensure,
@@ -406,6 +423,12 @@ class snmp (
       require => $snmptrapd_sysconfig_require,
       notify  => Service['snmptrapd'],
     }
+  }
+
+  # If options change on debian with systemd, we need to reload the systemd daemon
+  # before restarting the service.
+  if $facts['service_provider'] == 'systemd' and $snmp::sysconfig == undef {
+    Exec['systemctl-daemon-reload'] -> Service['snmpd', 'snmptrapd']
   }
 
   # Services

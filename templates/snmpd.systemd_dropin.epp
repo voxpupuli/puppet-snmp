@@ -1,0 +1,17 @@
+<%- | String $snmpd_options
+| -%>
+# This file is managed by puppet
+# * module: snmp
+# * template: snmpd.systemd_dropin.epp
+<%
+  if '-f' in $snmpd_options.split(' ') {
+    $opts = $snmpd_options
+  }
+  else {
+    $opts = "${snmpd_options} -f"
+  }
+-%>
+[Service]
+ExecStart=
+ExecStart=/usr/sbin/snmpd <%= $opts %>
+

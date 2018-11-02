@@ -63,8 +63,10 @@ class snmp::params {
   $snmpv2_enable = true
   $template_snmpd_conf = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${facts['os']['family']}.erb"
+  $template_snmpd_systemd_dropin  = 'snmp/snmpd.systemd_dropin.epp'
   $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
   $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${facts['os']['family']}.erb"
+  $template_snmptrapd_systemd_dropin = 'snmp/snmptrapd.systemd_dropin.epp'
 
   $majordistrelease = $facts['os']['release']['major']
 
@@ -113,8 +115,17 @@ class snmp::params {
         $varnetsnmp_group       = 'snmp'
       }
 
-      $sysconfig      = '/etc/default/snmpd'
-      $trap_sysconfig = '/etc/default/snmptrapd'
+      if $::facts['service_provider'] == 'systemd' {
+        $sysconfig      = undef
+        $trap_sysconfig = undef
+        $snmpd_options            = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid -f"
+        $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid -f'
+      } else {
+        $sysconfig      = '/etc/default/snmpd'
+        $trap_sysconfig = '/etc/default/snmptrapd'
+        $snmpd_options            = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid"
+        $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
+      }
 
       $package_name             = 'snmpd'
       $snmptrapd_package_name   = 'snmptrapd'
@@ -122,8 +133,7 @@ class snmp::params {
       $service_config_perms     = '0600'
       $service_config_dir_group = 'root'
       $service_name             = 'snmpd'
-      $snmpd_options            = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid"
-      $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
+
       $var_net_snmp             = '/var/lib/snmp'
       $varnetsnmp_perms         = '0755'
 
