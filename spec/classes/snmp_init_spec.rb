@@ -532,12 +532,28 @@ describe 'snmp' do
         end
 
       when 'Debian'
+        let(:snmp_user) do
+          case facts[:os]['release']['major']
+          when '9', '18.04'
+            'Debian-snmp'
+          else
+            'snmp'
+          end
+        end
+
         it {
           is_expected.to contain_package('snmpd').with(
             ensure: 'present',
             name: 'snmpd'
           )
         }
+        it {
+          is_expected.to contain_package('snmptrapd').with(
+            ensure: 'present',
+            name: 'snmptrapd'
+          )
+        }
+        it { is_expected.not_to contain_class('snmp::client') }
         it {
           is_expected.to contain_file('snmpd.conf').with(
             ensure: 'present',
@@ -547,25 +563,25 @@ describe 'snmp' do
             path: '/etc/snmp/snmpd.conf'
           ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
-        it {
-          is_expected.to contain_file('snmpd.sysconfig').with(
-            ensure: 'present',
-            mode: '0644',
-            owner: 'root',
-            group: 'root',
-            path: '/etc/default/snmpd'
-          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
-        }
-        it {
-          is_expected.to contain_service('snmpd').with(
-            ensure: 'running',
-            name: 'snmpd',
-            enable: true,
-            hasstatus: true,
-            hasrestart: true
-          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
-        }
-
+        # TODO: add more contents for File[snmpd.conf]
+        it 'contains File[snmpd.conf] with expected contents' do
+          verify_contents(catalogue, 'snmpd.conf', [
+                            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
+                            'rocommunity public 127.0.0.1',
+                            'rocommunity6 public ::1',
+                            'com2sec notConfigUser  default       public',
+                            'com2sec6 notConfigUser  default       public',
+                            'group   notConfigGroup v1            notConfigUser',
+                            'group   notConfigGroup v2c           notConfigUser',
+                            'view    systemview    included   .1.3.6.1.2.1.1',
+                            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
+                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
+                            'sysLocation Unknown',
+                            'sysContact Unknown',
+                            'sysServices 72',
+                            'dontLogTCPWrappersConnects no'
+                          ])
+        end
         it {
           is_expected.to contain_file('snmptrapd.conf').with(
             ensure: 'present',
@@ -573,95 +589,156 @@ describe 'snmp' do
             owner: 'root',
             group: 'root',
             path: '/etc/snmp/snmptrapd.conf'
-          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
+          ).that_requires('Package[snmptrapd]').that_notifies('Service[snmptrapd]')
         }
-        it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
-        it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\'"' do
-          verify_contents(catalogue, 'snmpd.sysconfig', [
-                            'TRAPDRUN=no',
-                            'TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\''
+        # TODO: add more contents for File[snmptrapd.conf]
+        it 'contains File[snmptrapd.conf] with correct contents' do
+          verify_contents(catalogue, 'snmptrapd.conf', [
+                            'doNotLogTraps no',
+                            'authCommunity log,execute,net public',
+                            'disableAuthorization no'
                           ])
         end
-        it { is_expected.not_to contain_service('snmptrapd') }
 
-        case facts[:os]['release']['major']
-        when '9', '18.04'
-          describe 'Debian-snmp as snmp user' do
-            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
+        it {
+          is_expected.to contain_file('var-net-snmp').with(
+            ensure: 'directory',
+            mode: '0755',
+            owner: snmp_user,
+            group: snmp_user,
+            path: '/var/lib/snmp'
+          ).that_requires('Package[snmpd]')
+        }
+
+        context 'on a sysvinit system' do
+          let(:facts) do
+            facts.merge(service_provider: 'debian')
+          end
+
+          describe 'default params' do
+            let(:params) { {} }
+
+            it {
+              is_expected.to contain_file('snmpd.sysconfig').with(
+                ensure: 'present',
+                mode: '0644',
+                owner: 'root',
+                group: 'root',
+                path: '/etc/default/snmpd'
+              ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
+            }
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\'"' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
                                 'SNMPDRUN=yes',
-                                'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\''
+                                "SNMPDOPTS='-Lsd -Lf /dev/null -u #{snmp_user} -g #{snmp_user} -I -smux -p /var/run/snmpd.pid'"
                               ])
             end
-            it {
-              is_expected.to contain_file('var-net-snmp').with(
-                ensure: 'directory',
-                mode: '0755',
-                owner: 'Debian-snmp',
-                group: 'Debian-snmp',
-                path: '/var/lib/snmp'
-              ).that_requires('Package[snmpd]')
-            }
-          end
-        else
-          describe 'snmp as snmp user' do
-            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid""' do
-              verify_contents(catalogue, 'snmpd.sysconfig', [
-                                'SNMPDRUN=yes',
-                                'SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\''
+            it 'contains File[snmptrapd.sysconfig] with contents "TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\'"' do
+              verify_contents(catalogue, 'snmptrapd.sysconfig', [
+                                'TRAPDRUN=yes',
+                                'TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\''
                               ])
             end
-            it {
-              is_expected.to contain_file('var-net-snmp').with(
-                ensure: 'directory',
-                mode: '0755',
-                owner: 'snmp',
-                group: 'snmp',
-                path: '/var/lib/snmp'
-              ).that_requires('Package[snmpd]')
-            }
+          end
+          describe 'service_ensure => stopped and trap_service_ensure => running' do
+            let(:params) do
+              {
+                service_ensure: 'stopped',
+                trap_service_ensure: 'running'
+              }
+            end
+
+            it { is_expected.to contain_service('snmpd').with_ensure('stopped') }
+            it { is_expected.to contain_service('snmptrapd').with_ensure('running') }
+          end
+          describe 'snmpd_options => blah' do
+            let(:params) { { snmpd_options: 'blah' } }
+
+            it { is_expected.to contain_file('snmpd.sysconfig') }
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'blah\'"' do
+              verify_contents(catalogue, 'snmpd.sysconfig', ['SNMPDOPTS=\'blah\''])
+            end
+          end
+
+          describe 'snmptrapd_options => bleh' do
+            let(:params) { { snmptrapd_options: 'bleh' } }
+
+            it { is_expected.to contain_file('snmptrapd.sysconfig') }
+            it 'contains File[snmptrapd.sysconfig] with contents "TRAPDOPTS=\'bleh\'"' do
+              verify_contents(catalogue, 'snmptrapd.sysconfig', ['TRAPDOPTS=\'bleh\''])
+            end
           end
         end
 
-        describe 'service_ensure => stopped and trap_service_ensure => running' do
-          let :params do
-            {
-              service_ensure: 'stopped',
-              trap_service_ensure: 'running'
-            }
+        context 'with systemd' do
+          let(:facts) do
+            facts.merge(service_provider: 'systemd')
           end
 
-          it { is_expected.to contain_service('snmpd').with_ensure('running') }
-          it { is_expected.not_to contain_service('snmptrapd') }
-          it 'contains File[snmpd.sysconfig] with contents "SNMPDRUN=no" and "TRAPDRUN=yes"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'SNMPDRUN=no',
-                              'TRAPDRUN=yes'
-                            ])
+          it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
+          it { is_expected.not_to contain_file('snmpd.sysconfig') }
+
+          it {
+            is_expected.to contain_service('snmpd').with(
+              ensure: 'running',
+              name: 'snmpd',
+              enable: true,
+              hasstatus: true,
+              hasrestart: true
+            ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
+          }
+
+          describe 'default params' do
+            let(:params) { {} }
+
+            it 'contains systemd dropin file for snmpd with execstart' do
+              is_expected.to contain_systemd__dropin_file('snmpd.conf').with(
+                unit: 'snmpd.service'
+              ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
+
+              expected_lines = [
+                '[Service]',
+                'ExecStart=',
+                "ExecStart=/usr/sbin/snmpd -Lsd -Lf /dev/null -u #{snmp_user} -g #{snmp_user} -I -smux -p /var/run/snmpd.pid -f"
+              ]
+              verify_contents(catalogue, '/etc/systemd/system/snmpd.service.d/snmpd.conf', expected_lines)
+            end
+          end
+          describe 'ensure_service => stopped, trap_service_ensure => running' do
+            let :params do
+              {
+                service_ensure: 'stopped',
+                trap_service_ensure: 'running'
+              }
+            end
+
+            it { is_expected.to contain_service('snmpd').with_ensure('stopped') }
+            it { is_expected.to contain_service('snmptrapd').with_ensure('running') }
+          end
+
+          describe 'snmpd_options => blah' do
+            let(:params) { { snmpd_options: 'blah' } }
+
+            it { is_expected.to contain_systemd__dropin_file('snmpd.conf') }
+            it 'contains systemd drop-in file with contents ExecStart' do
+              verify_contents(catalogue, '/etc/systemd/system/snmpd.service.d/snmpd.conf', [
+                                'ExecStart=/usr/sbin/snmpd blah -f'
+                              ])
+            end
+          end
+
+          describe 'snmptrapd_options => bleh' do
+            let(:params) { { snmptrapd_options: 'bleh' } }
+
+            it { is_expected.to contain_systemd__dropin_file('snmptrapd.conf') }
+            it 'contains systemd drop-in file with contents ExecStart' do
+              verify_contents(catalogue, '/etc/systemd/system/snmptrapd.service.d/snmptrapd.conf', [
+                                'ExecStart=/usr/sbin/snmptrapd bleh -f'
+                              ])
+            end
           end
         end
 
-        describe 'snmpd_options => blah' do
-          let(:params) { { snmpd_options: 'blah' } }
-
-          it { is_expected.to contain_file('snmpd.sysconfig') }
-          it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'blah\'"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'SNMPDOPTS=\'blah\''
-                            ])
-          end
-        end
-
-        describe 'snmptrapd_options => bleh' do
-          let(:params) { { snmptrapd_options: 'bleh' } }
-
-          it { is_expected.to contain_file('snmpd.sysconfig') }
-          it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'bleh\'"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'TRAPDOPTS=\'bleh\''
-                            ])
-          end
-        end
       when 'Suse'
         it {
           is_expected.to contain_package('snmpd').with(
