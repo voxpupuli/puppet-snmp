@@ -139,6 +139,11 @@
 # @param package_name
 #   Name of the package. Only set this if your platform is not supported or you know what you are doing.
 #
+# @param snmptrapd_package_name
+#   Name of the snmptrapd package, if there is one.
+#   Only set thi sif your platform is not supported or you know what you are doing.
+#   Default: auto-set, platform specific
+#
 # @param snmpd_options
 #   Commandline options passed to snmpd via init script.
 #
@@ -241,6 +246,7 @@ class snmp (
   $snmp_config                  = $snmp::params::snmp_config,
   Boolean $autoupgrade          = $snmp::params::autoupgrade,
   String[1] $package_name       = $snmp::params::package_name,
+  Optional[String] $snmptrapd_package_name = $snmp::params::snmptrapd_package_name,
   $snmpd_options                = $snmp::params::snmpd_options,
   Stdlib::Filemode $service_config_perms  = $snmp::params::service_config_perms,
   String[1] $service_config_dir_group     = $snmp::params::service_config_dir_group,
@@ -322,6 +328,14 @@ class snmp (
     name   => $package_name,
   }
 
+  if $snmptrapd_package_name {
+    package {'snmptrapd':
+      ensure => $package_ensure,
+      name   => $snmptrapd_package_name,
+      notify => Service['snmptrapd'],
+    }
+  }
+
   file { 'var-net-snmp':
     ensure  => 'directory',
     mode    => $snmp::params::varnetsnmp_perms,
@@ -363,6 +377,11 @@ class snmp (
     require => Package['snmpd'],
   }
 
+  $require_snmptrapd_package = $snmptrapd_package_name ? {
+    undef   => 'snmpd',
+    default => 'snmptrapd',
+  }
+
   file { 'snmptrapd.conf':
     ensure  => $file_ensure,
     mode    => $service_config_perms,
@@ -370,7 +389,7 @@ class snmp (
     group   => $service_config_dir_group,
     path    => $snmp::params::trap_service_config,
     content => template($template_snmptrapd),
-    require => Package['snmpd'],
+    require => Package[$require_snmptrapd_package],
   }
 
 
