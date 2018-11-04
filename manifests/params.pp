@@ -82,43 +82,22 @@ class snmp::params {
 
   case $facts['os']['family'] {
     'RedHat': {
-      case $facts['os']['name'] {
-        'Fedora': {
-          $snmpd_options        = '-LS0-6d'
-          $snmptrapd_options    = '-Lsd'
-          $sysconfig            = '/etc/sysconfig/snmpd'
-          $trap_sysconfig       = '/etc/sysconfig/snmptrapd'
-          $var_net_snmp         = '/var/lib/net-snmp'
-          $varnetsnmp_perms     = '0755'
-          $service_config_perms = '0600'
-        }
-        default: {
-          if versioncmp($majordistrelease, '5') <= 0 {
-            $snmpd_options        = '-Lsd -Lf /dev/null -p /var/run/snmpd.pid -a'
-            $sysconfig            = '/etc/sysconfig/snmpd.options'
-            $trap_sysconfig       = '/etc/sysconfig/snmptrapd.options'
-            $var_net_snmp         = '/var/net-snmp'
-            $varnetsnmp_perms     = '0700'
-            $snmptrapd_options    = '-Lsd -p /var/run/snmptrapd.pid'
-            $service_config_perms = '0644'
-          } elsif $majordistrelease == '6' {
-            $snmpd_options        = '-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid'
-            $sysconfig            = '/etc/sysconfig/snmpd'
-            $trap_sysconfig       = '/etc/sysconfig/snmptrapd'
-            $var_net_snmp         = '/var/lib/net-snmp'
-            $varnetsnmp_perms     = '0755'
-            $snmptrapd_options    = '-Lsd -p /var/run/snmptrapd.pid'
-            $service_config_perms = '0600'
-          } else {
-            $snmpd_options        = '-LS0-6d'
-            $sysconfig            = '/etc/sysconfig/snmpd'
-            $trap_sysconfig       = '/etc/sysconfig/snmptrapd'
-            $var_net_snmp         = '/var/lib/net-snmp'
-            $varnetsnmp_perms     = '0755'
-            $snmptrapd_options    = '-Lsd'
-            $service_config_perms = '0600'
-          }
-        }
+      if $majordistrelease == '6' {
+        $snmpd_options        = '-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid'
+        $sysconfig            = '/etc/sysconfig/snmpd'
+        $trap_sysconfig       = '/etc/sysconfig/snmptrapd'
+        $var_net_snmp         = '/var/lib/net-snmp'
+        $varnetsnmp_perms     = '0755'
+        $snmptrapd_options    = '-Lsd -p /var/run/snmptrapd.pid'
+        $service_config_perms = '0600'
+      } else {
+        $snmpd_options        = '-LS0-6d'
+        $sysconfig            = '/etc/sysconfig/snmpd'
+        $trap_sysconfig       = '/etc/sysconfig/snmptrapd'
+        $var_net_snmp         = '/var/lib/net-snmp'
+        $varnetsnmp_perms     = '0755'
+        $snmptrapd_options    = '-Lsd'
+        $service_config_perms = '0600'
       }
       $package_name             = 'net-snmp'
       $service_config           = '/etc/snmp/snmpd.conf'

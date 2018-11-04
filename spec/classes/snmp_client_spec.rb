@@ -1,39 +1,17 @@
 require 'spec_helper'
 
-describe 'snmp::client', type: 'class' do
-  context 'on a non-supported osfamily' do
-    let(:params) { {} }
-    let :facts do
-      {
-        os: { 'release' => { 'full' => '42', 'major' => '42' }, 'name' => 'bar', 'family' => 'foo' }
-      }
-    end
-
-    it 'fails' do
-      expect do
-        is_expected.to raise_error(Puppet::Error, %r{Module snmp is not supported on bar})
+describe 'snmp::client' do
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts
       end
-    end
-  end
+      let(:params) { {} }
 
-  redhatish = ['RedHat']
-  # redhatish = ['RedHat', 'Fedora']
-  debianish = ['Debian']
-  # debianish = ['Debian', 'Ubuntu']
-  suseish = ['Suse']
-  freebsdish = ['FreeBSD']
-  openbsdish = ['OpenBSD']
+      it { is_expected.to compile.with_all_deps }
 
-  context 'on a supported osfamily, default parameters' do
-    redhatish.each do |os|
-      describe "for osfamily RedHat, operatingsystem #{os}" do
-        let(:params) { {} }
-        let :facts do
-          {
-            os: { 'release' => { 'full' => '6.4', 'major' => '6' }, 'name' => 'CentOS', 'family' => 'RedHat' }
-          }
-        end
-
+      case facts[:os]['family']
+      when 'RedHat'
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
@@ -49,18 +27,7 @@ describe 'snmp::client', type: 'class' do
             path: '/etc/snmp/snmp.conf'
           ).that_requires(['Package[snmp-client]', 'File[/etc/snmp]'])
         }
-      end
-    end
-
-    debianish.each do |os|
-      describe "for osfamily Debian, operatingsystem #{os}" do
-        let(:params) { {} }
-        let :facts do
-          {
-            os: { 'release' => { 'full' => '6.0.7', 'major' => '6' }, 'name' => 'Debian', 'family' => 'Debian' }
-          }
-        end
-
+      when 'Debian'
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
@@ -76,18 +43,7 @@ describe 'snmp::client', type: 'class' do
             path: '/etc/snmp/snmp.conf'
           ).that_requires('Package[snmp-client]')
         }
-      end
-    end
-
-    suseish.each do |os|
-      describe "for osfamily Suse, operatingsystem #{os}" do
-        let(:params) { {} }
-        let :facts do
-          {
-            os: { 'release' => { 'full' => '11.1', 'major' => '11' }, 'name' => 'SLES', 'family' => 'Suse' }
-          }
-        end
-
+      when 'Suse'
         it { is_expected.not_to contain_package('snmp-client') }
         it {
           is_expected.to contain_file('snmp.conf').with(
@@ -99,18 +55,7 @@ describe 'snmp::client', type: 'class' do
             require: nil
           )
         }
-      end
-    end
-
-    freebsdish.each do |os|
-      describe "for osfamily FreeBSD, operatingsystem #{os}" do
-        let(:params) { {} }
-        let :facts do
-          {
-            os: { 'release' => { 'full' => '9.2', 'major' => '9' }, 'name' => 'FreeBSD', 'family' => 'FreeBSD' }
-          }
-        end
-
+      when 'FreeBSD'
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
@@ -126,18 +71,7 @@ describe 'snmp::client', type: 'class' do
             path: '/usr/local/etc/snmp/snmp.conf'
           )
         }
-      end
-    end
-
-    openbsdish.each do |os|
-      describe "for osfamily OpenBSD, operatingsystem #{os}" do
-        let(:params) { {} }
-        let :facts do
-          {
-            os: { 'release' => { 'full' => '5.9', 'major' => '5' }, 'name' => 'OpenBSD', 'family' => 'OpenBSD' }
-          }
-        end
-
+      when 'OpenBSD'
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
@@ -156,50 +90,41 @@ describe 'snmp::client', type: 'class' do
         }
       end
     end
-  end
 
-  context 'on a supported osfamily, custom parameters' do
-    let :facts do
-      {
-        os: { 'release' => { 'full' => '6.4', 'major' => '6' }, 'name' => 'CentOS', 'family' => 'RedHat' }
-      }
-    end
-
-    describe 'ensure => absent' do
+    context "on #{os} with ensure => 'absent' " do
+      let(:facts) do
+        facts
+      end
       let(:params) { { ensure: 'absent' } }
 
-      it { is_expected.to contain_package('snmp-client').with_ensure('absent') }
       it { is_expected.to contain_file('snmp.conf').with_ensure('absent') }
-    end
-
-    describe 'ensure => badvalue' do
-      let(:params) { { ensure: 'badvalue' } }
-
-      it 'fails' do
-        expect do
-          is_expected.to raise_error(Puppet::Error, %r{ensure parameter must be present or absent})
-        end
+      case facts[:os]['family']
+      when 'Suse'
+        it { is_expected.not_to contain_package('snmp-client') }
+      else
+        it { is_expected.to contain_package('snmp-client').with_ensure('absent') }
       end
     end
 
-    describe 'autoupgrade => true' do
+    context "on #{os} with autoupgrade => true" do
+      let(:facts) do
+        facts
+      end
       let(:params) { { autoupgrade: true } }
 
-      it { is_expected.to contain_package('snmp-client').with_ensure('latest') }
       it { is_expected.to contain_file('snmp.conf').with_ensure('present') }
-    end
-
-    describe 'autoupgrade => badvalue' do
-      let(:params) { { autoupgrade: 'badvalue' } }
-
-      it 'fails' do
-        expect do
-          is_expected.to raise_error(Puppet::Error, %r{"badvalue" is not a boolean.})
-        end
+      case facts[:os]['family']
+      when 'Suse'
+        it { is_expected.not_to contain_package('snmp-client') }
+      else
+        it { is_expected.to contain_package('snmp-client').with_ensure('latest') }
       end
     end
 
-    describe 'snmp_config => [ "defVersion 2c", "defCommunity public" ]' do
+    context "on #{os} with snmp_config" do
+      let(:facts) do
+        facts
+      end
       let(:params) { { snmp_config: ['defVersion 2c', 'defCommunity public'] } }
 
       it { is_expected.to contain_file('snmp.conf') }
