@@ -559,8 +559,14 @@ Net-SNMP module support is available with these operating systems:
 
 ## Development
 
+This module is maintained by [Vox Pupuli](https://voxpupuli.org/). Voxpupuli welcomes new contributions to this module. We are happy to provide guidance if necessary.
+
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for information on how to contribute.
 
-Copyright (C) 2012 Mike Arnold <mike@razorsedge.org>
+### Authors
+
+* Mike Arnold <mike@razorsedge.org>
+* Vox Pupuli Team
+* List of contributors https://github.com/voxpupuli/puppet-snmp/graphs/contributors
 
 Licensed under the Apache License, Version 2.0.

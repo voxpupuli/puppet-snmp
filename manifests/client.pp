@@ -37,14 +37,6 @@
 #     snmp_config => [ 'defVersion 2c', 'defCommunity public', ],
 #   }
 #
-# === Authors:
-#
-# Mike Arnold <mike@razorsedge.org>
-#
-# === Copyright:
-#
-# Copyright (C) 2012 Mike Arnold, unless otherwise noted.
-#
 class snmp::client (
   $snmp_config         = $snmp::params::snmp_config,
   Enum['present', 'absent'] $ensure = $snmp::params::ensure,

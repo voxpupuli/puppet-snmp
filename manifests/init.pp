@@ -290,14 +290,6 @@
 #     ],
 #   }
 #
-# === Authors:
-#
-# Mike Arnold <mike@razorsedge.org>
-#
-# === Copyright:
-#
-# Copyright (C) 2012 Mike Arnold, unless otherwise noted.
-#
 class snmp (
   Enum['present','absent'] $ensure = $snmp::params::ensure,
   $agentaddress                 = $snmp::params::agentaddress,
