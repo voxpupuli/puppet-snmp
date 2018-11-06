@@ -44,14 +44,6 @@
 #     privpass => '5678priv',
 #   }
 #
-# === Authors:
-#
-# Mike Arnold <mike@razorsedge.org>
-#
-# === Copyright:
-#
-# Copyright (C) 2012 Mike Arnold, unless otherwise noted.
-#
 define snmp::snmpv3_user (
   $authpass,
   Enum['SHA','MD5'] $authtype = 'SHA',

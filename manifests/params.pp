@@ -5,14 +5,6 @@
 # the variable doesn't exist in top scope, it falls back to a hard coded default
 # value.
 #
-# === Authors:
-#
-# Mike Arnold <mike@razorsedge.org>
-#
-# === Copyright:
-#
-# Copyright (C) 2012 Mike Arnold, unless otherwise noted.
-#
 class snmp::params {
   $agentaddress = [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ]
   $master = false
