@@ -524,19 +524,16 @@ Default: snmpd
 
 Net-SNMP module support is available with these operating systems:
 
-* RedHat family  - tested on CentOS 5.9, CentOS 6.6, and CentOS 7.0
+* RedHat family  - tested on CentOS 6, CentOS 7
 * SuSE family    - tested on SLES 11 SP1
-* Debian family  - tested on Ubuntu 12.04.2 LTS, Debian 6.0.7, Debian 7.0, and Debian 9.
-* FreeBSD family - tested on FreeBSD 9.2-RELEASE, FreeBSD 10.0-RELEASE
+* Debian family  - tested on Debian 8, Debian 9, Ubuntu 14.04, Ubuntu 16.04, Ubuntu 18.04
+* FreeBSD family - tested on FreeBSD 9.2, FreeBSD 10.0
 * OpenBSD family - tested on OpenBSD 5.9
 
 ### Notes:
 
 * By default the SNMP service now listens on BOTH the IPv4 and IPv6 loopback
   addresses.
-* Only tested on CentOS 5.9, CentOS 6.6, CentOS 7.0, Ubuntu 12.04.2 LTS, Debian
-  squeeze, and Debian wheezy x86_64.
-* SNMPv3 user auth is not yet tested on Debian or Suse osfamilies.
 * There is a bug on Debian squeeze of net-snmp's status script. If snmptrapd is
   not running the status script returns 'not running' so puppet restarts the
   snmpd service. The following is a workaround: `class { 'snmp':
