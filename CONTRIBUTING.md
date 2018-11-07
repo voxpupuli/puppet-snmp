@@ -1,87 +1,169 @@
-Contributing
-------------
+This module has grown over time based on a range of contributions from
+people using it. If you follow these contributing guidelines your patch
+will likely make it into a release a little more quickly.
 
-normal
+## Contributing
 
-  1. [Fork](http://help.github.com/forking/) puppet-snmp.
-  2. Create a topic branch against the develop branch. `git checkout develop; git checkout -b my_branch`
-  3. Make your change.
-  4. Add a test for your change. Only refactoring and documentation changes require no new tests. If you are adding functionality or fixing a bug, please add a test.
-  5. Run the tests. We only take pull requests with passing tests. `bundle exec rake spec SPEC_OPTS='--format documentation'`
-  6. Add or update documentation.
-  7. Squash your commits down into logical components. Make sure to rebase against the current `develop` branch. `git pull --rebase upstream develop`
-  8. Push to your branch. `git push origin my_branch`
-  9. Create a [Pull Request](http://help.github.com/pull-requests/) from your branch against the develop branch.
+Please note that this project is released with a Contributor Code of Conduct.
+By participating in this project you agree to abide by its terms.
+[Contributor Code of Conduct](https://voxpupuli.org/coc/).
 
-[git-flow](https://github.com/nvie/gitflow)
+1. Fork the repo.
 
-  1. [Fork](http://help.github.com/forking/) puppet-snmp.
-  2. Create a feature. `git flow feature start my-feature`
-  3. Make your change.
-  4. Add a test for your change. Only refactoring and documentation changes require no new tests. If you are adding functionality or fixing a bug, please add a test.
-  5. Run the tests. We only take pull requests with passing tests. `bundle exec rake spec SPEC_OPTS='--format documentation'`
-  6. Add or update documentation.
-  7. Squash your commits down into logical components. Make sure to rebase against the current `develop` branch. `git pull --rebase upstream develop`
-  8. Publish your feature. `git flow feature publish my-feature`
-  9. Create a [Pull Request](http://help.github.com/pull-requests/) from your branch against the develop branch.
+1. Create a separate branch for your change.
 
-Testing
--------
+1. We only take pull requests with passing tests, and documentation. [travis-ci](http://travis-ci.org)
+   runs the tests for us. You can also execute them locally. This is explained
+   in a later section.
 
-Tests are written with [rspec-puppet](http://rspec-puppet.com/). CI is covered by [Travis CI](http://about.travis-ci.org/) and the current status is visible [here](http://travis-ci.org/razorsedge/puppet-snmp).
+1. Checkout [our docs](https://voxpupuli.org/docs/#reviewing-a-module-pr) we
+   use to review a module and the [official styleguide](https://puppet.com/docs/puppet/6.0/style_guide.html).
+   They provide some guidance for new code that might help you before you submit a pull request.
 
-To install the test system, pick one of the following:
+1. Add a test for your change. Only refactoring and documentation
+   changes require no new tests. If you are adding functionality
+   or fixing a bug, please add a test.
 
-    PUPPET_GEM_VERSION="~> 2.7.0" FACTER_GEM_VERSION="~> 1.7.0" bundle install --path=.vendor --without system_tests
-    PUPPET_GEM_VERSION="~> 3.0" bundle install --path=.vendor --without system_tests
-    PUPPET_GEM_VERSION="~> 4.0" bundle install --path=.vendor --without system_tests
+1. Squash your commits down into logical components. Make sure to rebase
+   against our current master.
 
-To run all tests:
+1. Push the branch to your fork and submit a pull request.
 
-    bundle exec rake validate && \
-    bundle exec rake lint && \
-    bundle exec rake metadata_lint && \
-    bundle exec rake spec SPEC_OPTS='--format documentation' FUTURE_PARSER="yes" STRICT_VARIABLES="no"
+Please be prepared to repeat some of these steps as our contributors review
+your code.
 
-Branching
----------
+## Dependencies
 
-This repository is organized and maintained with the help of [gitflow](https://github.com/nvie/gitflow). Developers are encouraged to use it when working with this repository.
+The testing and development tools have a bunch of dependencies,
+all managed by [bundler](http://bundler.io/) according to the
+[Puppet support matrix](http://docs.puppetlabs.com/guides/platforms.html#ruby-versions).
 
-We use the following naming convention for branches:
+By default the tests use a baseline version of Puppet.
 
-* develop (during development)
-* master (will be or has been released)
-* feature/<name> (feature branches)
-* release/<name> (release branches)
-* hotfix/<name> (hotfix branches)
-* (empty version prefix)
+If you have Ruby 2.x or want a specific version of Puppet,
+you must set an environment variable such as:
 
-During development, you should work in feature branches instead of committing to master directly. Tell gitflow that you want to start working on a feature and it will do the work for you (like creating a branch prefixed with feature/):
+```sh
+export PUPPET_VERSION="~> 5.5.6"
+```
 
-    git flow feature start <FEATURE_NAME>
+You can install all needed gems for spec tests into the modules directory by
+running:
 
-The work in a feature branch should be kept close to the original problem. Tell gitflow that a feature is finished and it will merge it into master and push it to the upstream repository:
+```sh
+bundle install --path .vendor/ --without development --without system_tests --without release
+```
 
-    git flow feature finish <FEATURE_NAME>
+If you also want to run acceptance tests:
 
-Even before a feature is finished, you might want to make your branch available to other developers. You can do that by publishing it, which will push it to the upstream repository:
+```sh
+bundle install --path .vendor/ --without development --with system_tests --without release
+```
 
-    git flow feature publish <FEATURE_NAME>
+Our all in one solution if you don't know if you need to install or update gems:
 
-To track a feature that is located in the upstream repository and not yet present locally, invoke the following command:
+```sh
+bundle install --path .vendor/ --without development --with system_tests --without release; bundle update; bundle clean
+```
 
-    git flow feature track <FEATURE_NAME>
+## Syntax and style
 
-Changes that should go into production should come from the up-to-date master branch. Enter the "release to production" phase by running:
+The test suite will run [Puppet Lint](http://puppet-lint.com/) and
+[Puppet Syntax](https://github.com/gds-operations/puppet-syntax) to
+check various syntax and style things. You can run these locally with:
 
-    git flow release start <VERSION_NUMBER>
+```sh
+bundle exec rake lint
+bundle exec rake validate
+```
 
-In this phase, only meta information should be touched, like bumping the version and update the history. Finish the release phase with:
+It will also run some [Rubocop](http://batsov.com/rubocop/) tests
+against it. You can run those locally ahead of time with:
 
-    git flow release finish <VERSION_NUMBER>
+```sh
+bundle exec rake rubocop
+```
 
-Versioning
-----------
+## Running the unit tests
 
-This project is versioned with the help of the [Semantic Versioning Specification](http://semver.org/) using 0.0.1 as the initial version. Please make sure you have read the guidelines before increasing a version number either for a release or a hotfix.
+The unit test suite covers most of the code, as mentioned above please
+add tests if you're adding new functionality. If you've not used
+[rspec-puppet](http://rspec-puppet.com/) before then feel free to ask
+about how best to test your new feature.
+
+To run the linter, the syntax checker and the unit tests:
+
+```sh
+bundle exec rake test
+```
+
+To run your all the unit tests
+
+```sh
+bundle exec rake spec
+```
+
+To run a specific spec test set the `SPEC` variable:
+
+```sh
+bundle exec rake spec SPEC=spec/foo_spec.rb
+```
+
+## Integration tests
+
+The unit tests just check the code runs, not that it does exactly what
+we want on a real machine. For that we're using
+[beaker](https://github.com/puppetlabs/beaker).
+
+This fires up a new virtual machine (using vagrant) and runs a series of
+simple tests against it after applying the module. You can run this
+with:
+
+```sh
+bundle exec rake acceptance
+```
+
+This will run the tests on the module's default nodeset. You can override the
+nodeset used, e.g.,
+
+```sh
+BEAKER_set=centos-7-x64 bundle exec rake acceptance
+```
+
+There are default rake tasks for the various acceptance test modules, e.g.,
+
+```sh
+bundle exec rake beaker:centos-7-x64
+bundle exec rake beaker:ssh:centos-7-x64
+```
+
+If you don't want to have to recreate the virtual machine every time you can
+use `BEAKER_destroy=no` and `BEAKER_provision=no`. On the first run you will at
+least need `BEAKER_provision` set to yes (the default). The Vagrantfile for the
+created virtual machines will be in `.vagrant/beaker_vagrant_files`.
+
+Beaker also supports docker containers. We also use that in our automated CI
+pipeline at [travis-ci](http://travis-ci.org). To use that instead of Vagrant:
+
+```
+PUPPET_INSTALL_TYPE=agent BEAKER_IS_PE=no BEAKER_PUPPET_COLLECTION=puppet5 BEAKER_debug=true BEAKER_setfile=debian9-64{hypervisor=docker} BEAKER_destroy=yes bundle exec rake beaker
+```
+
+You can replace the string `debian9` with any common operating system.
+The following strings are known to work:
+
+* ubuntu1604
+* ubuntu1804
+* debian8
+* debian9
+* centos6
+* centos7
+
+The easiest way to debug in a docker container is to open a shell:
+
+```sh
+docker exec -it -u root ${container_id_or_name} bash
+```
+
+The source of this file is in our [modulesync_config](https://github.com/voxpupuli/modulesync_config/blob/master/moduleroot/.github/CONTRIBUTING.md.erb)
+repository.
