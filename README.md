@@ -59,13 +59,21 @@ include snmp
 
 #### Deprecation Warning
 
-The classes `snmp::server` and `snmp::trapd` will be merged into class `snmp` in version 3.0.0 of this module.  All of their class parameters will be made available in the `snmp` class.
+##### Past module 3.x series
 
-The parameter `install_client` has been renamed to `manage_client` in version 4.0.0 of this module.
+ * The classes `snmp::server` and `snmp::trapd` have been merged into class `snmp`.  All of their class parameters available in the `snmp` class.
 
-The parameters `ro_community`, `rw_community`, `ro_network`, and `rw_network` will be removed in version 4.0.0 of this module.  The snmptrapd parameter name will become `authcommunity`.
+##### Current module 4.x series
 
-Support for Puppet 2.7 will be removed in version 4.0.0 of this module.
+ * The parameter `install_client` is renamed to `manage_client`.
+
+ * Support for Puppet < 4 is removed.
+
+##### Future module 5.x series
+
+ * The parameters `ro_community`, `rw_community`, `ro_network`, and `rw_network` will be removed.
+
+ * The snmptrapd parameter name will become `authcommunity`.
 
 ## Usage
 
