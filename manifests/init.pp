@@ -358,7 +358,7 @@ class snmp (
     }
   }
 
-  if $facts['os']['family'] == 'Debian' and $facts['service_provider'] == 'systemd' {
+  if $facts['service_provider'] == 'systemd' and $snmp::sysconfig == undef {
     systemd::dropin_file { 'snmpd.conf':
       unit    => 'snmpd.service',
       content => epp($template_snmpd_systemd_dropin, { 'snmpd_options' => $snmpd_options, }),

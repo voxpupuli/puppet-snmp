@@ -115,17 +115,37 @@ class snmp::params {
         $varnetsnmp_group = 'snmp'
       }
 
-      if $::facts['service_provider'] == 'systemd' {
-        $sysconfig      = undef
-        $trap_sysconfig = undef
-        $snmpd_options            = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid -f"
-        $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid -f'
+      # Config / Services on debian/ubuntu are a mess:
+      # - Debian *        + sysvinit -> config in /etc/default + uses init scripts
+      # - Debian == 8     + systemd  -> config in /etc/default + systemctl uses init scripts
+      # - Ubuntu == 16.04 + systemd  -> config in /etc/default + systemctl uses init scripts and needs -p as /run/snmpd.pid
+      # - Debian >=9      + Systemd  -> config in /etc/systemd/*dropin* + pure systemctl (need -f)
+      # - Ubuntu >= 18.04 + systemd  -> config in /etc/systemd/*dropin* + pure systemctl (need -f)
+
+      if $facts['service_provider'] == 'systemd' {
+        if $facts['os']['name'] == 'Ubuntu' and versioncmp($majordistrelease, '18.04') < 0 {
+          $sysconfig         = '/etc/default/snmpd'
+          $trap_sysconfig    = '/etc/default/snmptrapd'
+        } elsif $facts['os']['name'] == 'Debian' and versioncmp($majordistrelease, '9') < 0 {
+          $sysconfig         = '/etc/default/snmpd'
+          $trap_sysconfig    = '/etc/default/snmptrapd'
+        } else {
+          $sysconfig = undef
+          $trap_sysconfig = undef
+        }
       } else {
-        $sysconfig      = '/etc/default/snmpd'
-        $trap_sysconfig = '/etc/default/snmptrapd'
-        $snmpd_options            = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid"
-        $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
+        $sysconfig         = '/etc/default/snmpd'
+        $trap_sysconfig    = '/etc/default/snmptrapd'
       }
+
+      if $facts['os']['name'] == 'Ubuntu' {
+        $snmpd_options     = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /run/snmpd.pid"
+        $snmptrapd_options = '-Lsd -p /run/snmptrapd.pid'
+      } else {
+        $snmpd_options     = "-Lsd -Lf /dev/null -u ${varnetsnmp_owner} -g ${varnetsnmp_group} -I -smux -p /var/run/snmpd.pid"
+        $snmptrapd_options = '-Lsd -p /var/run/snmptrapd.pid'
+      }
+
 
       $package_name             = 'snmpd'
       $snmptrapd_package_name   = 'snmptrapd'
