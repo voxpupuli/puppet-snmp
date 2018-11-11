@@ -1,41 +1,25 @@
-# == Class: snmp::client
+# @summary 
+#   Installs the Net-SNMP client package and configuration.
 #
-# This class handles installing the Net-SNMP client.
-#
-# === Parameters:
-#
-# [*snmp_config*]
-#   Array of lines to add to the client's global snmp.conf file.
-#   See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
-#   Default: []
-#
-# [*ensure*]
-#   Ensure if present or absent.
-#   Default: present
-#
-# [*autoupgrade*]
-#   Upgrade package automatically, if there is a newer version.
-#   Default: false
-#
-# [*package_name*]
-#   Name of the package.
-#   Only set this if your platform is not supported or you know what you are
-#   doing.
-#   Default: auto-set, platform specific
-#
-# === Actions:
-#
-# Installs the Net-SNMP client package and configuration.
-#
-# === Requires:
-#
-# Nothing.
-#
-# === Sample Usage:
-#
+# @example
 #   class { 'snmp::client':
 #     snmp_config => [ 'defVersion 2c', 'defCommunity public', ],
 #   }
+#
+# @param snmp_config
+#   Array of lines to add to the client's global snmp.conf file.
+#   See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
+#
+# @param ensure
+#   Ensure if present or absent.
+#
+# @param autoupgrade
+#   Upgrade package automatically, if there is a newer version.
+#
+# @param package_name
+#   Name of the package.
+#   Only set this if your platform is not supported or you know what you are
+#   doing.
 #
 class snmp::client (
   $snmp_config         = $snmp::params::snmp_config,

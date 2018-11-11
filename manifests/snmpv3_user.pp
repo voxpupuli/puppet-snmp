@@ -1,48 +1,27 @@
-# == Definition: snmp::snmpv3_user
+# @summary
+#   Creates a SNMPv3 user with authentication and encryption paswords.
 #
-# This definition creates a SNMPv3 user.
-#
-# === Parameters:
-#
-# [*title*]
-#   Name of the user.
-#   Required
-#
-# [*authpass*]
-#   Authentication password for the user.
-#   Required
-#
-# [*authtype*]
-#   Authentication type for the user.  SHA or MD5
-#   Default: SHA
-#
-# [*privpass*]
-#   Encryption password for the user.
-#   Default: no encryption password
-#
-# [*privtype*]
-#   Encryption type for the user.  AES or DES
-#   Default: AES
-#
-# [*daemon*]
-#   Which daemon file in which to write the user.  snmpd or snmptrapd
-#   Default: snmpd
-#
-# === Actions:
-#
-# Creates a SNMPv3 user with authentication and encryption paswords.
-#
-# === Requires:
-#
-# Class['snmp']
-#
-# === Sample Usage:
-#
+# @example
 #   snmp::snmpv3_user { 'myuser':
 #     authtype => 'MD5',
 #     authpass => '1234auth',
 #     privpass => '5678priv',
 #   }
+#
+# @param authpass
+#   Authentication password for the user.
+#
+# @param authtype
+#   Authentication type for the user.  SHA or MD5
+#
+# @param privpass
+#   Encryption password for the user.
+#
+# @param privtype
+#   Encryption type for the user.  AES or DES
+#
+# @param daemon
+#   Which daemon file in which to write the user.  snmpd or snmptrapd
 #
 define snmp::snmpv3_user (
   $authpass,
