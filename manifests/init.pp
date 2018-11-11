@@ -1,279 +1,7 @@
-# == Class: snmp
+# @summary 
+#   Installs the Net-SNMP daemon package, service, and configuration. Installs the Net-SNMP trap daemon service and configuration.
 #
-# This class handles installing the Net-SNMP server and trap server.
-#
-# === Parameters:
-#
-# [*agentaddress*]
-#   An array of addresses, on which snmpd will listen for queries.
-#   Default: [ udp:127.0.0.1:161, udp6:[::1]:161 ]
-#
-# [*snmptrapdaddr*]
-#   An array of addresses, on which snmptrapd will listen to receive incoming
-#   SNMP notifications.
-#   Default: [ udp:127.0.0.1:162, udp6:[::1]:162 ]
-#
-# [*ro_community*]
-#   Read-only (RO) community string or array for agent and snmptrap daemon.
-#   Default: public
-#
-# [*ro_community6*]
-#   Read-only (RO) community string or array for IPv6 agent.
-#   Default: public
-#
-# [*rw_community*]
-#   Read-write (RW) community string or array agent.
-#   Default: none
-#
-# [*rw_community6*]
-#   Read-write (RW) community string or array for IPv6 agent.
-#   Default: none
-#
-# [*ro_network*]
-#   Network that is allowed to RO query the daemon.  Can be string or array.
-#   Default: 127.0.0.1
-#
-# [*ro_network6*]
-#   Network that is allowed to RO query the daemon via IPv6.  Can be string or array.
-#   Default: ::1/128
-#
-# [*rw_network*]
-#   Network that is allowed to RW query the daemon.  Can be string or array.
-#   Default: 127.0.0.1
-#
-# [*rw_network6*]
-#   Network that is allowed to RW query the daemon via IPv6.  Can be string or array.
-#   Default: ::1/128
-#
-# [*contact*]
-#   Responsible person for the SNMP system.
-#   Default: Unknown
-#
-# [*location*]
-#   Location of the SNMP system.
-#   Default: Unknown
-#
-# [*sysname*]
-#   Name of the system (hostname).
-#   Default: ${::fqdn}
-#
-# [*services*]
-#   For a host system, a good value is 72 (application + end-to-end layers).
-#   Default: 72
-#
-# [*com2sec*]
-#   An array of VACM com2sec mappings.
-#   Must provide SECNAME, SOURCE and COMMUNITY.
-#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
-#   Default: [ "notConfigUser default public" ]
-#
-# [*com2sec6*]
-#   An array of VACM com2sec6 mappings.
-#   Must provide SECNAME, SOURCE and COMMUNITY.
-#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
-#   Default: [ "notConfigUser default ${ro_community}" ]
-#
-# [*groups*]
-#   An array of VACM group mappings.
-#   Must provide GROUP, {v1|v2c|usm|tsm|ksm}, SECNAME.
-#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
-#   Default: [ 'notConfigGroup v1  notConfigUser',
-#              'notConfigGroup v2c notConfigUser' ]
-#
-# [*views*]
-#   An array of views that are available to query.
-#   Must provide VNAME, TYPE, OID, and [MASK].
-#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
-#   Default: [ 'systemview included .1.3.6.1.2.1.1',
-#              'systemview included .1.3.6.1.2.1.25.1.1' ]
-#
-# [*accesses*]
-#   An array of access controls that are available to query.
-#   Must provide GROUP, CONTEXT, {any|v1|v2c|usm|tsm|ksm}, LEVEL, PREFX, READ,
-#   WRITE, and NOTIFY.
-#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
-#   Default: [ 'notConfigGroup "" any noauth exact systemview none none' ]
-#
-# [*dlmod*]
-#   Array of dlmod lines to add to the snmpd.conf file.
-#   Must provide NAME and PATH (ex. "cmaX /usr/lib64/libcmaX64.so").
-#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBD for details.
-#   Default: []
-#
-# [*extends*]
-#   Array of extend lines to add to the snmpd.conf file.
-#   Must provide NAME, PROG and ARG.
-#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBA for details.
-#   Default: []
-#
-# [*snmpd_config*]
-#   Safety valve.  Array of lines to add to the snmpd.conf file.
-#   See http://www.net-snmp.org/docs/man/snmpd.conf.html for all options.
-#   Default: []
-#
-#
-# [*disable_authorization*]
-#   Disable all access control checks. (yes|no)
-#   Default: no
-#
-# [*do_not_log_traps*]
-#   Disable the logging of notifications altogether. (yes|no)
-#   Default: no
-#
-# [*do_not_log_tcpwrappers*]
-#   Disable the logging of tcpwrappers messages, e.g. "Connection from UDP: "
-#   messages in syslog. (yes|no)
-#   Default: no
-#
-# [*trap_handlers*]
-#   An array of programs to invoke on receipt of traps.
-#   Must provide OID and PROGRAM (ex. "IF-MIB::linkDown /bin/traps down").
-#   See http://www.net-snmp.org/docs/man/snmptrapd.conf.html#lbAI for details.
-#   Default: []
-#
-# [*trap_forwards*]
-#   An array of destinations to send to on receipt of traps.
-#   Must provide OID and DESTINATION (ex. "IF-MIB::linkUp udp:1.2.3.5:162").
-#   See http://www.net-snmp.org/docs/man/snmptrapd.conf.html#lbAI for details.
-#   Default: []
-#
-# [*snmptrapd_config*]
-#   Safety valve.  Array of lines to add to the snmptrapd.conf file.
-#   See http://www.net-snmp.org/docs/man/snmptrapd.conf.html for all options.
-#   Default: []
-#
-#
-# [*manage_client*]
-#   Whether to install the Net-SNMP client package. (true|false)
-#   Default: false
-#
-# [*snmp_config*]
-#   Safety valve.  Array of lines to add to the client's global snmp.conf file.
-#   See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
-#   Default: []
-#
-# [*ensure*]
-#   Ensure if present or absent.
-#   Default: present
-#
-# [*autoupgrade*]
-#   Upgrade package automatically, if there is a newer version.
-#   Default: false
-#
-# [*package_name*]
-#   Name of the package.
-#   Only set this if your platform is not supported or you know what you are
-#   doing.
-#   Default: auto-set, platform specific
-#
-# [*snmpd_options*]
-#   Commandline options passed to snmpd via init script.
-#   Default: auto-set, platform specific
-#
-# [*service_config_perms*]
-#   Set permissions for the service configuration file.
-#   Default: auto-set, platform specific
-#
-# [*service_config_dir_group*]
-#   Set group ownership for the service configuration file.
-#   Default: auto-set, platform specific
-#
-# [*service_ensure*]
-#   Ensure if service is running or stopped.
-#   Default: running
-#
-# [*service_name*]
-#   Name of SNMP service
-#   Only set this if your platform is not supported or you know what you are
-#   doing.
-#   Default: auto-set, platform specific
-#
-# [*service_enable*]
-#   Start service at boot.
-#   Default: true
-#
-# [*service_hasstatus*]
-#   Service has status command.
-#   Default: true
-#
-# [*service_hasrestart*]
-#   Service has restart command.
-#   Default: true
-#
-# [*snmptrapd_options*]
-#   Commandline options passed to snmptrapd via init script.
-#   Default: auto-set, platform specific
-#
-# [*trap_service_ensure*]
-#   Ensure if service is running or stopped.
-#   Default: stopped
-#
-# [*trap_service_name*]
-#   Name of SNMP service
-#   Only set this if your platform is not supported or you know what you are
-#   doing.
-#   Default: auto-set, platform specific
-#
-# [*trap_service_enable*]
-#   Start service at boot.
-#   Default: true
-#
-# [*trap_service_hasstatus*]
-#   Service has status command.
-#   Default: true
-#
-# [*trap_service_hasrestart*]
-#   Service has restart command.
-#   Default: true
-#
-# [*openmanage_enable*]
-#   Adds the smuxpeer directive to the snmpd.conf file to allow net-snmp to
-#   talk with Dell's OpenManage
-#   Default: false
-#
-# [*master*]
-#   Include the *master* option to enable AgentX registrations.
-#   Default: false
-#
-# [*agentx_perms*]
-#   Defines the permissions and ownership of the AgentX Unix Domain socket.
-#   Default: none
-#
-# [*agentx_ping_interval*]
-#   This will make the subagent try and reconnect every NUM seconds to the
-#   master if it ever becomes (or starts) disconnected.
-#   Default: none
-#
-# [*agentx_socket*]
-#   Defines the address the master agent listens at, or the subagent should
-#   connect to.
-#   Default: none
-#
-# [*agentx_timeout*]
-#   Defines the timeout period (NUM seconds) for an AgentX request.
-#   Default: 1
-#
-# [*agentx_retries*]
-#   Defines the number of retries for an AgentX request.
-#   Default: 5
-#
-# [*snmpv2_enable*]
-#   Disable com2sec, group, and access in snmpd.conf
-#
-#   Default: true
-#
-# === Actions:
-#
-# Installs the Net-SNMP daemon package, service, and configuration.
-# Installs the Net-SNMP trap daemon service and configuration.
-#
-# === Requires:
-#
-# Nothing.
-#
-# === Sample Usage:
-#
-#   # Configure and run the snmp daemon and install the client:
+# @example
 #   class { 'snmp':
 #     com2sec       => [ 'notConfigUser default PassW0rd' ],
 #     manage_client => true,
@@ -289,6 +17,195 @@
 #       'IF-MIB::linkDown /home/nba/bin/traps down',
 #     ],
 #   }
+#
+# @param agentaddress
+#   An array of addresses, on which snmpd will listen for queries.
+#
+# @param snmptrapdaddr
+#   An array of addresses, on which snmptrapd will listen to receive incoming
+#   SNMP notifications.
+#
+# @param ro_community
+#   Read-only (RO) community string or array for agent and snmptrap daemon.
+#
+# @param ro_community6
+#   Read-only (RO) community string or array for IPv6 agent.
+#
+# @param rw_community
+#   Read-write (RW) community string or array agent.
+#
+# @param rw_community6
+#   Read-write (RW) community string or array for IPv6 agent.
+#
+# @param ro_network
+#   Network that is allowed to RO query the daemon.  Can be string or array.
+#
+# @param ro_network6
+#   Network that is allowed to RO query the daemon via IPv6.  Can be string or array.
+#
+# @param rw_network
+#   Network that is allowed to RW query the daemon.  Can be string or array.
+#
+# @param rw_network6
+#   Network that is allowed to RW query the daemon via IPv6.  Can be string or array.
+#
+# @param contact
+#   Responsible person for the SNMP system.
+#
+# @param location
+#   Location of the SNMP system.
+#
+# @param sysname
+#   Name of the system (hostname).
+#
+# @param services
+#   For a host system, a good value is 72 (application + end-to-end layers).
+#
+# @param com2sec
+#   An array of VACM com2sec mappings.
+#   Must provide SECNAME, SOURCE and COMMUNITY.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
+#
+# @param com2sec6
+#   An array of VACM com2sec6 mappings.
+#   Must provide SECNAME, SOURCE and COMMUNITY.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
+#
+# @param groups
+#   An array of VACM group mappings.
+#   Must provide GROUP, <v1|v2c|usm|tsm|ksm>, SECNAME.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
+#
+# @param views
+#   An array of views that are available to query.
+#   Must provide VNAME, TYPE, OID, and [MASK].
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
+#
+# @param accesses
+#   An array of access controls that are available to query.
+#   Must provide GROUP, CONTEXT, <any|v1|v2c|usm|tsm|ksm>, LEVEL, PREFX, READ, WRITE, and NOTIFY.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
+#
+# @param dlmod
+#   Array of dlmod lines to add to the snmpd.conf file.
+#   Must provide NAME and PATH (ex. "cmaX /usr/lib64/libcmaX64.so").
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBD for details.
+#
+# @param extends
+#   Array of extend lines to add to the snmpd.conf file.
+#   Must provide NAME, PROG and ARG.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBA for details.
+#
+# @param snmpd_config
+#   Safety valve.  Array of lines to add to the snmpd.conf file.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html for all options.
+#
+# @param disable_authorization
+#   Disable all access control checks.
+#
+# @param do_not_log_traps
+#   Disable the logging of notifications altogether. 
+#
+# @param do_not_log_tcpwrappers
+#   Disable the logging of tcpwrappers messages, e.g. "Connection from UDP: " messages in syslog.
+#
+# @param trap_handlers
+#   An array of programs to invoke on receipt of traps.
+#   Must provide OID and PROGRAM (ex. "IF-MIB::linkDown /bin/traps down").
+#   See http://www.net-snmp.org/docs/man/snmptrapd.conf.html#lbAI for details.
+#
+# @param trap_forwards
+#   An array of destinations to send to on receipt of traps.
+#   Must provide OID and DESTINATION (ex. "IF-MIB::linkUp udp:1.2.3.5:162").
+#   See http://www.net-snmp.org/docs/man/snmptrapd.conf.html#lbAI for details.
+#
+# @param snmptrapd_config
+#   Safety valve.  Array of lines to add to the snmptrapd.conf file.
+#   See http://www.net-snmp.org/docs/man/snmptrapd.conf.html for all options.
+#
+# @param manage_client
+#   Whether to install the Net-SNMP client package.
+#
+# @param snmp_config
+#   Safety valve.  Array of lines to add to the client's global snmp.conf file.
+#   See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
+#
+# @param ensure
+#   Ensure if present or absent.
+#
+# @param autoupgrade
+#   Upgrade package automatically, if there is a newer version.
+#
+# @param package_name
+#   Name of the package. Only set this if your platform is not supported or you know what you are doing.
+#
+# @param snmpd_options
+#   Commandline options passed to snmpd via init script.
+#
+# @param service_config_perms
+#   Set permissions for the service configuration file.
+#
+# @param service_config_dir_group
+#   Set group ownership for the service configuration file.
+#
+# @param service_ensure
+#   Ensure if service is running or stopped.
+#
+# @param service_name
+#   Name of SNMP service. Only set this if your platform is not supported or you know what you are doing.
+#
+# @param service_enable
+#   Start service at boot.
+#
+# @param service_hasstatus
+#   Service has status command.
+#
+# @param service_hasrestart
+#   Service has restart command.
+#
+# @param snmptrapd_options
+#   Commandline options passed to snmptrapd via init script.
+#
+# @param trap_service_ensure
+#   Ensure if service is running or stopped.
+#
+# @param trap_service_name
+#   Name of SNMP service
+#   Only set this if your platform is not supported or you know what you are doing.
+#
+# @param trap_service_enable
+#   Start service at boot.
+#
+# @param trap_service_hasstatus
+#   Service has status command.
+#
+# @param trap_service_hasrestart
+#   Service has restart command.
+#
+# @param openmanage_enable
+#   Adds the smuxpeer directive to the snmpd.conf file to allow net-snmp to talk with Dell's OpenManage
+#
+# @param master
+#   Include the *master* option to enable AgentX registrations.
+#
+# @param agentx_perms
+#   Defines the permissions and ownership of the AgentX Unix Domain socket.
+#
+# @param agentx_ping_interval
+#   This will make the subagent try and reconnect every NUM seconds to the
+#   master if it ever becomes (or starts) disconnected.
+#
+# @param agentx_socket
+#   Defines the address the master agent listens at, or the subagent should connect to.
+#
+# @param agentx_timeout
+#   Defines the timeout period (NUM seconds) for an AgentX request.
+#
+# @param agentx_retries
+#   Defines the number of retries for an AgentX request.
+#
+# @param snmpv2_enable
+#   Disable com2sec, group, and access in snmpd.conf
 #
 class snmp (
   Enum['present','absent'] $ensure = $snmp::params::ensure,

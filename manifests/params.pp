@@ -1,9 +1,5 @@
-# == Class: snmp::params
-#
-# This class handles OS-specific configuration of the snmp module.  It
-# looks for variables in top scope (probably from an ENC such as Dashboard).  If
-# the variable doesn't exist in top scope, it falls back to a hard coded default
-# value.
+# @summary
+#   This class handles OS-specific configuration of the snmp module.
 #
 class snmp::params {
   $agentaddress = [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ]
