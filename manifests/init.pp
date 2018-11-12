@@ -364,7 +364,7 @@ class snmp (
 
     # Make sure that if $trap_service_ensure == 'running' that
     # $service_ensure_real == 'running' on Debian.
-    if ($facts['os']['family'] == 'Debian') and ($trap_service_ensure_real == 'running') {
+    if ($facts['osfamily'] == 'Debian') and ($trap_service_ensure_real == 'running') {
       $service_ensure_real = $trap_service_ensure_real
       $service_enable_real = $trap_service_enable_real
     } else {
@@ -414,7 +414,7 @@ class snmp (
     require => Package['snmpd'],
   }
 
-  if $facts['os']['family'] == 'FreeBSD' {
+  if $facts['osfamily'] == 'FreeBSD' {
     file { $snmp::params::service_config_dir_path:
       ensure  => 'directory',
       mode    => $snmp::params::service_config_dir_perms,
@@ -424,7 +424,7 @@ class snmp (
     }
   }
 
-  if $facts['os']['family'] == 'Suse' {
+  if $facts['osfamily'] == 'Suse' {
     file { '/etc/init.d/snmptrapd':
       source  => '/usr/share/doc/packages/net-snmp/rc.snmptrapd',
       owner   => 'root',
@@ -457,7 +457,7 @@ class snmp (
   }
 
 
-  unless $facts['os']['family'] == 'FreeBSD' or $facts['os']['family'] == 'OpenBSD' {
+  unless $facts['osfamily'] == 'FreeBSD' or $facts['osfamily'] == 'OpenBSD' {
     file { 'snmpd.sysconfig':
       ensure  => $file_ensure,
       mode    => '0644',
@@ -470,7 +470,7 @@ class snmp (
     }
   }
 
-  if $facts['os']['family'] == 'RedHat' {
+  if $facts['osfamily'] == 'RedHat' {
     file { 'snmptrapd.sysconfig':
       ensure  => $file_ensure,
       mode    => '0644',
@@ -484,7 +484,7 @@ class snmp (
   }
 
   # Services
-  unless $facts['os']['family'] == 'Debian' {
+  unless $facts['osfamily'] == 'Debian' {
     service { 'snmptrapd':
       ensure     => $trap_service_ensure_real,
       name       => $trap_service_name,
@@ -506,7 +506,7 @@ class snmp (
     subscribe  => File['snmpd.conf'],
   }
 
-  if $facts['os']['family'] == 'Debian' {
+  if $facts['osfamily'] == 'Debian' {
     File['snmptrapd.conf'] ~> Service['snmpd']
   }
 }

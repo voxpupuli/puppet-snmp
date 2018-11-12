@@ -24,7 +24,7 @@ class snmp::params {
   $rw_network6 = '::1'
   $contact = 'Unknown'
   $location = 'Unknown'
-  $sysname = $facts['networking']['fqdn']
+  $sysname = $facts['fqdn']
   $com2sec = [ 'notConfigUser  default       public', ]
   $com2sec6 = [ 'notConfigUser  default       public', ]
   $groups = [
@@ -66,15 +66,15 @@ class snmp::params {
   $trap_service_hasrestart = true
   $snmpv2_enable = true
   $template_snmpd_conf = 'snmp/snmpd.conf.erb'
-  $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${facts['os']['family']}.erb"
+  $template_snmpd_sysconfig = "snmp/snmpd.sysconfig-${facts['osfamily']}.erb"
   $template_snmptrapd = 'snmp/snmptrapd.conf.erb'
-  $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${facts['os']['family']}.erb"
+  $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${facts['osfamily']}.erb"
 
-  $majordistrelease = $facts['os']['release']['major']
+  $majordistrelease = $facts['operatingsystemmajrelease']
 
-  case $facts['os']['family'] {
+  case $facts['osfamily'] {
     'RedHat': {
-      if $majordistrelease == '6' {
+      if $facts['operatingsystemmajrelease'] == '6' {
         $snmpd_options        = '-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid'
         $sysconfig            = '/etc/sysconfig/snmpd'
         $trap_sysconfig       = '/etc/sysconfig/snmptrapd'
@@ -197,7 +197,7 @@ class snmp::params {
       $snmptrapd_options        = undef
     }
     default: {
-      fail("Module does not support ${facts['os']['family']}.")
+      fail("Module does not support ${facts['osfamily']}.")
     }
   }
 }
