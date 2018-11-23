@@ -139,6 +139,9 @@
 # @param package_name
 #   Name of the package. Only set this if your platform is not supported or you know what you are doing.
 #
+# @param snmptrapd_package_name
+#   Name of the package provinding snmptrapd. Only set this if your platform is not supported or you know what you are doing.
+#
 # @param snmpd_options
 #   Commandline options passed to snmpd via init script.
 #
@@ -241,6 +244,7 @@ class snmp (
   $snmp_config                  = $snmp::params::snmp_config,
   Boolean $autoupgrade          = $snmp::params::autoupgrade,
   $package_name                 = $snmp::params::package_name,
+  $snmptrapd_package_name       = $snmp::params::snmptrapd_package_name,
   $snmpd_options                = $snmp::params::snmpd_options,
   $service_config_perms         = $snmp::params::service_config_perms,
   $service_config_dir_group     = $snmp::params::service_config_dir_group,
@@ -322,6 +326,14 @@ class snmp (
     name   => $package_name,
   }
 
+  # Since ubuntu 16.04 platforms, there is a differente snmptrad package
+  if $snmp::snmptrapd_package_name {
+    package { 'snmptrapd':
+      ensure => $package_ensure,
+      name   => $snmp::snmptrapd_package_name,
+    }
+  }
+
   file { 'var-net-snmp':
     ensure  => 'directory',
     mode    => $snmp::params::varnetsnmp_perms,
@@ -397,6 +409,27 @@ class snmp (
       content => template($template_snmptrapd_sysconfig),
       require => Package['snmpd'],
       notify  => Service['snmptrapd'],
+    }
+  } elsif $facts['os']['family'] == 'Debian' and versioncmp($facts['os']['release']['major'], '16.04') >= 0 {
+    file { 'snmptrapd.sysconfig':
+      ensure  => $file_ensure,
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      path    => $snmp::params::trap_sysconfig,
+      content => template($template_snmptrapd_sysconfig),
+      require => Package['snmptrapd'],
+      notify  => Service['snmptrapd'],
+    }
+
+    service { 'snmptrapd':
+      ensure     => $trap_service_ensure_real,
+      name       => $trap_service_name,
+      enable     => $trap_service_enable_real,
+      hasstatus  => $trap_service_hasstatus,
+      hasrestart => $trap_service_hasrestart,
+      require    => [ File['var-net-snmp'], Package['snmptrapd'], ],
+      subscribe  => File['snmptrapd.conf'],
     }
   }
 

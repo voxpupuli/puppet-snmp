@@ -61,6 +61,9 @@ describe 'snmp class' do
     describe process('snmpd') do
       it { is_expected.to be_running }
     end
+    describe process('snmptrapd') do
+      it { is_expected.not_to be_running }
+    end
     describe file(service_config.to_s) do
       it { is_expected.to be_file }
       it { is_expected.not_to contain 'rocommunity' }
@@ -95,6 +98,26 @@ describe 'snmp class' do
     describe command('snmpget -v 3 -u mysubcontractor -l authPriv -a SHA -A 456authpass -x AES -X 789privpass localhost iso.3.6.1.2.1.1.1.0') do
       its(:stdout) { is_expected.to match %r{iso.3.6.1.2.1.1.1.0 = STRING: "Linux.*} }
       its(:exit_status) { is_expected.to eq 0 }
+    end
+  end
+
+  context 'with snmptrapd running' do
+    it 'installs snmpd idempotently' do
+      pp = %(
+        class { 'snmp':
+          trap_service_ensure => 'running',
+          agentaddress  => [ 'udp:127.0.0.1:161' ],
+          snmptrapdaddr => [ 'udp:127.0.0.1:162' ],
+        }
+      )
+      apply_manifest(pp, catch_failures: true)
+      apply_manifest(pp, catch_changes: true)
+    end
+    describe process('snmpd') do
+      it { is_expected.to be_running }
+    end
+    describe process('snmptrapd') do
+      it { is_expected.to be_running }
     end
   end
 end

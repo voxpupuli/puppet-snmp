@@ -99,6 +99,7 @@ class snmp::params {
 
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
+      $snmptrapd_package_name   = undef
     }
     'Debian': {
       if $facts['os']['name'] == 'Debian' and versioncmp($majordistrelease, '9') >= 0 {
@@ -125,8 +126,16 @@ class snmp::params {
       $client_config            = '/etc/snmp/snmp.conf'
 
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
-      $trap_service_name        = undef
       $snmptrapd_options        = '-Lsd -p /var/run/snmptrapd.pid'
+
+      if $facts['os']['name'] == 'Ubuntu' and versioncmp($majordistrelease, '16.04') >= 0 {
+        $trap_service_name      = 'snmptrapd'
+        $snmptrapd_package_name = 'snmptrapd'
+        $trap_sysconfig         = '/etc/default/snmptrapd'
+      } else {
+        $trap_service_name      = undef
+        $snmptrapd_package_name = undef
+      }
     }
     'Suse': {
       $package_name             = 'net-snmp'
@@ -147,6 +156,7 @@ class snmp::params {
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
       $snmptrapd_options        = undef
+      $snmptrapd_package_name   = undef
     }
     'FreeBSD': {
       $package_name             = 'net-mgmt/net-snmp'
@@ -169,6 +179,7 @@ class snmp::params {
       $trap_service_config      = '/usr/local/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'snmptrapd'
       $snmptrapd_options        = undef
+      $snmptrapd_package_name   = undef
     }
     'OpenBSD': {
       $package_name             = 'net-snmp'
@@ -191,6 +202,7 @@ class snmp::params {
       $trap_service_config      = '/etc/snmp/snmptrapd.conf'
       $trap_service_name        = 'netsnmptrapd'
       $snmptrapd_options        = undef
+      $snmptrapd_package_name   = undef
     }
     default: {
       fail("Module does not support ${facts['os']['family']}.")
