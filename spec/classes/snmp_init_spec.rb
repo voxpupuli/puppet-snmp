@@ -575,14 +575,36 @@ describe 'snmp' do
             path: '/etc/snmp/snmptrapd.conf'
           ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
-        it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
+        case facts[:os]['release']['major']
+        when '8', '9', '16.04', '18.04'
+          it {
+            is_expected.to contain_file('snmptrapd.sysconfig').with(
+              ensure: 'present',
+              mode: '0644',
+              owner: 'root',
+              group: 'root',
+              path: '/etc/default/snmptrapd'
+            ).that_requires('Package[snmptrapd]').that_notifies('Service[snmptrapd]')
+          }
+          it {
+            is_expected.to contain_service('snmptrapd').with(
+              ensure: 'stopped',
+              name: 'snmptrapd',
+              enable: false,
+              hasstatus: true,
+              hasrestart: true
+            ).that_requires(['Package[snmptrapd]', 'File[var-net-snmp]'])
+          }
+        else
+          it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
+          it { is_expected.not_to contain_service('snmptrapd') }
+        end
         it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\'"' do
           verify_contents(catalogue, 'snmpd.sysconfig', [
                             'TRAPDRUN=no',
                             'TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\''
                           ])
         end
-        it { is_expected.not_to contain_service('snmptrapd') }
 
         case facts[:os]['release']['major']
         when '9', '18.04'
@@ -623,21 +645,46 @@ describe 'snmp' do
           end
         end
 
-        describe 'service_ensure => stopped and trap_service_ensure => running' do
-          let :params do
-            {
-              service_ensure: 'stopped',
-              trap_service_ensure: 'running'
-            }
-          end
+        case facts[:os]['release']['major']
+        when '8', '9', '16.04', '18.04'
+          describe 'service_ensure => stopped and trap_service_ensure => running' do
+            let :params do
+              {
+                service_ensure: 'stopped',
+                trap_service_ensure: 'running'
+              }
+            end
 
-          it { is_expected.to contain_service('snmpd').with_ensure('running') }
-          it { is_expected.not_to contain_service('snmptrapd') }
-          it 'contains File[snmpd.sysconfig] with contents "SNMPDRUN=no" and "TRAPDRUN=yes"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'SNMPDRUN=no',
-                              'TRAPDRUN=yes'
-                            ])
+            it { is_expected.to contain_service('snmpd').with_ensure('running') }
+            it { is_expected.to contain_service('snmptrapd').with_ensure('running') }
+            it 'contains File[snmpd.sysconfig] with content "SNMPDRUN=no"' do
+              verify_contents(catalogue, 'snmpd.sysconfig', [
+                                'SNMPDRUN=no'
+                              ])
+            end
+            it 'contains File[snmptrapd.sysconfig] with content "TRAPDRUN=yes"' do
+              verify_contents(catalogue, 'snmptrapd.sysconfig', [
+                                'TRAPDRUN=yes'
+                              ])
+            end
+          end
+        else
+          describe 'service_ensure => stopped and trap_service_ensure => running' do
+            let :params do
+              {
+                service_ensure: 'stopped',
+                trap_service_ensure: 'running'
+              }
+            end
+
+            it { is_expected.to contain_service('snmpd').with_ensure('running') }
+            it { is_expected.not_to contain_service('snmptrapd') }
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDRUN=no" and "TRAPDRUN=yes"' do
+              verify_contents(catalogue, 'snmpd.sysconfig', [
+                                'SNMPDRUN=no',
+                                'TRAPDRUN=yes'
+                              ])
+            end
           end
         end
 
