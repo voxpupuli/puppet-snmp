@@ -132,6 +132,10 @@ class snmp::params {
         $trap_service_name      = 'snmptrapd'
         $snmptrapd_package_name = 'snmptrapd'
         $trap_sysconfig         = '/etc/default/snmptrapd'
+      } elsif $facts['os']['name'] == 'Debian' and versioncmp($majordistrelease, '8') >= 0 {
+        $trap_service_name      = 'snmptrapd'
+        $snmptrapd_package_name = 'snmptrapd'
+        $trap_sysconfig         = '/etc/default/snmptrapd'
       } else {
         $trap_service_name      = undef
         $snmptrapd_package_name = undef

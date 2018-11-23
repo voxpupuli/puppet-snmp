@@ -576,7 +576,7 @@ describe 'snmp' do
           ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         case facts[:os]['release']['major']
-        when '16.04', '18.04'
+        when '8', '9', '16.04', '18.04'
           it {
             is_expected.to contain_file('snmptrapd.sysconfig').with(
               ensure: 'present',
@@ -646,7 +646,7 @@ describe 'snmp' do
         end
 
         case facts[:os]['release']['major']
-        when '16.04', '18.04'
+        when '8', '9', '16.04', '18.04'
           describe 'service_ensure => stopped and trap_service_ensure => running' do
             let :params do
               {

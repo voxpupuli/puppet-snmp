@@ -410,7 +410,8 @@ class snmp (
       require => Package['snmpd'],
       notify  => Service['snmptrapd'],
     }
-  } elsif $facts['os']['family'] == 'Debian' and versioncmp($facts['os']['release']['major'], '16.04') >= 0 {
+  } elsif ( $facts['os']['name'] == 'Ubuntu' and versioncmp($facts['os']['release']['major'], '16.04') >= 0 ) or
+  ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '8') >= 0 ) {
     file { 'snmptrapd.sysconfig':
       ensure  => $file_ensure,
       mode    => '0644',
