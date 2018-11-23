@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v4.1.0](https://github.com/voxpupuli/puppet-snmp/tree/v4.1.0) (2018-11-23)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v4.0.0...v4.1.0)
+
+**Implemented enhancements:**
+
+- Implement snmpv3\_user fact and snmp::snmpv3\_usm\_hash function [\#157](https://github.com/voxpupuli/puppet-snmp/pull/157) ([smoeding](https://github.com/smoeding))
+
+**Fixed bugs:**
+
+- fix snmptrapd on ubuntu and debian [\#168](https://github.com/voxpupuli/puppet-snmp/pull/168) ([amateo](https://github.com/amateo))
+
+**Merged pull requests:**
+
+- use puppet strings format for reference [\#167](https://github.com/voxpupuli/puppet-snmp/pull/167) ([Dan33l](https://github.com/Dan33l))
+- add acceptance tests with beaker [\#166](https://github.com/voxpupuli/puppet-snmp/pull/166) ([Dan33l](https://github.com/Dan33l))
+
 ## [v4.0.0](https://github.com/voxpupuli/puppet-snmp/tree/v4.0.0) (2018-11-08)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/3.9.0...v4.0.0)
@@ -37,7 +54,7 @@ Earlier versions of the module (razorsedge/snmp) stated that traditional access 
 - Release the current version on the forge [\#138](https://github.com/voxpupuli/puppet-snmp/issues/138)
 - Test cases are broken [\#132](https://github.com/voxpupuli/puppet-snmp/issues/132)
 - cannot disable VACM [\#129](https://github.com/voxpupuli/puppet-snmp/issues/129)
-- extemds variable  [\#123](https://github.com/voxpupuli/puppet-snmp/issues/123)
+- `extemds` variable typo [\#123](https://github.com/voxpupuli/puppet-snmp/issues/123)
 
 **Merged pull requests:**
 
