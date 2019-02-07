@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v4.1.1](https://github.com/voxpupuli/puppet-snmp/tree/v4.1.1) (2019-02-07)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v4.1.0...v4.1.1)
+
+**Breaking changes:**
+
+- modulesync 2.5.1 and drop Puppet 4 [\#177](https://github.com/voxpupuli/puppet-snmp/pull/177) ([bastelfreak](https://github.com/bastelfreak))
+
+**Fixed bugs:**
+
+- Dependancy listings are out of date [\#178](https://github.com/voxpupuli/puppet-snmp/issues/178)
+- rouser in snmpd.conf missing for v3 auth [\#9](https://github.com/voxpupuli/puppet-snmp/issues/9)
+- Updated stdlib to 4.22.0 [\#179](https://github.com/voxpupuli/puppet-snmp/pull/179) ([thaylin](https://github.com/thaylin))
+
+**Closed issues:**
+
+- Deprecate razorsedge/snmp [\#163](https://github.com/voxpupuli/puppet-snmp/issues/163)
+
 ## [v4.1.0](https://github.com/voxpupuli/puppet-snmp/tree/v4.1.0) (2018-11-23)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v4.0.0...v4.1.0)
@@ -24,10 +42,6 @@ These should not affect the functionality of the module.
 ## [v4.0.0](https://github.com/voxpupuli/puppet-snmp/tree/v4.0.0) (2018-11-08)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/3.9.0...v4.0.0)
-
-This is the first release in VoxPupuli's `puppet` namespace.
-
-Earlier versions of the module (razorsedge/snmp) stated that traditional access control and its parameters were deprecated and would be removed in version 4.0.0.  Removing this feature has been deferred until at least version 5.
 
 **Breaking changes:**
 
@@ -50,6 +64,7 @@ Earlier versions of the module (razorsedge/snmp) stated that traditional access 
 
 **Closed issues:**
 
+- Prepare for release 4.0.0 [\#153](https://github.com/voxpupuli/puppet-snmp/issues/153)
 - Needs to be updated to support Ubuntu 18 [\#151](https://github.com/voxpupuli/puppet-snmp/issues/151)
 - Release the current version on the forge [\#138](https://github.com/voxpupuli/puppet-snmp/issues/138)
 - Test cases are broken [\#132](https://github.com/voxpupuli/puppet-snmp/issues/132)
