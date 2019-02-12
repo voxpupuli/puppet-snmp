@@ -98,19 +98,23 @@ sysName <%= @sysname %>
 
 ################################################################################
 # EXTENDING AGENT FUNCTIONALITY
-<% if @extends.any? -%>
-<% @extends.each do |extending| -%>
+<% if @extends -%>
+<%   if @extends.any? -%>
+<%     @extends.each do |extending| -%>
 extend <%= extending %>
-<% end -%>
+<%     end -%>
+<%   end -%>
 <% end -%>
 
-<% if @dlmod.any? -%>
+<% if @dlmod -%>
+<%   if @dlmod.any? -%>
 # ------------------------------------------------------------------------------
 # Dynamically Loadable Modules
-<% @dlmod.each do |mod| -%>
+<%     @dlmod.each do |mod| -%>
 dlmod <%= mod %>
-<% end -%>
+<%     end -%>
 
+<%   end -%>
 <% end -%>
 
 ###############################################################################
@@ -132,6 +136,8 @@ smuxpeer .1.3.6.1.4.1.674.10892.1
 #Allow Systems Management Data Engine SNMP Storageservices to connect to snmpd using SMUX
 smuxpeer .1.3.6.1.4.1.674.10893.1
 <% end -%>
-<% @snmpd_config.each do |line| -%>
+<% if not @snmpd_config.nil? -%>
+<%   @snmpd_config.each do |line| -%>
 <%= line %>
+<%   end -%>
 <% end -%>

@@ -227,7 +227,7 @@ describe 'snmp' do
             is_expected.to contain_class('snmp::client').with(
               ensure: 'present',
               autoupgrade: 'false',
-              snmp_config: []
+              snmp_config: nil
             )
           }
         end
@@ -492,7 +492,7 @@ describe 'snmp' do
             {
               master: true,
               agentx_perms: '0644',
-              agentx_ping_interval: '5',
+              agentx_ping_interval: 5,
               agentx_socket: 'unix:/var/agentx/master',
               agentx_timeout: 10,
               agentx_retries: 10
@@ -516,7 +516,7 @@ describe 'snmp' do
             {
               master: false,
               agentx_perms: '0644',
-              agentx_ping_interval: '5',
+              agentx_ping_interval: 5,
               agentx_socket: 'unix:/var/agentx/master',
               agentx_timeout: 10,
               agentx_retries: 10

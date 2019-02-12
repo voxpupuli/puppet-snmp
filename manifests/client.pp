@@ -1,17 +1,20 @@
-# @summary 
-#   Installs the Net-SNMP client package and configuration.
+# @summary
+#   Manage the Net-SNMP client package and configuration.
 #
 # @example
 #   class { 'snmp::client':
-#     snmp_config => [ 'defVersion 2c', 'defCommunity public', ],
+#     snmp_config => [
+#       'defVersion 2c',
+#       'defCommunity public',
+#     ],
 #   }
+#
+# @param ensure
+#   Ensure if present or absent.
 #
 # @param snmp_config
 #   Array of lines to add to the client's global snmp.conf file.
 #   See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
-#
-# @param ensure
-#   Ensure if present or absent.
 #
 # @param autoupgrade
 #   Upgrade package automatically, if there is a newer version.
@@ -21,12 +24,18 @@
 #   Only set this if your platform is not supported or you know what you are
 #   doing.
 #
+# @param client_config
+#   Path to `snmp.conf`.
+#
 class snmp::client (
-  $snmp_config         = $snmp::params::snmp_config,
-  Enum['present', 'absent'] $ensure = $snmp::params::ensure,
-  Boolean $autoupgrade = $snmp::params::autoupgrade,
-  $package_name        = $snmp::params::client_package_name
-) inherits snmp::params {
+  Enum['present', 'absent']  $ensure        = 'present',
+  Optional[Array[String[1]]] $snmp_config   = undef,
+  Boolean                    $autoupgrade   = false,
+  Optional[String[1]]        $package_name  = undef,
+  Stdlib::Absolutepath       $client_config = '/etc/snmp/snmp.conf',
+) {
+
+  include snmp
 
   if $ensure == 'present' {
     if $autoupgrade {
@@ -40,11 +49,13 @@ class snmp::client (
     $file_ensure = 'absent'
   }
 
-  unless $facts['os']['family'] == 'Suse' {
-    package { 'snmp-client':
-      ensure => $package_ensure,
-      name   => $package_name,
-      before => File['snmp.conf'],
+  if $facts['os']['family'] != 'Suse' {
+    if $package_name != undef {
+      package { 'snmp-client':
+        ensure => $package_ensure,
+        name   => $package_name,
+        before => File['snmp.conf'],
+      }
     }
   }
 
@@ -56,10 +67,10 @@ class snmp::client (
 
   file { 'snmp.conf':
     ensure  => $file_ensure,
-    mode    => '0644',
+    path    => $client_config,
     owner   => 'root',
     group   => 'root',
-    path    => $snmp::params::client_config,
+    mode    => '0644',
     content => template('snmp/snmp.conf.erb'),
   }
 }
