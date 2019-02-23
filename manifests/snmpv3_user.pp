@@ -30,6 +30,7 @@ define snmp::snmpv3_user (
   Enum['AES','DES']         $privtype = 'AES',
   Enum['snmpd','snmptrapd'] $daemon   = 'snmpd'
 ) {
+
   include snmp
 
   if ($daemon == 'snmptrapd') and ($facts['os']['family'] != 'Debian') {
@@ -68,7 +69,7 @@ define snmp::snmpv3_user (
       path    => '/bin:/sbin:/usr/bin:/usr/sbin',
       # TODO: Add "rwuser ${title}" (or rouser) to /etc/snmp/${daemon}.conf
       command => "service ${service_name} stop ; sleep 5 ; \
-echo \"${cmd}\" >>${snmp::params::var_net_snmp}/${daemon}.conf",
+echo \"${cmd}\" >>${snmp::var_net_snmp}/${daemon}.conf",
       user    => 'root',
       require => [ Package['snmpd'], File['var-net-snmp'], ],
       before  => Service[$service_name],
