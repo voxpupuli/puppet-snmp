@@ -36,7 +36,7 @@ class { 'snmp':
 
 # Only configure and run the snmptrap daemon:
 class { 'snmp':
-  ro_community        => 'SeCrEt',
+  ro_community        => ['SeCrEt'],
   service_ensure      => 'stopped',
   trap_service_ensure => 'running',
   trap_handlers       => [
@@ -69,67 +69,67 @@ Default value: [ 'udp:127.0.0.1:162', 'udp6:[::1]:162' ]
 
 ##### `ro_community`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Array[String[1]]`
 
-Read-only (RO) community string or array for agent and snmptrap daemon.
+Read-only (RO) array of community strings for agent and snmptrap daemon.
 
-Default value: 'public'
+Default value: ['public']
 
 ##### `ro_community6`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Array[String[1]]`
 
-Read-only (RO) community string or array for IPv6 agent.
+Read-only (RO) array of community strings for IPv6 agent.
 
-Default value: 'public'
+Default value: ['public']
 
 ##### `rw_community`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Array[String[1]]`
 
-Read-write (RW) community string or array agent.
+Read-write (RW) array of community strings for agent.
 
-Default value: `undef`
+Default value: []
 
 ##### `rw_community6`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Array[String[1]]`
 
-Read-write (RW) community string or array for IPv6 agent.
+Read-write (RW) array of community strings for IPv6 agent.
 
-Default value: `undef`
+Default value: []
 
 ##### `ro_network`
 
-Data type: `Variant[Array, Stdlib::IP::Address::V4, Stdlib::IP::Address::V4::CIDR]`
+Data type: `Array[Stdlib::IP::Address::V4]`
 
-Network that is allowed to RO query the daemon.  Can be string or array.
+Networks that are allowed to RO query the daemon.
 
-Default value: '127.0.0.1'
+Default value: ['127.0.0.1']
 
 ##### `ro_network6`
 
-Data type: `Variant[Array, Stdlib::IP::Address::V6, Stdlib::IP::Address::V6::CIDR]`
+Data type: `Array[Stdlib::IP::Address::V6]`
 
-Network that is allowed to RO query the daemon via IPv6.  Can be string or array.
+Networks that are allowed to RO query the daemon via IPv6.
 
-Default value: '::1'
+Default value: ['::1']
 
 ##### `rw_network`
 
-Data type: `Variant[Array, Stdlib::IP::Address::V4, Stdlib::IP::Address::V4::CIDR]`
+Data type: `Array[Stdlib::IP::Address::V4]`
 
-Network that is allowed to RW query the daemon.  Can be string or array.
+Networks that are allowed to RW query the daemon.
 
-Default value: '127.0.0.1'
+Default value: ['127.0.0.1']
 
 ##### `rw_network6`
 
-Data type: `Variant[Array, Stdlib::IP::Address::V6, Stdlib::IP::Address::V6::CIDR]`
+Data type: `Array[Stdlib::IP::Address::V6]`
 
-Network that is allowed to RW query the daemon via IPv6.  Can be string or array.
+Networks that are allowed to RW query the daemon via IPv6.
 
-Default value: '::1'
+Default value: ['::1']
 
 ##### `contact`
 

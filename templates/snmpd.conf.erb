@@ -36,23 +36,23 @@ agentaddress <%= @agentaddress.join(',') %>
 
 # ------------------------------------------------------------------------------
 # Traditional Access Control
-<%- [*@ro_community].compact.each do |c| -%>
-  <%- [*@ro_network].compact.each do |n| -%>
+<%- @ro_community.each do |c| -%>
+  <%- @ro_network.each do |n| -%>
 rocommunity <%= c %> <%= n %>
   <%- end -%>
 <%- end -%>
-<%- [*@ro_community6].compact.each do |c| -%>
-  <%- [*@ro_network6].compact.each do |n| -%>
+<%- @ro_community6.each do |c| -%>
+  <%- @ro_network6.each do |n| -%>
 rocommunity6 <%= c %> <%= n %>
   <%- end -%>
 <%- end -%>
-<%- [*@rw_community].compact.each do |c| -%>
-  <%- [*@rw_network].compact.each do |n| -%>
+<%- @rw_community.each do |c| -%>
+  <%- @rw_network.each do |n| -%>
 rwcommunity <%= c %> <%= n %>
   <%- end -%>
 <%- end -%>
-<%- [*@rw_community6].compact.each do |c| -%>
-  <%- [*@rw_network6].compact.each do |n| -%>
+<%- @rw_community6.each do |c| -%>
+  <%- @rw_network6.each do |n| -%>
 rocommunity6 <%= c %> <%= n %>
   <%- end -%>
 <%- end -%>

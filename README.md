@@ -57,23 +57,7 @@ include snmp
 
 ### Upgrading
 
-#### Deprecation Warning
-
-##### Past module 3.x series
-
- * The classes `snmp::server` and `snmp::trapd` have been merged into class `snmp`.  All of their class parameters available in the `snmp` class.
-
-##### Current module 4.x series
-
- * The parameter `install_client` is renamed to `manage_client`.
-
- * Support for Puppet < 4 is removed.
-
-##### Future module 5.x series
-
- * The parameters `ro_community`, `rw_community`, `ro_network`, and `rw_network` will be removed.
-
- * The snmptrapd parameter name will become `authcommunity`.
+Please see the [CHANGELOG](CHANGELOG.md) for details of breaking changes between major releases.
 
 ## Usage
 
@@ -92,8 +76,8 @@ To change the SNMP community from the default value and limit the netblocks that
 ```puppet
 class { 'snmp':
   agentaddress => [ 'udp:161', ],
-  ro_community => 'myPassword',
-  ro_network   => '192.168.0.0/16',
+  ro_community => ['myPassword'],
+  ro_network   => ['192.168.0.0/16'],
 }
 ```
 
@@ -187,11 +171,13 @@ snmp::snmpv3_user { 'myuser':
 
 ### Access Control
 
+For access control, it is recommended to configure VACM, (see below), and turn off traditional access control.
+
 With traditional access control, you can give a simple password and (optional) network restriction:
 ```puppet
 class { 'snmp':
-  ro_community => 'myPassword',
-  ro_network   => '10.0.0.0/8',
+  ro_community => ['myPassword'],
+  ro_network   => ['10.0.0.0/8'],
 }
 ```
 and it becomes this in snmpd.conf:
@@ -199,6 +185,14 @@ and it becomes this in snmpd.conf:
 rocommunity myPassword 10.0.0.0/8
 ```
 This says that any host on network 10.0.0.0/8 can read any SNMP value via SNMP versions 1 and 2c as long as they provide the password 'myPassword'.
+
+To disable traditional access control make sure you override the `ro_community` and `ro_community6` parameters.
+```puppet
+class { 'snmp':
+  ro_community  => [],
+  ro_community6 => [],
+  # ...
+}
 
 With View-based Access Control Model (VACM), you can do this (more complex) configuration instead:
 ```puppet
@@ -233,7 +227,7 @@ Reference: [Manpage of snmpd.conf - Access Control](http://www.net-snmp.org/docs
 In traditional access control, you can also pass multiple networks for the community string.
 ```puppet
 class { 'snmp':
-  ro_community => 'shibboleth',
+  ro_community => ['shibboleth'],
   ro_network   => [ '192.168.0.0/16', '1.2.3.4/32', ],
 }
 ```

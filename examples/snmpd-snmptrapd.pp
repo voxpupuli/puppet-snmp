@@ -1,5 +1,5 @@
 class { 'snmp':
-  ro_community        => 'SeCrEt',
+  ro_community        => ['SeCrEt'],
   trap_service_ensure => 'running',
   trap_service_enable => true,
   trap_handlers       => [

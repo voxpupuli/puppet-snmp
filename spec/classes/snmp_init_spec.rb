@@ -450,8 +450,8 @@ describe 'snmp' do
           end
         end
 
-        describe 'ro_network => "127.0.0.2"' do
-          let(:params) { { ro_network: '127.0.0.2' } }
+        describe 'ro_network => ["127.0.0.2"]' do
+          let(:params) { { ro_network: ['127.0.0.2'] } }
 
           it 'contains File[snmpd.conf] with contents "127.0.0.2"' do
             verify_contents(catalogue, 'snmpd.conf', [
@@ -460,8 +460,8 @@ describe 'snmp' do
           end
         end
 
-        describe 'ro_community => [ "a", "b", ] and ro_network => "127.0.0.2"' do
-          let(:params) { { ro_community: %w[a b], ro_network: '127.0.0.2' } }
+        describe 'ro_community => [ "a", "b", ] and ro_network => ["127.0.0.2"]' do
+          let(:params) { { ro_community: %w[a b], ro_network: ['127.0.0.2'] } }
 
           it 'contains File[snmpd.conf] with contents "a 127.0.0.2" and "b 127.0.0.2"' do
             verify_contents(catalogue, 'snmpd.conf', [

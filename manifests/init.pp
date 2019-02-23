@@ -10,7 +10,7 @@
 #
 #   # Only configure and run the snmptrap daemon:
 #   class { 'snmp':
-#     ro_community        => 'SeCrEt',
+#     ro_community        => ['SeCrEt'],
 #     service_ensure      => 'stopped',
 #     trap_service_ensure => 'running',
 #     trap_handlers       => [
@@ -27,28 +27,28 @@
 #   SNMP notifications.
 #
 # @param ro_community
-#   Read-only (RO) community string or array for agent and snmptrap daemon.
+#   Read-only (RO) array of community strings for agent and snmptrap daemon.
 #
 # @param ro_community6
-#   Read-only (RO) community string or array for IPv6 agent.
+#   Read-only (RO) array of community strings for IPv6 agent.
 #
 # @param rw_community
-#   Read-write (RW) community string or array agent.
+#   Read-write (RW) array of community strings for agent.
 #
 # @param rw_community6
-#   Read-write (RW) community string or array for IPv6 agent.
+#   Read-write (RW) array of community strings for IPv6 agent.
 #
 # @param ro_network
-#   Network that is allowed to RO query the daemon.  Can be string or array.
+#   Networks that are allowed to RO query the daemon.
 #
 # @param ro_network6
-#   Network that is allowed to RO query the daemon via IPv6.  Can be string or array.
+#   Networks that are allowed to RO query the daemon via IPv6.
 #
 # @param rw_network
-#   Network that is allowed to RW query the daemon.  Can be string or array.
+#   Networks that are allowed to RW query the daemon.
 #
 # @param rw_network6
-#   Network that is allowed to RW query the daemon via IPv6.  Can be string or array.
+#   Networks that are allowed to RW query the daemon via IPv6.
 #
 # @param contact
 #   Responsible person for the SNMP system.
@@ -245,23 +245,23 @@
 #   Group of `var_net_snmp` directory.
 #
 class snmp (
-  Enum['present','absent']                                        $ensure        = 'present',
-  Array[String[1]]                                                $agentaddress  = [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ],
-  Array[String[1]]                                                $snmptrapdaddr = [ 'udp:127.0.0.1:162', 'udp6:[::1]:162' ],
-  Variant[Undef, String[1], Array[String[1]]]                     $ro_community  = 'public',
-  Variant[Undef, String[1], Array[String[1]]]                     $ro_community6 = 'public',
-  Variant[Undef, String[1], Array[String[1]]]                     $rw_community  = undef,
-  Variant[Undef, String[1], Array[String[1]]]                     $rw_community6 = undef,
-  Variant[Array, Stdlib::IP::Address::V4, Stdlib::IP::Address::V4::CIDR] $ro_network    = '127.0.0.1',
-  Variant[Array, Stdlib::IP::Address::V6, Stdlib::IP::Address::V6::CIDR] $ro_network6   = '::1',
-  Variant[Array, Stdlib::IP::Address::V4, Stdlib::IP::Address::V4::CIDR] $rw_network    = '127.0.0.1',
-  Variant[Array, Stdlib::IP::Address::V6, Stdlib::IP::Address::V6::CIDR] $rw_network6   = '::1',
-  String[1]                                                       $contact       = 'Unknown',
-  String[1]                                                       $location      = 'Unknown',
-  String[1]                                                       $sysname       = $facts['networking']['fqdn'],
-  Integer                                                         $services      = 72,
-  Array[String[1]]                                                $com2sec       = [ 'notConfigUser  default       public' ],
-  Array[String[1]]                                                $com2sec6      = [ 'notConfigUser  default       public' ],
+  Enum['present','absent'] $ensure = 'present',
+  Array[String[1]] $agentaddress  = [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ],
+  Array[String[1]] $snmptrapdaddr = [ 'udp:127.0.0.1:162', 'udp6:[::1]:162' ],
+  Array[String[1]] $ro_community  = ['public'],
+  Array[String[1]] $ro_community6 = ['public'],
+  Array[String[1]] $rw_community  = [],
+  Array[String[1]] $rw_community6 = [],
+  Array[Stdlib::IP::Address::V4] $ro_network  = ['127.0.0.1'],
+  Array[Stdlib::IP::Address::V6] $ro_network6 = ['::1'],
+  Array[Stdlib::IP::Address::V4] $rw_network  = ['127.0.0.1'],
+  Array[Stdlib::IP::Address::V6] $rw_network6 = ['::1'],
+  String[1] $contact  = 'Unknown',
+  String[1] $location = 'Unknown',
+  String[1] $sysname  = $facts['networking']['fqdn'],
+  Integer   $services = 72,
+  Array[String[1]] $com2sec  = [ 'notConfigUser  default       public' ],
+  Array[String[1]] $com2sec6 = [ 'notConfigUser  default       public' ],
   Array[String[1]] $groups = [
     'notConfigGroup v1            notConfigUser',
     'notConfigGroup v2c           notConfigUser',
