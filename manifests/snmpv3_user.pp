@@ -40,8 +40,8 @@ define snmp::snmpv3_user (
   }
 
   $cmd = $privpass ? {
-    undef   => "createUser ${title} ${authtype} \\\"${authpass}\\\"",
-    default => "createUser ${title} ${authtype} \\\"${authpass}\\\" ${privtype} \\\"${privpass}\\\""
+    undef   => "createUser ${title} ${authtype} \"${authpass}\"",
+    default => "createUser ${title} ${authtype} \"${authpass}\" ${privtype} \"${privpass}\""
   }
 
   if ($title in $facts['snmpv3_user']) {
@@ -65,14 +65,44 @@ define snmp::snmpv3_user (
   }
 
   if $create {
-    exec { "create-snmpv3-user-${title}":
-      path    => '/bin:/sbin:/usr/bin:/usr/sbin',
-      # TODO: Add "rwuser ${title}" (or rouser) to /etc/snmp/${daemon}.conf
-      command => "service ${service_name} stop ; sleep 5 ; \
-echo \"${cmd}\" >>${snmp::var_net_snmp}/${daemon}.conf",
-      user    => 'root',
-      require => [ Package['snmpd'], File['var-net-snmp'], ],
-      before  => Service[$service_name],
+    unless defined(Exec["stop-${service_name}"]) {
+      #
+      # TODO: update $command for different operating systems/releases
+      #
+      $command = "service ${service_name} stop ; sleep 5"
+
+      exec { "stop-${service_name}":
+        command => $command,
+        user    => 'root',
+        cwd     => '/',
+        path    => '/bin:/sbin:/usr/bin:/usr/sbin',
+        require => [ Package['snmpd'], File['var-net-snmp'], ],
+      }
+    }
+
+    unless defined(File["${snmp::var_net_snmp}/${service_name}.conf"]) {
+      #
+      # For this file there is no content defined since the SNMP daemon
+      # rewrites the content on exit. But the file needs to exist or the
+      # following file_line resource will fail.
+      #
+      file { "${snmp::var_net_snmp}/${service_name}.conf":
+        ensure => file,
+        mode   => '0600',
+        owner  => $snmp::varnetsnmp_owner,
+        group  => $snmp::varnetsnmp_group,
+      }
+    }
+
+    file_line { "create-snmpv3-user-${title}":
+      path      => "${snmp::var_net_snmp}/${service_name}.conf",
+      line      => $cmd,
+      match     => "^createUser ${title} ",
+      subscribe => Exec["stop-${service_name}"],
+      require   => File["${snmp::var_net_snmp}/${service_name}.conf"],
+      before    => Service[$service_name],
     }
   }
+
+  # TODO: Add "rwuser ${title}" (or rouser) to /etc/snmp/${daemon}.conf
 }
