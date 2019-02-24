@@ -15,7 +15,12 @@ configuration.
 
 **Functions**
 
-* [`snmp::snmpv3_usm_hash`](#snmpsnmpv3_usm_hash): snmpv3_usm_hash.rb --- Calculate SNMPv3 USM hash for a passphrase
+_Public Functions_
+
+
+_Private Functions_
+
+* `snmp::snmpv3_usm_hash`: snmpv3_usm_hash.rb --- Calculate SNMPv3 USM hash for a passphrase
 
 ## Classes
 
@@ -743,40 +748,4 @@ Which daemon file in which to write the user.  snmpd or snmptrapd
 Default value: 'snmpd'
 
 ## Functions
-
-### snmp::snmpv3_usm_hash
-
-Type: Ruby 4.x API
-
-snmpv3_usm_hash.rb --- Calculate SNMPv3 USM hash for a passphrase
-
-#### `snmp::snmpv3_usm_hash(String $authtype, String $engine, String $passphrase, Optional[Integer] $bits)`
-
-snmpv3_usm_hash.rb --- Calculate SNMPv3 USM hash for a passphrase
-
-Returns: `String` The calculated hash.
-
-##### `authtype`
-
-Data type: `String`
-
-The authentication type to calculate. This must either be
-
-##### `engine`
-
-Data type: `String`
-
-The SNMP engine used. The value is used as salt and must
-
-##### `passphrase`
-
-Data type: `String`
-
-The passphrase for which the hash is calculated.
-
-##### `bits`
-
-Data type: `Optional[Integer]`
-
-The number of bits the result should be truncated to if it is
 
