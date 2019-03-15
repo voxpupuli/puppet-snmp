@@ -406,7 +406,7 @@ class snmp (
     }
   }
 
-  if $facts['os']['family'] == 'Suse' {
+  if ($facts['os']['family'] == 'Suse') and (versioncmp($facts['os']['release']['major'], '12') < 0) {
     file { '/etc/init.d/snmptrapd':
       source  => '/usr/share/doc/packages/net-snmp/rc.snmptrapd',
       owner   => 'root',
