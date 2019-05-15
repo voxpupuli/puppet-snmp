@@ -324,6 +324,10 @@ class snmp (
 
   $template_snmpd_conf          = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig     = "snmp/snmpd.sysconfig-${facts['os']['family']}.erb"
+  $template_snmpd_service = $facts['os']['release']['full']  ? {
+    /^9.*/ => "snmp/snmpd.service-${facts['os']['family']}.epp",
+    default => "snmp/snmpd.service-${facts['os']['family']}.erb",
+  }
   $template_snmptrapd           = 'snmp/snmptrapd.conf.erb'
   $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${facts['os']['family']}.erb"
 
@@ -448,6 +452,13 @@ class snmp (
       content => template($template_snmpd_sysconfig),
       require => Package['snmpd'],
       notify  => Service['snmpd'],
+    }
+  }
+
+  # Debian 9 use systemd
+  if ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '9') >= 0 ) {
+    systemd::unit_file { 'snmpd.service':
+      content => epp($template_snmpd_service),
     }
   }
 
