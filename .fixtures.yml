@@ -1,6 +1,5 @@
 fixtures:
-  forge_modules:
-    systemd: "camptocamp/systemd"
   repositories:
     stdlib: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
+    systemd: 'https://github.com/camptocamp/puppet-systemd.git'
 
