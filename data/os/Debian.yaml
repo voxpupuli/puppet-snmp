@@ -6,8 +6,8 @@ snmp::service_config: '/etc/snmp/snmpd.conf'
 snmp::service_config_dir_group: 'root'
 snmp::service_config_perms: '0600'
 snmp::service_name: 'snmpd'
-snmp::snmpd_options: "-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid"
-snmp::snmptrapd_options: '-Lsd -p /var/run/snmptrapd.pid'
+snmp::snmpd_options: "-LS6d -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid"
+snmp::snmptrapd_options: '-LS6d -p /var/run/snmptrapd.pid'
 snmp::snmptrapd_package_name: 'snmptrapd'
 snmp::sysconfig: '/etc/default/snmpd'
 snmp::trap_service_config: '/etc/snmp/snmptrapd.conf'
