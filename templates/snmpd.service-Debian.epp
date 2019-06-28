@@ -11,7 +11,7 @@ Environment="MIBSDIR=/usr/share/snmp/mibs:/usr/share/snmp/mibs/iana:/usr/share/s
 Environment="MIBS="
 Type=simple
 ExecStartPre=/bin/mkdir -p /var/run/agentx
-ExecStart=<%= $snmp::snmpd_options %>
+ExecStart=/usr/sbin/snmpd <%= $snmp::snmpd_options %>
 ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
