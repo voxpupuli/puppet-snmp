@@ -5,14 +5,17 @@ when 'RedHat'
   client_package = 'net-snmp-utils'
   service_config = '/etc/snmp/snmpd.conf'
   service_varconfig = '/var/lib/net-snmp/snmpd.conf'
+  modified_snmpd_options = 'here values that works well with this OS but different from default'
 when 'Debian'
   client_package = 'snmp'
   service_config = '/etc/snmp/snmpd.conf'
   service_varconfig = '/var/lib/snmp/snmpd.conf'
+  modified_snmpd_options = '-a -u Debian-snmp -g Debian-snmp -I -smux mteTrigger mteTriggerConf -f'
 when 'Suse'
   client_package = 'net-snmp'
   service_config = '/etc/snmp/snmpd.conf'
   service_varconfig = '/var/lib/snmp/snmpd.conf'
+  modified_snmpd_options = 'here values that works well with this OS but different from default'
 end
 
 describe 'snmp class' do
@@ -118,6 +121,27 @@ describe 'snmp class' do
     end
     describe process('snmptrapd') do
       it { is_expected.to be_running }
+    end
+  end
+
+  context 'with modified snmpd options' do
+    it 'executes with modified options' do
+      pp = %(
+        class { 'snmp':
+          snmpd_config => [
+            'rouser myops authPriv -V all_view',
+            'rouser mysubcontractor authPriv -V custom_view',
+          ],
+          snmpd_options => '-a -u Debian-snmp -g Debian-snmp -I -smux mteTrigger mteTriggerConf -f',
+        }
+      )
+      apply_manifest(pp, catch_failures: true)
+      apply_manifest(pp, catch_changes: true)
+    end
+
+    describe process('snmpd') do
+      it { is_expected.to be_running }
+      its(:args) { is_expected.to match %r{/usr/sbin/snmpd #{modified_snmpd_options}} }
     end
   end
 end
