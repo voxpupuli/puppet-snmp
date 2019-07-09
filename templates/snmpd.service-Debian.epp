@@ -13,6 +13,7 @@ Type=simple
 ExecStartPre=/bin/mkdir -p /var/run/agentx
 ExecStart=/usr/sbin/snmpd <%= $snmp::snmpd_options %>
 ExecReload=/bin/kill -HUP $MAINPID
+EnvironmentFile=-/etc/default/snmpd
 
 [Install]
 WantedBy=multi-user.target
