@@ -132,7 +132,7 @@ describe 'snmp class' do
             'rouser myops authPriv -V all_view',
             'rouser mysubcontractor authPriv -V custom_view',
           ],
-          snmpd_options => '-a -u Debian-snmp -g Debian-snmp -I -smux mteTrigger mteTriggerConf -f',
+          snmpd_options => '#{modified_snmpd_options}',
         }
       )
       apply_manifest(pp, catch_failures: true)
