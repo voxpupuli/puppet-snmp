@@ -123,6 +123,7 @@ describe 'snmp class' do
       it { is_expected.to be_running }
     end
   end
+
   context 'with modified snmpd options' do
     it 'executes with modified options' do
       pp = %(

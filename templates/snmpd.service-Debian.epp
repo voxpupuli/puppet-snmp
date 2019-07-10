@@ -1,2 +1,3 @@
+[service]
 ExecStart=
 ExecStart=/usr/sbin/snmpd <%= $snmp::snmpd_options %>
