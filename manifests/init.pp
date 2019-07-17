@@ -459,7 +459,7 @@ class snmp (
   if ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '9') >= 0 ) {
     systemd::dropin_file { 'snmpd.conf':
       unit    => 'snmpd.service',
-      content => epp($template_snmpd_service),
+      content => epp($template_snmpd_service_dropin),
     }
   }
 
