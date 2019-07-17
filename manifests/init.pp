@@ -325,7 +325,7 @@ class snmp (
   $template_snmpd_conf          = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig     = "snmp/snmpd.sysconfig-${facts['os']['family']}.erb"
   $template_snmpd_service_dropin = "snmp/snmpd.service-dropin-${facts['os']['family']}.epp"
-    /^9.*/ => "snmp/snmpd.service-${facts['os']['family']}.epp",
+    /^9.*/  => "snmp/snmpd.service-${facts['os']['family']}.epp",
     default => "snmp/snmpd.service-${facts['os']['family']}.erb",
   }
   $template_snmptrapd           = 'snmp/snmptrapd.conf.erb'
