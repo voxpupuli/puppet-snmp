@@ -5,29 +5,19 @@
 
 **Classes**
 
-* [`snmp`](#snmp): Manage the Net-SNMP and Net-SNMP trap daemon package, service, and
-configuration.
-* [`snmp::client`](#snmpclient): Manage the Net-SNMP client package and configuration.
+* [`snmp`](#snmp): Installs the Net-SNMP daemon package, service, and configuration. Installs the Net-SNMP trap daemon service and configuration.
+* [`snmp::client`](#snmpclient): Installs the Net-SNMP client package and configuration.
+* [`snmp::params`](#snmpparams): This class handles OS-specific configuration of the snmp module.
 
 **Defined types**
 
 * [`snmp::snmpv3_user`](#snmpsnmpv3_user): Creates a SNMPv3 user with authentication and encryption paswords.
 
-**Functions**
-
-_Public Functions_
-
-
-_Private Functions_
-
-* `snmp::snmpv3_usm_hash`: snmpv3_usm_hash.rb --- Calculate SNMPv3 USM hash for a passphrase
-
 ## Classes
 
 ### snmp
 
-Manage the Net-SNMP and Net-SNMP trap daemon package, service, and
-configuration.
+Installs the Net-SNMP daemon package, service, and configuration. Installs the Net-SNMP trap daemon service and configuration.
 
 #### Examples
 
@@ -57,11 +47,11 @@ The following parameters are available in the `snmp` class.
 
 ##### `agentaddress`
 
-Data type: `Array[String[1]]`
+Data type: `Any`
 
 An array of addresses, on which snmpd will listen for queries.
 
-Default value: [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ]
+Default value: $snmp::params::agentaddress
 
 ##### `snmptrapdaddr`
 
@@ -70,103 +60,103 @@ Data type: `Array[String[1]]`
 An array of addresses, on which snmptrapd will listen to receive incoming
 SNMP notifications.
 
-Default value: [ 'udp:127.0.0.1:162', 'udp6:[::1]:162' ]
+Default value: $snmp::params::snmptrapdaddr
 
 ##### `ro_community`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Any`
 
 Read-only (RO) community string or array for agent and snmptrap daemon.
 
-Default value: 'public'
+Default value: $snmp::params::ro_community
 
 ##### `ro_community6`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Any`
 
 Read-only (RO) community string or array for IPv6 agent.
 
-Default value: 'public'
+Default value: $snmp::params::ro_community6
 
 ##### `rw_community`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Any`
 
 Read-write (RW) community string or array agent.
 
-Default value: `undef`
+Default value: $snmp::params::rw_community
 
 ##### `rw_community6`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Any`
 
 Read-write (RW) community string or array for IPv6 agent.
 
-Default value: `undef`
+Default value: $snmp::params::rw_community6
 
 ##### `ro_network`
 
-Data type: `Variant[Array, Stdlib::IP::Address::V4, Stdlib::IP::Address::V4::CIDR]`
+Data type: `Any`
 
 Network that is allowed to RO query the daemon.  Can be string or array.
 
-Default value: '127.0.0.1'
+Default value: $snmp::params::ro_network
 
 ##### `ro_network6`
 
-Data type: `Variant[Array, Stdlib::IP::Address::V6, Stdlib::IP::Address::V6::CIDR]`
+Data type: `Any`
 
 Network that is allowed to RO query the daemon via IPv6.  Can be string or array.
 
-Default value: '::1'
+Default value: $snmp::params::ro_network6
 
 ##### `rw_network`
 
-Data type: `Variant[Array, Stdlib::IP::Address::V4, Stdlib::IP::Address::V4::CIDR]`
+Data type: `Any`
 
 Network that is allowed to RW query the daemon.  Can be string or array.
 
-Default value: '127.0.0.1'
+Default value: $snmp::params::rw_network
 
 ##### `rw_network6`
 
-Data type: `Variant[Array, Stdlib::IP::Address::V6, Stdlib::IP::Address::V6::CIDR]`
+Data type: `Any`
 
 Network that is allowed to RW query the daemon via IPv6.  Can be string or array.
 
-Default value: '::1'
+Default value: $snmp::params::rw_network6
 
 ##### `contact`
 
-Data type: `String[1]`
+Data type: `Any`
 
 Responsible person for the SNMP system.
 
-Default value: 'Unknown'
+Default value: $snmp::params::contact
 
 ##### `location`
 
-Data type: `String[1]`
+Data type: `Any`
 
 Location of the SNMP system.
 
-Default value: 'Unknown'
+Default value: $snmp::params::location
 
 ##### `sysname`
 
-Data type: `String[1]`
+Data type: `Any`
 
 Name of the system (hostname).
 
-Default value: $facts['networking']['fqdn']
+Default value: $snmp::params::sysname
 
 ##### `services`
 
-Data type: `Integer`
+Data type: `Any`
 
 For a host system, a good value is 72 (application + end-to-end layers).
 
-Default value: 72
+Default value: $snmp::params::services
 
 ##### `com2sec`
 
@@ -176,7 +166,7 @@ An array of VACM com2sec mappings.
 Must provide SECNAME, SOURCE and COMMUNITY.
 See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
 
-Default value: [ 'notConfigUser  default       public' ]
+Default value: $snmp::params::com2sec
 
 ##### `com2sec6`
 
@@ -186,7 +176,7 @@ An array of VACM com2sec6 mappings.
 Must provide SECNAME, SOURCE and COMMUNITY.
 See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
 
-Default value: [ 'notConfigUser  default       public' ]
+Default value: $snmp::params::com2sec6
 
 ##### `groups`
 
@@ -196,10 +186,7 @@ An array of VACM group mappings.
 Must provide GROUP, <v1|v2c|usm|tsm|ksm>, SECNAME.
 See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
 
-Default value: [
-    'notConfigGroup v1            notConfigUser',
-    'notConfigGroup v2c           notConfigUser',
-  ]
+Default value: $snmp::params::groups
 
 ##### `views`
 
@@ -209,10 +196,7 @@ An array of views that are available to query.
 Must provide VNAME, TYPE, OID, and [MASK].
 See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
 
-Default value: [
-    'systemview    included   .1.3.6.1.2.1.1',
-    'systemview    included   .1.3.6.1.2.1.25.1.1',
-  ]
+Default value: $snmp::params::views
 
 ##### `accesses`
 
@@ -222,38 +206,36 @@ An array of access controls that are available to query.
 Must provide GROUP, CONTEXT, <any|v1|v2c|usm|tsm|ksm>, LEVEL, PREFX, READ, WRITE, and NOTIFY.
 See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbAL for details.
 
-Default value: [
-    'notConfigGroup ""      any       noauth    exact  systemview none  none',
-  ]
+Default value: $snmp::params::accesses
 
 ##### `dlmod`
 
-Data type: `Optional[Array[String[1]]]`
+Data type: `Array[String[1]]`
 
 Array of dlmod lines to add to the snmpd.conf file.
 Must provide NAME and PATH (ex. "cmaX /usr/lib64/libcmaX64.so").
 See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBD for details.
 
-Default value: `undef`
+Default value: $snmp::params::dlmod
 
 ##### `extends`
 
-Data type: `Optional[Array[String[1]]]`
+Data type: `Array[String[1]]`
 
 Array of extend lines to add to the snmpd.conf file.
 Must provide NAME, PROG and ARG.
 See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBA for details.
 
-Default value: `undef`
+Default value: $snmp::params::extends
 
 ##### `snmpd_config`
 
-Data type: `Optional[Array[String[1]]]`
+Data type: `Array[String]`
 
 Safety valve.  Array of lines to add to the snmpd.conf file.
 See http://www.net-snmp.org/docs/man/snmpd.conf.html for all options.
 
-Default value: `undef`
+Default value: $snmp::params::snmpd_config
 
 ##### `disable_authorization`
 
@@ -261,7 +243,7 @@ Data type: `Enum['yes','no']`
 
 Disable all access control checks.
 
-Default value: 'no'
+Default value: $snmp::params::disable_authorization
 
 ##### `do_not_log_traps`
 
@@ -269,7 +251,7 @@ Data type: `Enum['yes','no']`
 
 Disable the logging of notifications altogether.
 
-Default value: 'no'
+Default value: $snmp::params::do_not_log_traps
 
 ##### `do_not_log_tcpwrappers`
 
@@ -277,36 +259,36 @@ Data type: `Enum['yes','no']`
 
 Disable the logging of tcpwrappers messages, e.g. "Connection from UDP: " messages in syslog.
 
-Default value: 'no'
+Default value: $snmp::params::do_not_log_tcpwrappers
 
 ##### `trap_handlers`
 
-Data type: `Optional[Array[String[1]]]`
+Data type: `Array[String[1]]`
 
 An array of programs to invoke on receipt of traps.
 Must provide OID and PROGRAM (ex. "IF-MIB::linkDown /bin/traps down").
 See http://www.net-snmp.org/docs/man/snmptrapd.conf.html#lbAI for details.
 
-Default value: `undef`
+Default value: $snmp::params::trap_handlers
 
 ##### `trap_forwards`
 
-Data type: `Optional[Array[String[1]]]`
+Data type: `Array[String[1]]`
 
 An array of destinations to send to on receipt of traps.
 Must provide OID and DESTINATION (ex. "IF-MIB::linkUp udp:1.2.3.5:162").
 See http://www.net-snmp.org/docs/man/snmptrapd.conf.html#lbAI for details.
 
-Default value: `undef`
+Default value: $snmp::params::trap_forwards
 
 ##### `snmptrapd_config`
 
-Data type: `Optional[Array[String[1]]]`
+Data type: `Array[String]`
 
 Safety valve.  Array of lines to add to the snmptrapd.conf file.
 See http://www.net-snmp.org/docs/man/snmptrapd.conf.html for all options.
 
-Default value: `undef`
+Default value: $snmp::params::snmptrapd_config
 
 ##### `manage_client`
 
@@ -314,16 +296,16 @@ Data type: `Boolean`
 
 Whether to install the Net-SNMP client package.
 
-Default value: `false`
+Default value: $snmp::params::manage_client
 
 ##### `snmp_config`
 
-Data type: `Optional[Array[String[1]]]`
+Data type: `Any`
 
 Safety valve.  Array of lines to add to the client's global snmp.conf file.
 See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
 
-Default value: `undef`
+Default value: $snmp::params::snmp_config
 
 ##### `ensure`
 
@@ -331,7 +313,7 @@ Data type: `Enum['present','absent']`
 
 Ensure if present or absent.
 
-Default value: 'present'
+Default value: $snmp::params::ensure
 
 ##### `autoupgrade`
 
@@ -339,103 +321,39 @@ Data type: `Boolean`
 
 Upgrade package automatically, if there is a newer version.
 
-Default value: `false`
+Default value: $snmp::params::autoupgrade
 
 ##### `package_name`
 
-Data type: `String[1]`
+Data type: `Any`
 
 Name of the package. Only set this if your platform is not supported or you know what you are doing.
 
-Default value: 'net-snmp'
-
-##### `snmptrapd_package_name`
-
-Data type: `Optional[String[1]]`
-
-Name of the package provinding snmptrapd. Only set this if your platform is not supported or you know what you are doing.
-
-Default value: `undef`
+Default value: $snmp::params::package_name
 
 ##### `snmpd_options`
 
-Data type: `Optional[String[1]]`
+Data type: `Any`
 
 Commandline options passed to snmpd via init script.
 
-Default value: `undef`
-
-##### `sysconfig`
-
-Data type: `Stdlib::Absolutepath`
-
-Path to sysconfig file for snmpd.
-
-Default value: '/etc/sysconfig/snmpd'
-
-##### `trap_sysconfig`
-
-Data type: `Stdlib::Absolutepath`
-
-Path to sysconfig file for snmptrapd.
-
-Default value: '/etc/sysconfig/snmptrapd'
-
-##### `trap_service_config`
-
-Data type: `Stdlib::Absolutepath`
-
-Path to snmptrapd.conf.
-
-Default value: '/etc/snmp/snmptrapd.conf'
-
-##### `service_config`
-
-Data type: `Stdlib::Absolutepath`
-
-Path to snmpd.conf.
-
-Default value: '/etc/snmp/snmpd.conf'
+Default value: $snmp::params::snmpd_options
 
 ##### `service_config_perms`
 
-Data type: `Stdlib::Filemode`
+Data type: `Any`
 
 Set permissions for the service configuration file.
 
-Default value: '0600'
-
-##### `service_config_dir_path`
-
-Data type: `Stdlib::Absolutepath`
-
-Path to services configuration directory.
-
-Default value: '/usr/local/etc/snmp'
-
-##### `service_config_dir_owner`
-
-Data type: `String[1]`
-
-Owner for the service configuration directory.
-
-Default value: 'root'
+Default value: $snmp::params::service_config_perms
 
 ##### `service_config_dir_group`
 
-Data type: `String[1]`
+Data type: `Any`
 
-Set group ownership for the service configuration directory.
+Set group ownership for the service configuration file.
 
-Default value: 'root'
-
-##### `service_config_dir_perms`
-
-Data type: `String[1]`
-
-Mode of the service configuration directory.
-
-Default value: '0755'
+Default value: $snmp::params::service_config_dir_group
 
 ##### `service_ensure`
 
@@ -443,15 +361,15 @@ Data type: `Stdlib::Ensure::Service`
 
 Ensure if service is running or stopped.
 
-Default value: 'running'
+Default value: $snmp::params::service_ensure
 
 ##### `service_name`
 
-Data type: `String[1]`
+Data type: `Any`
 
 Name of SNMP service. Only set this if your platform is not supported or you know what you are doing.
 
-Default value: 'snmpd'
+Default value: $snmp::params::service_name
 
 ##### `service_enable`
 
@@ -459,7 +377,7 @@ Data type: `Boolean`
 
 Start service at boot.
 
-Default value: `true`
+Default value: $snmp::params::service_enable
 
 ##### `service_hasstatus`
 
@@ -467,7 +385,7 @@ Data type: `Boolean`
 
 Service has status command.
 
-Default value: `true`
+Default value: $snmp::params::service_hasstatus
 
 ##### `service_hasrestart`
 
@@ -475,15 +393,15 @@ Data type: `Boolean`
 
 Service has restart command.
 
-Default value: `true`
+Default value: $snmp::params::service_hasrestart
 
 ##### `snmptrapd_options`
 
-Data type: `Optional[String[1]]`
+Data type: `Any`
 
 Commandline options passed to snmptrapd via init script.
 
-Default value: `undef`
+Default value: $snmp::params::snmptrapd_options
 
 ##### `trap_service_ensure`
 
@@ -491,40 +409,40 @@ Data type: `Stdlib::Ensure::Service`
 
 Ensure if service is running or stopped.
 
-Default value: 'stopped'
+Default value: $snmp::params::trap_service_ensure
 
 ##### `trap_service_name`
 
-Data type: `String[1]`
+Data type: `Any`
 
 Name of SNMP service
 Only set this if your platform is not supported or you know what you are doing.
 
-Default value: 'snmptrapd'
+Default value: $snmp::params::trap_service_name
 
 ##### `trap_service_enable`
 
-Data type: `Boolean`
+Data type: `Any`
 
 Start service at boot.
 
-Default value: `false`
+Default value: $snmp::params::trap_service_enable
 
 ##### `trap_service_hasstatus`
 
-Data type: `Boolean`
+Data type: `Any`
 
 Service has status command.
 
-Default value: `true`
+Default value: $snmp::params::trap_service_hasstatus
 
 ##### `trap_service_hasrestart`
 
-Data type: `Boolean`
+Data type: `Any`
 
 Service has restart command.
 
-Default value: `true`
+Default value: $snmp::params::trap_service_hasrestart
 
 ##### `openmanage_enable`
 
@@ -532,7 +450,7 @@ Data type: `Boolean`
 
 Adds the smuxpeer directive to the snmpd.conf file to allow net-snmp to talk with Dell's OpenManage
 
-Default value: `false`
+Default value: $snmp::params::openmanage_enable
 
 ##### `master`
 
@@ -540,32 +458,32 @@ Data type: `Boolean`
 
 Include the *master* option to enable AgentX registrations.
 
-Default value: `false`
+Default value: $snmp::params::master
 
 ##### `agentx_perms`
 
-Data type: `Optional[Stdlib::Filemode]`
+Data type: `Any`
 
 Defines the permissions and ownership of the AgentX Unix Domain socket.
 
-Default value: `undef`
+Default value: $snmp::params::agentx_perms
 
 ##### `agentx_ping_interval`
 
-Data type: `Optional[Integer]`
+Data type: `Any`
 
 This will make the subagent try and reconnect every NUM seconds to the
 master if it ever becomes (or starts) disconnected.
 
-Default value: `undef`
+Default value: $snmp::params::agentx_ping_interval
 
 ##### `agentx_socket`
 
-Data type: `Optional[String[1]]`
+Data type: `Any`
 
 Defines the address the master agent listens at, or the subagent should connect to.
 
-Default value: `undef`
+Default value: $snmp::params::agentx_socket
 
 ##### `agentx_timeout`
 
@@ -573,7 +491,7 @@ Data type: `Integer[0]`
 
 Defines the timeout period (NUM seconds) for an AgentX request.
 
-Default value: 1
+Default value: $snmp::params::agentx_timeout
 
 ##### `agentx_retries`
 
@@ -581,7 +499,7 @@ Data type: `Integer[0]`
 
 Defines the number of retries for an AgentX request.
 
-Default value: 5
+Default value: $snmp::params::agentx_retries
 
 ##### `snmpv2_enable`
 
@@ -589,43 +507,43 @@ Data type: `Boolean`
 
 Disable com2sec, group, and access in snmpd.conf
 
-Default value: `true`
+Default value: $snmp::params::snmpv2_enable
 
-##### `var_net_snmp`
-
-Data type: `Stdlib::Absolutepath`
-
-Path to snmp's var directory.
-
-Default value: '/var/lib/net-snmp'
-
-##### `varnetsnmp_perms`
-
-Data type: `Stdlib::Filemode`
-
-Mode of `var_net_snmp` directory.
-
-Default value: '0755'
-
-##### `varnetsnmp_owner`
+##### `template_snmpd_conf`
 
 Data type: `String[1]`
 
-Owner of `var_net_snmp` directory.
 
-Default value: 'root'
 
-##### `varnetsnmp_group`
+Default value: $snmp::params::template_snmpd_conf
+
+##### `template_snmpd_sysconfig`
 
 Data type: `String[1]`
 
-Group of `var_net_snmp` directory.
 
-Default value: 'root'
+
+Default value: $snmp::params::template_snmpd_sysconfig
+
+##### `template_snmptrapd`
+
+Data type: `String[1]`
+
+
+
+Default value: $snmp::params::template_snmptrapd
+
+##### `template_snmptrapd_sysconfig`
+
+Data type: `String[1]`
+
+
+
+Default value: $snmp::params::template_snmptrapd_sysconfig
 
 ### snmp::client
 
-Manage the Net-SNMP client package and configuration.
+Installs the Net-SNMP client package and configuration.
 
 #### Examples
 
@@ -633,10 +551,7 @@ Manage the Net-SNMP client package and configuration.
 
 ```puppet
 class { 'snmp::client':
-  snmp_config => [
-    'defVersion 2c',
-    'defCommunity public',
-  ],
+  snmp_config => [ 'defVersion 2c', 'defCommunity public', ],
 }
 ```
 
@@ -644,22 +559,22 @@ class { 'snmp::client':
 
 The following parameters are available in the `snmp::client` class.
 
+##### `snmp_config`
+
+Data type: `Any`
+
+Array of lines to add to the client's global snmp.conf file.
+See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
+
+Default value: $snmp::params::snmp_config
+
 ##### `ensure`
 
 Data type: `Enum['present', 'absent']`
 
 Ensure if present or absent.
 
-Default value: 'present'
-
-##### `snmp_config`
-
-Data type: `Optional[Array[String[1]]]`
-
-Array of lines to add to the client's global snmp.conf file.
-See http://www.net-snmp.org/docs/man/snmp.conf.html for all options.
-
-Default value: `undef`
+Default value: $snmp::params::ensure
 
 ##### `autoupgrade`
 
@@ -667,25 +582,21 @@ Data type: `Boolean`
 
 Upgrade package automatically, if there is a newer version.
 
-Default value: `false`
+Default value: $snmp::params::autoupgrade
 
 ##### `package_name`
 
-Data type: `Optional[String[1]]`
+Data type: `Any`
 
 Name of the package.
 Only set this if your platform is not supported or you know what you are
 doing.
 
-Default value: `undef`
+Default value: $snmp::params::client_package_name
 
-##### `client_config`
+### snmp::params
 
-Data type: `Stdlib::Absolutepath`
-
-Path to `snmp.conf`.
-
-Default value: '/etc/snmp/snmp.conf'
+This class handles OS-specific configuration of the snmp module.
 
 ## Defined types
 
@@ -711,7 +622,7 @@ The following parameters are available in the `snmp::snmpv3_user` defined type.
 
 ##### `authpass`
 
-Data type: `String[8]`
+Data type: `Any`
 
 Authentication password for the user.
 
@@ -725,7 +636,7 @@ Default value: 'SHA'
 
 ##### `privpass`
 
-Data type: `Optional[String[8]]`
+Data type: `Any`
 
 Encryption password for the user.
 
@@ -746,6 +657,4 @@ Data type: `Enum['snmpd','snmptrapd']`
 Which daemon file in which to write the user.  snmpd or snmptrapd
 
 Default value: 'snmpd'
-
-## Functions
 

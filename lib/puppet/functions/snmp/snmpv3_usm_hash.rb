@@ -1,6 +1,5 @@
 # snmpv3_usm_hash.rb --- Calculate SNMPv3 USM hash for a passphrase
 Puppet::Functions.create_function(:'snmp::snmpv3_usm_hash') do
-  # @api private
   # Calculate SNMPv3 USM hash for a passphrase
   #
   # The algorithm is implemented according to RFC-3414 sections A.2.1/A.2.2.
@@ -20,15 +19,23 @@ Puppet::Functions.create_function(:'snmp::snmpv3_usm_hash') do
   # @return [String] The calculated hash.
   #
   dispatch :snmpv3_usm_hash do
-    required_param "Enum['SHA','MD5']", :authtype
+    required_param 'String', :authtype
     required_param 'String', :engine
-    required_param 'String[8]', :passphrase
+    required_param 'String', :passphrase
     optional_param 'Integer', :bits
     return_type 'String'
   end
 
   def snmpv3_usm_hash(authtype, engine, passphrase, bits = nil)
     require 'digest'
+
+    unless passphrase.length >= 8
+      call_function('fail', 'passphrase chosen is below the length requirements (min=8)')
+    end
+
+    unless %w[SHA MD5].include? authtype
+      call_function('fail', "authtype must be either 'SHA' or 'MD5'")
+    end
 
     # Create an instance of the selected digest
     digest_instance = case authtype

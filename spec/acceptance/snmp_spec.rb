@@ -25,20 +25,20 @@ describe 'snmp class' do
         }
         snmp::snmpv3_user { 'mysubcontractor':
           authpass => '456authpass',
-          privpass => '789privpass',
-        }
+	  privpass => '789privpass',
+	}
         class { 'snmp':
-        manage_client => true,
-        snmp_config   => [
-          'mibs :',
-        ],
-        agentaddress  => [ 'udp:127.0.0.1:161' ],
+	  manage_client => true,
+	  snmp_config   => [
+            'mibs :',
+          ],
+	  agentaddress  => [ 'udp:127.0.0.1:161' ],
           ro_community  => [],
           ro_community6 => [],
           rw_community  => [],
           rw_community6 => [],
-          com2sec       => [],
-          com2sec6      => [],
+	  com2sec       => [],
+	  com2sec6      => [],
           groups        => [],
           views => [
             'all_view      included    .1',
@@ -49,7 +49,7 @@ describe 'snmp class' do
             'MyOpsGroup            ""      usm      priv    exact  all_view       none   none',
             'MySubContractorsGroup ""      usm      priv    exact  custom_view    none   none',
           ],
-          snmpd_config => [
+	  snmpd_config => [
             'rouser myops authPriv -V all_view',
             'rouser mysubcontractor authPriv -V custom_view',
           ],
@@ -106,7 +106,7 @@ describe 'snmp class' do
       pp = %(
         class { 'snmp':
           trap_service_ensure => 'running',
-          agentaddress  => [ 'udp:127.0.0.1:161' ],
+          agentaddress  => [ 'udp:127.0.0.1:161' ],
           snmptrapdaddr => [ 'udp:127.0.0.1:162' ],
         }
       )
