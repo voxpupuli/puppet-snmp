@@ -49,13 +49,11 @@ class snmp::client (
     $file_ensure = 'absent'
   }
 
-  if $facts['os']['family'] != 'Suse' {
-    if $package_name != undef {
-      package { 'snmp-client':
-        ensure => $package_ensure,
-        name   => $package_name,
-        before => File['snmp.conf'],
-      }
+  if ($package_name) and ($package_name != $snmp::package_name) {
+    package { 'snmp-client':
+      ensure => $package_ensure,
+      name   => $package_name,
+      before => File['snmp.conf'],
     }
   }
 
