@@ -296,5 +296,3 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md) for information on how to contribu
 * List of contributors https://github.com/voxpupuli/puppet-snmp/graphs/contributors
 
 Licensed under the Apache License, Version 2.0.
-
-This line added to demonstrate that tests fail with no code changes.
