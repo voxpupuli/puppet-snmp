@@ -21,7 +21,6 @@ describe 'snmp::snmpv3_user' do
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              command: 'service snmpd stop ; sleep 5',
               user: 'root'
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
@@ -50,7 +49,6 @@ describe 'snmp::snmpv3_user' do
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              command: 'service snmpd stop ; sleep 5',
               user: 'root'
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
@@ -77,7 +75,6 @@ describe 'snmp::snmpv3_user' do
           it {
             is_expected.to contain_exec('stop-snmptrapd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              command: 'service snmptrapd stop ; sleep 5',
               user: 'root'
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
@@ -103,7 +100,6 @@ describe 'snmp::snmpv3_user' do
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              command: 'service snmpd stop ; sleep 5',
               user: 'root'
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
@@ -132,7 +128,6 @@ describe 'snmp::snmpv3_user' do
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              command: 'service snmpd stop ; sleep 5',
               user: 'root'
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
@@ -159,7 +154,6 @@ describe 'snmp::snmpv3_user' do
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              command: 'service snmpd stop ; sleep 5',
               user: 'root'
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
@@ -185,7 +179,6 @@ describe 'snmp::snmpv3_user' do
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              command: 'service snmpd stop ; sleep 5',
               user: 'root'
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
@@ -214,7 +207,6 @@ describe 'snmp::snmpv3_user' do
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              command: 'service snmpd stop ; sleep 5',
               user: 'root'
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
@@ -241,7 +233,6 @@ describe 'snmp::snmpv3_user' do
           it {
             is_expected.to contain_exec('stop-snmptrapd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              command: 'service snmptrapd stop ; sleep 5',
               user: 'root'
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
