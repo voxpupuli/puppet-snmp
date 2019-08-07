@@ -256,8 +256,6 @@ Net-SNMP module support is available with these operating systems:
 * RedHat family  - tested on CentOS 6, CentOS 7
 * SuSE family    - tested on SLES 11 SP1
 * Debian family  - tested on Debian 8, Debian 9, Ubuntu 14.04, Ubuntu 16.04, Ubuntu 18.04
-* FreeBSD family - tested on FreeBSD 9.2, FreeBSD 10.0
-* OpenBSD family - tested on OpenBSD 5.9
 
 ### Notes:
 

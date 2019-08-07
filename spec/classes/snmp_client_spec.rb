@@ -55,39 +55,6 @@ describe 'snmp::client' do
             require: nil
           )
         }
-      when 'FreeBSD'
-        it {
-          is_expected.to contain_package('snmp-client').with(
-            ensure: 'present',
-            name: 'net-mgmt/net-snmp'
-          )
-        }
-        it {
-          is_expected.not_to contain_file('snmp.conf').with(
-            ensure: 'present',
-            mode: '0755',
-            owner: 'root',
-            group: 'wheel',
-            path: '/usr/local/etc/snmp/snmp.conf'
-          )
-        }
-      when 'OpenBSD'
-        it {
-          is_expected.to contain_package('snmp-client').with(
-            ensure: 'present',
-            name: 'net-snmp'
-          )
-        }
-        it {
-          is_expected.not_to contain_file('snmp.conf').with(
-            ensure: 'present',
-            mode: '0755',
-            owner: 'root',
-            group: 'wheel',
-            path: '/etc/snmp/snmp.conf',
-            require: nil
-          )
-        }
       end
     end
 
