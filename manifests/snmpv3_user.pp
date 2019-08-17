@@ -66,10 +66,10 @@ define snmp::snmpv3_user (
 
   if $create {
     unless defined(Exec["stop-${service_name}"]) {
-      #
-      # TODO: update $command for different operating systems/releases
-      #
-      $command = "service ${service_name} stop ; sleep 5"
+      $command = $facts['service_provider'] ? {
+        'systemd' => "systemctl stop ${service_name}; sleep 5",
+        default   => "service ${service_name} stop ; sleep 5",
+      }
 
       exec { "stop-${service_name}":
         command => $command,
