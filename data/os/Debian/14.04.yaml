@@ -1,3 +1,0 @@
----
-snmp::snmptrapd_package_name: ~
-snmp::trap_service_name: ~
