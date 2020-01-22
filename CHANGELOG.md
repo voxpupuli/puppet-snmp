@@ -4,6 +4,47 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v5.0.0](https://github.com/voxpupuli/puppet-snmp/tree/v5.0.0) (2020-01-22)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v4.1.0...v5.0.0)
+
+After consulting with the community, it was decided **not** to remove traditional access control.  The feature had been marked as deprecated for a long time, (before Vox Pupuli took over maintenance). We have committed to keeping this feature (but still recommend using VACM instead).
+
+**Breaking changes:**
+
+- drop Ubuntu 14.04 support [\#208](https://github.com/voxpupuli/puppet-snmp/pull/208) ([bastelfreak](https://github.com/bastelfreak))
+- drop EOL FreeBSD and OpenBSD [\#200](https://github.com/voxpupuli/puppet-snmp/pull/200) ([Dan33l](https://github.com/Dan33l))
+- modulesync 2.5.1 and drop Puppet 4 [\#177](https://github.com/voxpupuli/puppet-snmp/pull/177) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Provide a higher-level interface to snmpd [\#54](https://github.com/voxpupuli/puppet-snmp/issues/54)
+- "Debian will not support the use of non-numeric OIDs" [\#16](https://github.com/voxpupuli/puppet-snmp/issues/16)
+- Convert from params to data in module [\#181](https://github.com/voxpupuli/puppet-snmp/pull/181) ([ghoneycutt](https://github.com/ghoneycutt))
+
+**Fixed bugs:**
+
+- Dependancy listings are out of date [\#178](https://github.com/voxpupuli/puppet-snmp/issues/178)
+- Failure to set authpass/privpass containing a dollar sign [\#173](https://github.com/voxpupuli/puppet-snmp/issues/173)
+- rouser in snmpd.conf missing for v3 auth [\#9](https://github.com/voxpupuli/puppet-snmp/issues/9)
+- Set snmpd stop command based on the node's default service provider [\#204](https://github.com/voxpupuli/puppet-snmp/pull/204) ([blackknight36](https://github.com/blackknight36))
+- Updated stdlib to 4.22.0 [\#179](https://github.com/voxpupuli/puppet-snmp/pull/179) ([thaylin](https://github.com/thaylin))
+- Rewrite user creation to prevent quoting bug \(fixes \#173\) [\#176](https://github.com/voxpupuli/puppet-snmp/pull/176) ([smoeding](https://github.com/smoeding))
+
+**Closed issues:**
+
+- unit tests are failing [\#199](https://github.com/voxpupuli/puppet-snmp/issues/199)
+- Clean up function puppet-strings docs [\#185](https://github.com/voxpupuli/puppet-snmp/issues/185)
+- Deprecate razorsedge/snmp [\#163](https://github.com/voxpupuli/puppet-snmp/issues/163)
+
+**Merged pull requests:**
+
+- Remove duplicate CONTRIBUTING.md file [\#209](https://github.com/voxpupuli/puppet-snmp/pull/209) ([dhoppe](https://github.com/dhoppe))
+- Install client only when required to avoid potential duplicate resource. [\#203](https://github.com/voxpupuli/puppet-snmp/pull/203) ([pillarsdotnet](https://github.com/pillarsdotnet))
+- Allow puppetlabs/stdlib 6.x [\#202](https://github.com/voxpupuli/puppet-snmp/pull/202) ([pillarsdotnet](https://github.com/pillarsdotnet))
+- remove BSD from hiera data [\#201](https://github.com/voxpupuli/puppet-snmp/pull/201) ([Dan33l](https://github.com/Dan33l))
+- Mark `snmp::snmpv3_usm_hash` as private [\#186](https://github.com/voxpupuli/puppet-snmp/pull/186) ([alexjfisher](https://github.com/alexjfisher))
+
 ## [v4.1.0](https://github.com/voxpupuli/puppet-snmp/tree/v4.1.0) (2018-11-23)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v4.0.0...v4.1.0)
@@ -25,15 +66,11 @@ These should not affect the functionality of the module.
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/3.9.0...v4.0.0)
 
-This is the first release in VoxPupuli's `puppet` namespace.
-
-Earlier versions of the module (razorsedge/snmp) stated that traditional access control and its parameters were deprecated and would be removed in version 4.0.0.  Removing this feature has been deferred until at least version 5.
-
 **Breaking changes:**
 
 - Remove the use of global variables [\#145](https://github.com/voxpupuli/puppet-snmp/pull/145) ([ekohl](https://github.com/ekohl))
-- Remove `validate\_numeric` and `validate\_string` [\#144](https://github.com/voxpupuli/puppet-snmp/pull/144) ([alexjfisher](https://github.com/alexjfisher))
-- Remove deprecated `install\_client` parameter [\#143](https://github.com/voxpupuli/puppet-snmp/pull/143) ([alexjfisher](https://github.com/alexjfisher))
+- Remove `validate_numeric` and `validate_string` [\#144](https://github.com/voxpupuli/puppet-snmp/pull/144) ([alexjfisher](https://github.com/alexjfisher))
+- Remove deprecated `install_client` parameter [\#143](https://github.com/voxpupuli/puppet-snmp/pull/143) ([alexjfisher](https://github.com/alexjfisher))
 - Migrate stuff to Vox Pupuli; Drop Puppet 2/3 support; require stdlib 4.13.1 or newer [\#135](https://github.com/voxpupuli/puppet-snmp/pull/135) ([bastelfreak](https://github.com/bastelfreak))
 
 **Implemented enhancements:**
@@ -50,6 +87,7 @@ Earlier versions of the module (razorsedge/snmp) stated that traditional access 
 
 **Closed issues:**
 
+- Prepare for release 4.0.0 [\#153](https://github.com/voxpupuli/puppet-snmp/issues/153)
 - Needs to be updated to support Ubuntu 18 [\#151](https://github.com/voxpupuli/puppet-snmp/issues/151)
 - Release the current version on the forge [\#138](https://github.com/voxpupuli/puppet-snmp/issues/138)
 - Test cases are broken [\#132](https://github.com/voxpupuli/puppet-snmp/issues/132)
@@ -69,7 +107,7 @@ Earlier versions of the module (razorsedge/snmp) stated that traditional access 
 - Replace validation logic for \*service\_ensure. [\#148](https://github.com/voxpupuli/puppet-snmp/pull/148) ([vStone](https://github.com/vStone))
 - Replace validate\_array with proper data types [\#147](https://github.com/voxpupuli/puppet-snmp/pull/147) ([vStone](https://github.com/vStone))
 - Replace instances of validate\_re with Enum type [\#146](https://github.com/voxpupuli/puppet-snmp/pull/146) ([alexjfisher](https://github.com/alexjfisher))
-- Replace `validate\_bool` with `Boolean` data type [\#142](https://github.com/voxpupuli/puppet-snmp/pull/142) ([alexjfisher](https://github.com/alexjfisher))
+- Replace `validate_bool` with `Boolean` data type [\#142](https://github.com/voxpupuli/puppet-snmp/pull/142) ([alexjfisher](https://github.com/alexjfisher))
 - Unpin stdlib in fixtures.yml [\#141](https://github.com/voxpupuli/puppet-snmp/pull/141) ([alexjfisher](https://github.com/alexjfisher))
 - Include full Apache 2.0 license text and add badge [\#140](https://github.com/voxpupuli/puppet-snmp/pull/140) ([alexjfisher](https://github.com/alexjfisher))
 
@@ -187,7 +225,7 @@ Earlier versions of the module (razorsedge/snmp) stated that traditional access 
 
 **Implemented enhancements:**
 
-- `ensure =\> absent` fails on el5/el6 if net-snmp-utils is installed [\#20](https://github.com/voxpupuli/puppet-snmp/issues/20)
+- `ensure => absent` fails on el5/el6 if net-snmp-utils is installed [\#20](https://github.com/voxpupuli/puppet-snmp/issues/20)
 - Add support for Dell's OpenManage [\#28](https://github.com/voxpupuli/puppet-snmp/pull/28) ([erinn](https://github.com/erinn))
 - Disable logging from tcpwrappers in snmpd.conf [\#27](https://github.com/voxpupuli/puppet-snmp/pull/27) ([erinn](https://github.com/erinn))
 - IPv6 support round 2 [\#26](https://github.com/voxpupuli/puppet-snmp/pull/26) ([erinn](https://github.com/erinn))
