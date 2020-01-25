@@ -607,7 +607,7 @@ describe 'snmp' do
         end
 
         case facts[:os]['release']['major']
-        when '9', '18.04'
+        when '9', '10', '18.04'
           describe 'Debian-snmp as snmp user' do
             it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
@@ -646,7 +646,7 @@ describe 'snmp' do
         end
 
         case facts[:os]['release']['major']
-        when '8', '9', '16.04', '18.04'
+        when '8', '9', '10', '16.04', '18.04'
           describe 'service_ensure => stopped and trap_service_ensure => running' do
             let :params do
               {
