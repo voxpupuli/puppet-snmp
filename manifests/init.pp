@@ -322,10 +322,12 @@ class snmp (
   Stdlib::Filemode           $varnetsnmp_perms             = '0755',
 ) {
 
-  $template_snmpd_conf          = 'snmp/snmpd.conf.erb'
-  $template_snmpd_sysconfig     = "snmp/snmpd.sysconfig-${facts['os']['family']}.erb"
-  $template_snmptrapd           = 'snmp/snmptrapd.conf.erb'
-  $template_snmptrapd_sysconfig = "snmp/snmptrapd.sysconfig-${facts['os']['family']}.erb"
+  $template_snmpd_conf           = 'snmp/snmpd.conf.erb'
+  $template_snmpd_sysconfig      = "snmp/snmpd.sysconfig-${facts['os']['family']}.erb"
+  $template_snmpd_service_dropin = "snmp/snmpd.service-dropin-${facts['os']['family']}.epp"
+
+  $template_snmptrapd            = 'snmp/snmptrapd.conf.erb'
+  $template_snmptrapd_sysconfig  = "snmp/snmptrapd.sysconfig-${facts['os']['family']}.erb"
 
   if $ensure == 'present' {
     if $autoupgrade {
@@ -437,6 +439,14 @@ class snmp (
     content => template($template_snmpd_sysconfig),
     require => Package['snmpd'],
     notify  => Service['snmpd'],
+  }
+
+  # Debian 9 use systemd
+  if ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '9') >= 0 ) {
+    systemd::dropin_file { 'snmpd.conf':
+      unit    => 'snmpd.service',
+      content => epp($template_snmpd_service_dropin),
+    } ~> Class['systemd::systemctl::daemon_reload'] ~> Service['snmpd']
   }
 
   if $facts['os']['family'] == 'RedHat' {

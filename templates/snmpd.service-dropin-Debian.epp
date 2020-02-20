@@ -1,0 +1,6 @@
+###
+### File managed by Puppet
+###
+[Service]
+ExecStart=
+ExecStart=/usr/sbin/snmpd <%= $snmp::snmpd_options %>
