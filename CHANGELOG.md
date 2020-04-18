@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v5.1.0](https://github.com/voxpupuli/puppet-snmp/tree/v5.1.0) (2020-04-19)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v5.0.0...v5.1.0)
+
+**Implemented enhancements:**
+
+- use systemd for debian 9 snmpd options [\#216](https://github.com/voxpupuli/puppet-snmp/pull/216) ([hdep](https://github.com/hdep))
+- Support Debian 10 [\#214](https://github.com/voxpupuli/puppet-snmp/pull/214) ([antondollmaier](https://github.com/antondollmaier))
+
+**Fixed bugs:**
+
+- snmpd\_options parameter does not work with Debian 9 [\#110](https://github.com/voxpupuli/puppet-snmp/issues/110)
+
+**Closed issues:**
+
+- Release 4.1.1 [\#212](https://github.com/voxpupuli/puppet-snmp/issues/212)
+
+**Merged pull requests:**
+
+- Use voxpupuli-acceptance [\#221](https://github.com/voxpupuli/puppet-snmp/pull/221) ([ekohl](https://github.com/ekohl))
+
 ## [v5.0.0](https://github.com/voxpupuli/puppet-snmp/tree/v5.0.0) (2020-01-22)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v4.1.0...v5.0.0)
