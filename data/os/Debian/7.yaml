@@ -1,0 +1,4 @@
+---
+snmp::snmpd_options: "-Lsd -Lf /dev/null -u snmp -g snmp -I -smux,mteTrigger,mteTriggerConf -f"
+snmp::varnetsnmp_group: 'snmp'
+snmp::varnetsnmp_owner: 'snmp'

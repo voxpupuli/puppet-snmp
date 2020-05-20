@@ -1,4 +1,0 @@
----
-snmp::snmpd_options: "-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f"
-snmp::varnetsnmp_group: 'Debian-snmp'
-snmp::varnetsnmp_owner: 'Debian-snmp'
