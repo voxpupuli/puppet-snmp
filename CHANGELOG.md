@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v5.1.0](https://github.com/voxpupuli/puppet-snmp/tree/v5.1.0) (2020-04-19)
+## [v5.1.1](https://github.com/voxpupuli/puppet-snmp/tree/v5.1.1) (2020-06-30)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v5.1.0...v5.1.1)
+
+**Fixed bugs:**
+
+- Dependency on stdlib versions incorrect for version 5.1.0 ; types/ip/address/v6/cidr.pp and type Stdlib::IP::Address::V6::CIDR does not exist in 4.25.0 [\#224](https://github.com/voxpupuli/puppet-snmp/issues/224)
+
+## [v5.1.0](https://github.com/voxpupuli/puppet-snmp/tree/v5.1.0) (2020-04-18)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v5.0.0...v5.1.0)
 
@@ -16,10 +24,6 @@ These should not affect the functionality of the module.
 **Fixed bugs:**
 
 - snmpd\_options parameter does not work with Debian 9 [\#110](https://github.com/voxpupuli/puppet-snmp/issues/110)
-
-**Closed issues:**
-
-- Release 4.1.1 [\#212](https://github.com/voxpupuli/puppet-snmp/issues/212)
 
 **Merged pull requests:**
 
