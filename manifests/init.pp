@@ -246,8 +246,8 @@
 #
 class snmp (
   Enum['present','absent']                                        $ensure        = 'present',
-  Array[String[1]]                                                $agentaddress  = [ 'udp:127.0.0.1:161', 'udp6:[::1]:161' ],
-  Array[String[1]]                                                $snmptrapdaddr = [ 'udp:127.0.0.1:162', 'udp6:[::1]:162' ],
+  Array[String[1]]                                                $agentaddress  = ['udp:127.0.0.1:161', 'udp6:[::1]:161'],
+  Array[String[1]]                                                $snmptrapdaddr = ['udp:127.0.0.1:162', 'udp6:[::1]:162'],
   Variant[Undef, String[1], Array[String[1]]]                     $ro_community  = 'public',
   Variant[Undef, String[1], Array[String[1]]]                     $ro_community6 = 'public',
   Variant[Undef, String[1], Array[String[1]]]                     $rw_community  = undef,
@@ -260,8 +260,8 @@ class snmp (
   String[1]                                                       $location      = 'Unknown',
   String[1]                                                       $sysname       = $facts['networking']['fqdn'],
   Integer                                                         $services      = 72,
-  Array[String[1]]                                                $com2sec       = [ 'notConfigUser  default       public' ],
-  Array[String[1]]                                                $com2sec6      = [ 'notConfigUser  default       public' ],
+  Array[String[1]]                                                $com2sec       = ['notConfigUser  default       public'],
+  Array[String[1]]                                                $com2sec6      = ['notConfigUser  default       public'],
   Array[String[1]] $groups = [
     'notConfigGroup v1            notConfigUser',
     'notConfigGroup v2c           notConfigUser',
@@ -321,7 +321,6 @@ class snmp (
   String[1]                  $varnetsnmp_group             = 'root',
   Stdlib::Filemode           $varnetsnmp_perms             = '0755',
 ) {
-
   $template_snmpd_conf           = 'snmp/snmpd.conf.erb'
   $template_snmpd_sysconfig      = "snmp/snmpd.sysconfig-${facts['os']['family']}.erb"
   $template_snmpd_service_dropin = "snmp/snmpd.service-dropin-${facts['os']['family']}.epp"
@@ -429,7 +428,6 @@ class snmp (
     require => Package['snmpd'],
   }
 
-
   file { 'snmpd.sysconfig':
     ensure  => $file_ensure,
     path    => $sysconfig,
@@ -461,9 +459,8 @@ class snmp (
       notify  => Service['snmptrapd'],
     }
   } elsif
-    ( $facts['os']['name'] == 'Ubuntu' and versioncmp($facts['os']['release']['major'], '16.04') >= 0 ) or
-    ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '8') >= 0 )
-  {
+  ( $facts['os']['name'] == 'Ubuntu' and versioncmp($facts['os']['release']['major'], '16.04') >= 0 ) or
+  ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '8') >= 0 ) {
     file { 'snmptrapd.sysconfig':
       ensure  => $file_ensure,
       path    => $trap_sysconfig,
