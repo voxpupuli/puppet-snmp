@@ -30,7 +30,6 @@ define snmp::snmpv3_user (
   Enum['AES','DES']         $privtype = 'AES',
   Enum['snmpd','snmptrapd'] $daemon   = 'snmpd'
 ) {
-
   include snmp
 
   if ($daemon == 'snmptrapd') and ($facts['os']['family'] != 'Debian') {
@@ -76,7 +75,7 @@ define snmp::snmpv3_user (
         user    => 'root',
         cwd     => '/',
         path    => '/bin:/sbin:/usr/bin:/usr/sbin',
-        require => [ Package['snmpd'], File['var-net-snmp'], ],
+        require => [Package['snmpd'], File['var-net-snmp'],],
       }
     }
 

@@ -34,7 +34,6 @@ class snmp::client (
   Optional[String[1]]        $package_name  = undef,
   Stdlib::Absolutepath       $client_config = '/etc/snmp/snmp.conf',
 ) {
-
   include snmp
 
   if $ensure == 'present' {

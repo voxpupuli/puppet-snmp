@@ -7,5 +7,5 @@ class { 'snmp':
     'default /usr/bin/perl /usr/bin/traptoemail me@somewhere.local',
     'IF-MIB::linkDown /home/nba/bin/traps down',
   ],
-  trap_forwards       => [ 'default udp:55.55.55.55:162' ],
+  trap_forwards       => ['default udp:55.55.55.55:162'],
 }
