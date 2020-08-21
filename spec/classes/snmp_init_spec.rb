@@ -165,11 +165,7 @@ describe 'snmp' do
         describe 'ensure => badvalue' do
           let(:params) { { ensure: 'badvalue' } }
 
-          it 'fails' do
-            expect do
-              is_expected.to raise_error(Puppet::Error, %r{ensure parameter must be present or absent})
-            end
-          end
+          it { is_expected.to compile.and_raise_error(%r{expects a match for}) }
         end
 
         describe 'autoupgrade => true' do
@@ -189,21 +185,13 @@ describe 'snmp' do
         describe 'autoupgrade => badvalue' do
           let(:params) { { autoupgrade: 'badvalue' } }
 
-          it 'fails' do
-            expect do
-              is_expected.to raise_error(Puppet::Error, %r{"badvalue" is not a boolean.})
-            end
-          end
+          it { is_expected.to compile.and_raise_error(%r{expects a Boolean value, got String}) }
         end
 
         describe 'service_ensure => badvalue' do
           let(:params) { { service_ensure: 'badvalue' } }
 
-          it 'fails' do
-            expect do
-              is_expected.to raise_error(Puppet::Error, %r{service_ensure parameter must be running or stopped})
-            end
-          end
+          it { is_expected.to compile.and_raise_error(%r{expects a match for Stdlib::Ensure::Service}) }
         end
 
         describe 'service_config_perms => "0123"' do
