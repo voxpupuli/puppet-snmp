@@ -1,6 +1,7 @@
 ---
 .travis.yml:
   docker_sets:
+    - set: ubuntu2004-64
     - set: ubuntu1804-64
     - set: ubuntu1604-64
     - set: centos7-64
