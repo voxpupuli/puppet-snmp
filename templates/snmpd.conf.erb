@@ -106,6 +106,22 @@ extend <%= extending %>
 <%   end -%>
 <% end -%>
 
+<% if @pass -%>
+<%   if @pass.any? -%>
+<%     @pass.each do |passing| -%>
+pass <%= passing %>
+<%     end -%>
+<%   end -%>
+<% end -%>
+
+<% if @pass_persist -%>
+<%   if @pass_persist.any? -%>
+<%     @pass_persist.each do |pass_persisting| -%>
+pass_persist <%= pass_persisting %>
+<%     end -%>
+<%   end -%>
+<% end -%>
+
 <% if @dlmod -%>
 <%   if @dlmod.any? -%>
 # ------------------------------------------------------------------------------
