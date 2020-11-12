@@ -360,6 +360,28 @@ describe 'snmp' do
           end
         end
 
+        describe 'pass => [ "SomeArray1", "SomeArray2" ]' do
+          let(:params) { { pass: %w[SomeArray1 SomeArray2] } }
+
+          it 'contains File[snmpd.conf] with contents from array' do
+            verify_contents(catalogue, 'snmpd.conf', [
+                              'pass SomeArray1',
+                              'pass SomeArray2'
+                            ])
+          end
+        end
+
+        describe 'pass_persist => [ "SomeArray1", "SomeArray2" ]' do
+          let(:params) { { pass_persist: %w[SomeArray1 SomeArray2] } }
+
+          it 'contains File[snmpd.conf] with contents from array' do
+            verify_contents(catalogue, 'snmpd.conf', [
+                              'pass_persist SomeArray1',
+                              'pass_persist SomeArray2'
+                            ])
+          end
+        end
+
         describe 'openmanage_enable => true' do
           let(:params) { { openmanage_enable: true } }
 

@@ -97,6 +97,16 @@
 #   Must provide NAME, PROG and ARG.
 #   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBA for details.
 #
+# @param pass
+#   Array of pass lines to add to the snmpd.conf file.
+#   Must provide MIBOID and PROG.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBB for details.
+#
+# @param pass_persist
+#   Array of pass_persist lines to add to the snmpd.conf file.
+#   Must provide MIBOID and PROG.
+#   See http://www.net-snmp.org/docs/man/snmpd.conf.html#lbBB for details.
+#
 # @param snmpd_config
 #   Safety valve.  Array of lines to add to the snmpd.conf file.
 #   See http://www.net-snmp.org/docs/man/snmpd.conf.html for all options.
@@ -275,6 +285,8 @@ class snmp (
   ],
   Optional[Array[String[1]]] $dlmod                        = undef,
   Optional[Array[String[1]]] $extends                      = undef,
+  Optional[Array[String[1]]] $pass                         = undef,
+  Optional[Array[String[1]]] $pass_persist                 = undef,
   Optional[Array[String[1]]] $snmpd_config                 = undef,
   Enum['yes','no']           $disable_authorization        = 'no',
   Enum['yes','no']           $do_not_log_traps             = 'no',
