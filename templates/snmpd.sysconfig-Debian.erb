@@ -13,6 +13,7 @@ SNMPDRUN=<%= @snmpdrun %>
 # snmpd options (use syslog, close stdin/out/err).
 SNMPDOPTS='<%= @snmpd_options %>'
 
+<% if @manage_snmptrapd -%>
 # snmptrapd control (yes means start daemon).  As of net-snmp version
 # 5.0, master agentx support must be enabled in snmpd before snmptrapd
 # can be run.  See snmpd.conf(5) for how to do this.
@@ -20,6 +21,6 @@ TRAPDRUN=<%= @trapdrun %>
 
 # snmptrapd options (use syslog).
 TRAPDOPTS='<%= @snmptrapd_options %>'
-
+<% end -%>
 # create symlink on Debian legacy location to official RFC path
 SNMPDCOMPAT=yes
