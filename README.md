@@ -131,6 +131,13 @@ class { 'snmp':
 }
 ```
 
+To install the SNMP service but not install the snmptrapd service
+```puppet
+class { 'snmp':
+  manage_snmptrapd => false,
+}
+```
+
 If you want to pass client configuration stanzas to the snmp.conf file:
 
 ```puppet

@@ -126,6 +126,8 @@
 #
 # @param manage_client
 #   Whether to install the Net-SNMP client package.
+# @param manage_snmptrapd
+#   Weheter to install the Net-SNMP snmptrapd package
 #
 # @param snmp_config
 #   Safety valve.  Array of lines to add to the client's global snmp.conf file.
@@ -283,6 +285,7 @@ class snmp (
   Optional[Array[String[1]]] $trap_forwards                = undef,
   Optional[Array[String[1]]] $snmptrapd_config             = undef,
   Boolean                    $manage_client                = false,
+  Boolean                    $manage_snmptrapd             = true,
   Optional[Array[String[1]]] $snmp_config                  = undef,
   Boolean                    $autoupgrade                  = false,
   String[1]                  $package_name                 = 'net-snmp',
@@ -381,7 +384,7 @@ class snmp (
   }
 
   # Since ubuntu 16.04 platforms, there is a differente snmptrad package
-  if $snmp::snmptrapd_package_name {
+  if ($snmp::snmptrapd_package_name) and ($manage_snmptrapd) {
     package { 'snmptrapd':
       ensure => $package_ensure,
       name   => $snmp::snmptrapd_package_name,
@@ -397,7 +400,7 @@ class snmp (
     require => Package['snmpd'],
   }
 
-  if $facts['os']['family'] == 'Suse' {
+  if ($facts['os']['family'] == 'Suse') and ($manage_snmptrapd) {
     file { '/etc/init.d/snmptrapd':
       source  => '/usr/share/doc/packages/net-snmp/rc.snmptrapd',
       owner   => 'root',
@@ -417,15 +420,16 @@ class snmp (
     content => template($template_snmpd_conf),
     require => Package['snmpd'],
   }
-
-  file { 'snmptrapd.conf':
-    ensure  => $file_ensure,
-    path    => $trap_service_config,
-    owner   => 'root',
-    group   => $service_config_dir_group,
-    mode    => $service_config_perms,
-    content => template($template_snmptrapd),
-    require => Package['snmpd'],
+  if ($manage_snmptrapd) {
+    file { 'snmptrapd.conf':
+      ensure  => $file_ensure,
+      path    => $trap_service_config,
+      owner   => 'root',
+      group   => $service_config_dir_group,
+      mode    => $service_config_perms,
+      content => template($template_snmptrapd),
+      require => Package['snmpd'],
+    }
   }
 
   file { 'snmpd.sysconfig':
@@ -447,7 +451,7 @@ class snmp (
     } ~> Class['systemd::systemctl::daemon_reload'] ~> Service['snmpd']
   }
 
-  if $facts['os']['family'] == 'RedHat' {
+  if ($facts['os']['family'] == 'RedHat') and ($manage_snmptrapd) {
     file { 'snmptrapd.sysconfig':
       ensure  => $file_ensure,
       path    => $trap_sysconfig,
@@ -459,8 +463,8 @@ class snmp (
       notify  => Service['snmptrapd'],
     }
   } elsif
-  ( $facts['os']['name'] == 'Ubuntu' and versioncmp($facts['os']['release']['major'], '16.04') >= 0 ) or
-  ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '8') >= 0 ) {
+  ( $facts['os']['name'] == 'Ubuntu' and versioncmp($facts['os']['release']['major'], '16.04') >= 0 and $manage_snmptrapd ) or
+  ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '8') >= 0 and $manage_snmptrapd ) {
     file { 'snmptrapd.sysconfig':
       ensure  => $file_ensure,
       path    => $trap_sysconfig,
@@ -486,7 +490,7 @@ class snmp (
     }
   }
 
-  unless $facts['os']['family'] == 'Debian' {
+  if ($facts['os']['family'] != 'Debian') and ($manage_snmptrapd) {
     service { 'snmptrapd':
       ensure     => $trap_service_ensure_real,
       name       => $trap_service_name,
@@ -508,7 +512,7 @@ class snmp (
     subscribe  => File['snmpd.conf'],
   }
 
-  if $facts['os']['family'] == 'Debian' {
+  if ($facts['os']['family'] == 'Debian') and ($manage_snmptrapd) {
     File['snmptrapd.conf'] ~> Service['snmpd']
   }
 }

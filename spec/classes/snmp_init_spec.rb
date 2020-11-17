@@ -46,6 +46,13 @@ describe 'snmp' do
 
       case facts[:os]['family']
       when 'RedHat'
+
+        describe 'manage_snmpdtrapd => false RedHat' do
+          let(:params) { { manage_snmptrapd: false } }
+
+          it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
+        end
+
         it {
           is_expected.to contain_package('snmpd').with(
             ensure: 'present',
@@ -218,6 +225,13 @@ describe 'snmp' do
               snmp_config: nil
             )
           }
+        end
+
+        describe 'manage_snmpdtrapd => false' do
+          let(:params) { { manage_snmptrapd: false } }
+
+          it { is_expected.not_to contain_package('snmptrapd') }
+          it { is_expected.not_to contain_file('snmptrapd.conf') }
         end
 
         describe 'manage_client => true, snmp_config => [ "defVersion 2c", "defCommunity public" ], ensure => absent, and autoupgrade => true' do
@@ -520,6 +534,13 @@ describe 'snmp' do
         end
 
       when 'Debian'
+
+        describe 'manage_snmpdtrapd => false Debian' do
+          let(:params) { { manage_snmptrapd: false } }
+
+          it { is_expected.to contain_file('snmpd.sysconfig').without_content(%r{TRAPDRUN|TRAPDOPTS}) }
+        end
+
         it {
           is_expected.to contain_package('snmpd').with(
             ensure: 'present',

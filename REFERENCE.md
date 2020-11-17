@@ -316,6 +316,14 @@ Whether to install the Net-SNMP client package.
 
 Default value: `false`
 
+##### `manage_snmptrapd`
+
+Data type: `Boolean`
+
+Whether to install the Net-SNMP snmptrapd package.
+
+Default value: `true`
+
 ##### `snmp_config`
 
 Data type: `Optional[Array[String[1]]]`
