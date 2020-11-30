@@ -607,7 +607,7 @@ describe 'snmp' do
           ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         case facts[:os]['release']['major']
-        when '8', '9', '10', '16.04', '18.04'
+        when '8', '9', '10', '16.04', '18.04', '20.04'
           it {
             is_expected.to contain_file('snmptrapd.sysconfig').with(
               ensure: 'present',
@@ -692,6 +692,24 @@ describe 'snmp' do
               ).that_requires('Package[snmpd]')
             }
           end
+        when '20.04'
+          describe 'Debian-snmp as snmp user' do
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
+              verify_contents(catalogue, 'snmpd.sysconfig', [
+                                'SNMPDRUN=yes',
+                                'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\''
+                              ])
+            end
+            it {
+              is_expected.to contain_file('var-net-snmp').with(
+                ensure: 'directory',
+                mode: '0755',
+                owner: 'Debian-snmp',
+                group: 'Debian-snmp',
+                path: '/var/lib/snmp'
+              ).that_requires('Package[snmpd]')
+            }
+          end
         else
           describe 'snmp as snmp user' do
             it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid""' do
@@ -713,7 +731,7 @@ describe 'snmp' do
         end
 
         case facts[:os]['release']['major']
-        when '8', '9', '10', '16.04', '18.04'
+        when '8', '9', '10', '16.04', '18.04' '20.04'
           describe 'service_ensure => stopped and trap_service_ensure => running' do
             let :params do
               {
