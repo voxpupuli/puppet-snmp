@@ -674,25 +674,7 @@ describe 'snmp' do
               ).that_requires('Package[snmpd]')
             }
           end
-        when '18.04'
-          describe 'Debian-snmp as snmp user' do
-            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
-              verify_contents(catalogue, 'snmpd.sysconfig', [
-                                'SNMPDRUN=yes',
-                                'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\''
-                              ])
-            end
-            it {
-              is_expected.to contain_file('var-net-snmp').with(
-                ensure: 'directory',
-                mode: '0755',
-                owner: 'Debian-snmp',
-                group: 'Debian-snmp',
-                path: '/var/lib/snmp'
-              ).that_requires('Package[snmpd]')
-            }
-          end
-        when '20.04'
+        when '18.04', '20.04'
           describe 'Debian-snmp as snmp user' do
             it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
