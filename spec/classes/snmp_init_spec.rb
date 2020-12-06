@@ -745,7 +745,7 @@ describe 'snmp' do
             end
 
             it { is_expected.to contain_service('snmpd').with_ensure('running') }
-            it { is_expected.not_to contain_service('snmptrapd') }
+            it { is_expected.to contain_service('snmptrapd') }
             it 'contains File[snmpd.sysconfig] with contents "SNMPDRUN=no" and "TRAPDRUN=yes"' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
                                 'SNMPDRUN=no',
