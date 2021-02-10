@@ -412,6 +412,16 @@ class snmp (
     require => Package['snmpd'],
   }
 
+  if $facts['os']['family'] == 'FreeBSD' {
+    file { $service_config_dir_path:
+      ensure  => 'directory',
+      owner   => $service_config_dir_owner,
+      group   => $service_config_dir_group,
+      mode    => $service_config_dir_perms,
+      require => Package['snmpd'],
+    }
+  }
+
   if ($facts['os']['family'] == 'Suse') and ($manage_snmptrapd) {
     file { '/etc/init.d/snmptrapd':
       source  => '/usr/share/doc/packages/net-snmp/rc.snmptrapd',
@@ -444,15 +454,17 @@ class snmp (
     }
   }
 
-  file { 'snmpd.sysconfig':
-    ensure  => $file_ensure,
-    path    => $sysconfig,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template($template_snmpd_sysconfig),
-    require => Package['snmpd'],
-    notify  => Service['snmpd'],
+  unless $facts['os']['family'] == 'FreeBSD' {
+    file { 'snmpd.sysconfig':
+      ensure  => $file_ensure,
+      path    => $sysconfig,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template($template_snmpd_sysconfig),
+      require => Package['snmpd'],
+      notify  => Service['snmpd'],
+    }
   }
 
   # Debian 9 use systemd

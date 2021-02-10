@@ -890,6 +890,60 @@ describe 'snmp' do
                             ])
           end
         end
+      when 'FreeBSD'
+        it {
+          is_expected.to contain_package('snmpd').with(
+            ensure: 'present',
+            name: 'net-mgmt/net-snmp'
+          )
+        }
+        it {
+          is_expected.to contain_file('var-net-snmp').with(
+            ensure: 'directory',
+            mode: '0600',
+            owner: 'root',
+            group: 'wheel',
+            path: '/var/net-snmp'
+            ).that_requires('Package[snmpd]')
+        }
+
+        it {
+          is_expected.to contain_file('snmpd.conf').with(
+            ensure: 'present',
+            mode: '0755',
+            owner: 'root',
+            group: 'wheel',
+            path: '/usr/local/etc/snmp/snmpd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
+        }
+        it {
+          is_expected.to contain_service('snmpd').with(
+            ensure: 'running',
+            name: 'snmpd',
+            enable: true,
+            hasstatus: true,
+            hasrestart: true
+          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
+        }
+
+        it {
+          is_expected.to contain_file('snmptrapd.conf').with(
+            ensure: 'present',
+            mode: '0755',
+            owner: 'root',
+            group: 'wheel',
+            path: '/usr/local/etc/snmp/snmptrapd.conf'
+          ).that_requires('Package[snmpd]').that_notifies('Service[snmptrapd]')
+        }
+        it {
+          is_expected.to contain_service('snmptrapd').with(
+            ensure: 'stopped',
+            name: 'snmptrapd',
+            enable: false,
+            hasstatus: true,
+            hasrestart: true
+          ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
+        }
       else
         is_expected.to raise_error(Puppet::Error, %r{Module snmp is not supported on bar})
       end
