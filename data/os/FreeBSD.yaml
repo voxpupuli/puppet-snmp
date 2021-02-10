@@ -1,0 +1,2 @@
+---
+snmp::service_config_dir_group: 'wheel'
