@@ -894,7 +894,7 @@ describe 'snmp' do
         it {
           is_expected.to contain_package('snmpd').with(
             ensure: 'present',
-            name: 'net-mgmt/net-snmp'
+            name: 'net-snmp'
           )
         }
         it {
