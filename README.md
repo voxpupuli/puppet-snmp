@@ -271,6 +271,7 @@ Net-SNMP module support is available with these operating systems:
 * SuSE family    - tested on SLES 11 SP1
 * Debian family  - tested on Debian 8, Debian 9, Ubuntu 14.04, Ubuntu 16.04, Ubuntu 18.04
 * FreeBSD family - tested on FreeBSD 12.2 (uses ports/pkgng Net-SNMP, not system bsnmpd)
+* Darwin family  - tested on Darwin 18 (macOS 10.14 "Mojave"), 19 (macOS 10.15 "Catalina"), and 20 (macOS 11.1 "Big Sur").
 
 ### Notes:
 

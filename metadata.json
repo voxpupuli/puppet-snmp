@@ -67,6 +67,14 @@
         "16.04",
         "18.04"
       ]
+    },
+    {
+      "operatingsystem": "Darwin",
+      "operatingsystemrelease": [
+        "18",
+        "19",
+        "20"
+      ]
     }
   ],
   "requirements": [

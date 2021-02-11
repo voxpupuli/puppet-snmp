@@ -944,8 +944,49 @@ describe 'snmp' do
             hasrestart: true
           ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
         }
+      when 'Darwin'
+        it { is_expected.not_to contain_package('snmpd') }
+        it { is_expected.to contain_file('var-net-snmp').with_path('/var/db/net-snmp') }
+
+        it {
+          is_expected.to contain_file('snmpd.conf').with(
+            ensure: 'present',
+            mode: '0755',
+            owner: 'root',
+            group: 'wheel',
+            path: '/private/etc/snmp/snmpd.conf'
+          ).that_notifies('Service[snmpd]')
+        }
+        it {
+          is_expected.to contain_service('snmpd').with(
+            ensure: 'running',
+            name: 'org.net-snmp.snmpd',
+            enable: true,
+            hasstatus: true,
+            hasrestart: true
+          )
+        }
+
+        it {
+          is_expected.to contain_file('snmptrapd.conf').with(
+            ensure: 'present',
+            mode: '0755',
+            owner: 'root',
+            group: 'wheel',
+            path: '/private/etc/snmp/snmptrapd.conf'
+          )
+        }
+        it {
+          is_expected.to contain_service('snmptrapd').with(
+            ensure: 'stopped',
+            name: 'org.net-snmp.snmptrapd',
+            enable: false,
+            hasstatus: true,
+            hasrestart: true
+          )
+        }
       else
-        is_expected.to raise_error(Puppet::Error, %r{Module snmp is not supported on bar})
+        it {is_expected.to raise_error(Puppet::Error, %r{Module snmp is not supported on})}
       end
     end
   end

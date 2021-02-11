@@ -149,6 +149,9 @@
 # @param autoupgrade
 #   Upgrade package automatically, if there is a newer version.
 #
+# @param manage_packages
+#   Controls whether module attempts to manage the packages for SNMPD. On by default, except on Darwin where it ships with the OS.
+#
 # @param package_name
 #   Name of the package. Only set this if your platform is not supported or you know what you are doing.
 #
@@ -298,6 +301,7 @@ class snmp (
   Optional[Array[String[1]]] $snmptrapd_config             = undef,
   Boolean                    $manage_client                = false,
   Boolean                    $manage_snmptrapd             = true,
+  Boolean                    $manage_packages              = true,
   Optional[Array[String[1]]] $snmp_config                  = undef,
   Boolean                    $autoupgrade                  = false,
   String[1]                  $package_name                 = 'net-snmp',
@@ -382,6 +386,19 @@ class snmp (
     $trapdrun = 'no'
   }
 
+  $manage_snmp_conf_requires = $manage_packages ? {
+    true  => Package['snmpd'],
+    false => undef,
+  }
+
+  $manage_snmp_trap_conf_requires = $manage_packages ? {
+    true  => $snmptrapd_package_name ? {
+      default => Package['snmptrapd'],
+      undef   => Package['snmpd'],
+    },
+    false => undef,
+  }
+
   if $manage_client {
     class { 'snmp::client':
       ensure      => $ensure,
@@ -390,26 +407,30 @@ class snmp (
     }
   }
 
-  package { 'snmpd':
-    ensure => $package_ensure,
-    name   => $package_name,
+  if $package_name and $manage_packages {
+    package { 'snmpd':
+      ensure => $package_ensure,
+      name   => $package_name,
+    }
   }
 
   # Since ubuntu 16.04 platforms, there is a differente snmptrad package
-  if ($snmp::snmptrapd_package_name) and ($manage_snmptrapd) {
+  if ($snmp::snmptrapd_package_name) and ($manage_snmptrapd) and $manage_packages {
     package { 'snmptrapd':
       ensure => $package_ensure,
       name   => $snmp::snmptrapd_package_name,
     }
   }
 
-  file { 'var-net-snmp':
-    ensure  => 'directory',
-    path    => $var_net_snmp,
-    owner   => $varnetsnmp_owner,
-    group   => $varnetsnmp_group,
-    mode    => $varnetsnmp_perms,
-    require => Package['snmpd'],
+  if $var_net_snmp {
+    file { 'var-net-snmp':
+      ensure  => 'directory',
+      path    => $var_net_snmp,
+      owner   => $varnetsnmp_owner,
+      group   => $varnetsnmp_group,
+      mode    => $varnetsnmp_perms,
+      require => $manage_snmp_conf_requires,
+    }
   }
 
   if $facts['os']['family'] == 'FreeBSD' {
@@ -418,7 +439,7 @@ class snmp (
       owner   => $service_config_dir_owner,
       group   => $service_config_dir_group,
       mode    => $service_config_dir_perms,
-      require => Package['snmpd'],
+      require => $manage_snmp_conf_requires,
     }
   }
 
@@ -428,7 +449,7 @@ class snmp (
       owner   => 'root',
       group   => 'root',
       mode    => '0755',
-      require => Package['snmpd'],
+      require => $manage_snmp_trap_conf_requires,
       before  => Service['snmptrapd'],
     }
   }
@@ -440,7 +461,7 @@ class snmp (
     group   => $service_config_dir_group,
     mode    => $service_config_perms,
     content => template($template_snmpd_conf),
-    require => Package['snmpd'],
+    require => $manage_snmp_conf_requires,
   }
   if ($manage_snmptrapd) {
     file { 'snmptrapd.conf':
@@ -450,11 +471,11 @@ class snmp (
       group   => $service_config_dir_group,
       mode    => $service_config_perms,
       content => template($template_snmptrapd),
-      require => Package['snmpd'],
+      require => $manage_snmp_conf_requires,
     }
   }
 
-  unless $facts['os']['family'] == 'FreeBSD' {
+  unless $facts['os']['family'] in ['FreeBSD', 'Darwin'] {
     file { 'snmpd.sysconfig':
       ensure  => $file_ensure,
       path    => $sysconfig,
@@ -462,7 +483,7 @@ class snmp (
       group   => 'root',
       mode    => '0644',
       content => template($template_snmpd_sysconfig),
-      require => Package['snmpd'],
+      require => $manage_snmp_conf_requires,
       notify  => Service['snmpd'],
     }
   }
@@ -483,7 +504,7 @@ class snmp (
       group   => 'root',
       mode    => '0644',
       content => template($template_snmptrapd_sysconfig),
-      require => Package['snmpd'],
+      require => $manage_snmp_trap_conf_requires,
       notify  => Service['snmptrapd'],
     }
   } elsif
@@ -496,7 +517,7 @@ class snmp (
       group   => 'root',
       mode    => '0644',
       content => template($template_snmptrapd_sysconfig),
-      require => Package['snmptrapd'],
+      require => $manage_snmp_trap_conf_requires,
       notify  => Service['snmptrapd'],
     }
 
@@ -506,11 +527,12 @@ class snmp (
       enable     => $trap_service_enable_real,
       hasstatus  => $trap_service_hasstatus,
       hasrestart => $trap_service_hasrestart,
-      require    => [
-        File['var-net-snmp'],
-        Package['snmptrapd'],
-      ],
+      require    => File['var-net-snmp'],
       subscribe  => File['snmptrapd.conf'],
+    }
+
+    if $manage_packages {
+      Package['snmptrapd'] -> Service['snmptrapd']
     }
   }
 
