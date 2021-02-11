@@ -136,8 +136,9 @@
 #
 # @param manage_client
 #   Whether to install the Net-SNMP client package.
+#
 # @param manage_snmptrapd
-#   Weheter to install the Net-SNMP snmptrapd package
+#   Whether to install the Net-SNMP snmptrapd package. True by default, except on Darwin where there is no service available.
 #
 # @param snmp_config
 #   Safety valve.  Array of lines to add to the client's global snmp.conf file.
