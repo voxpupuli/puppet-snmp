@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'snmp' do
+  NO_SNMPTRAPD = ['Darwin'].freeze
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
@@ -35,7 +36,7 @@ describe 'snmp' do
                           ])
         end
       end
-      unless ['Darwin'].include?(facts[:os]['family'])
+      unless NO_SNMPTRAPD.include?(facts[:os]['family'])
         # TODO: add more contents for File[snmptrapd.conf]
         it 'contains File[snmptrapd.conf] with correct contents' do
           verify_contents(catalogue, 'snmptrapd.conf', [
