@@ -35,13 +35,15 @@ describe 'snmp' do
                           ])
         end
       end
-      # TODO: add more contents for File[snmptrapd.conf]
-      it 'contains File[snmptrapd.conf] with correct contents' do
-        verify_contents(catalogue, 'snmptrapd.conf', [
-                          'doNotLogTraps no',
-                          'authCommunity log,execute,net public',
-                          'disableAuthorization no'
-                        ])
+      unless ['Darwin'].include?(facts[:os]['family'])
+        # TODO: add more contents for File[snmptrapd.conf]
+        it 'contains File[snmptrapd.conf] with correct contents' do
+          verify_contents(catalogue, 'snmptrapd.conf', [
+                            'doNotLogTraps no',
+                            'authCommunity log,execute,net public',
+                            'disableAuthorization no'
+                          ])
+        end
       end
 
       case facts[:os]['family']
@@ -968,7 +970,7 @@ describe 'snmp' do
         }
 
         it {
-          is_expected.to contain_file('snmptrapd.conf').with(
+          is_expected.not_to contain_file('snmptrapd.conf').with(
             ensure: 'present',
             mode: '0755',
             owner: 'root',
@@ -977,7 +979,7 @@ describe 'snmp' do
           )
         }
         it {
-          is_expected.to contain_service('snmptrapd').with(
+          is_expected.not_to contain_service('snmptrapd').with(
             ensure: 'stopped',
             name: 'org.net-snmp.snmptrapd',
             enable: false,
