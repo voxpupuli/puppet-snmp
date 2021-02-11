@@ -59,7 +59,7 @@ describe 'snmp::client' do
         it {
           is_expected.not_to contain_package('snmp-client').with(
             ensure: 'present',
-            name: 'net-snmp',
+            name: 'net-snmp'
           )
         }
         it {
@@ -70,7 +70,7 @@ describe 'snmp::client' do
       when 'Darwin'
         it {
           is_expected.not_to contain_package('snmp-client').with(
-            ensure: 'present',
+            ensure: 'present'
           )
         }
         it {

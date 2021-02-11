@@ -906,7 +906,7 @@ describe 'snmp' do
             owner: 'root',
             group: 'wheel',
             path: '/var/net-snmp'
-            ).that_requires('Package[snmpd]')
+          ).that_requires('Package[snmpd]')
         }
 
         it {
@@ -988,7 +988,7 @@ describe 'snmp' do
           )
         }
       else
-        it {is_expected.to raise_error(Puppet::Error, %r{Module snmp is not supported on})}
+        it { is_expected.to raise_error(Puppet::Error, %r{Module snmp is not supported on}) }
       end
     end
   end
