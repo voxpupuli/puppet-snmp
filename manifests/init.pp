@@ -434,12 +434,6 @@ class snmp (
     }
   }
 
-  # If options change on debian with systemd, we need to reload the systemd daemon
-  # before restarting the service.
-  if $facts['service_provider'] == 'systemd' and $snmp::sysconfig == undef {
-    Exec['systemctl-daemon-reload'] -> Service['snmpd', 'snmptrapd']
-  }
-
   # Services
   service { 'snmptrapd':
     ensure     => $trap_service_ensure_real,
