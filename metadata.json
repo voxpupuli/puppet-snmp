@@ -15,7 +15,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 5.2.0 < 7.0.0"
+      "version_requirement": ">= 5.2.0 < 8.0.0"
     },
     {
       "name": "camptocamp/systemd",
