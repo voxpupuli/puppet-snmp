@@ -460,7 +460,7 @@ class snmp (
     systemd::dropin_file { 'snmpd.conf':
       unit    => 'snmpd.service',
       content => epp($template_snmpd_service_dropin),
-    } ~> Class['systemd::systemctl::daemon_reload'] ~> Service['snmpd']
+    } ~> Service['snmpd']
   }
 
   if ($facts['os']['family'] == 'RedHat') and ($manage_snmptrapd) {
