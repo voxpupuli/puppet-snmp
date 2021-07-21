@@ -42,6 +42,12 @@
       ]
     },
     {
+      "operatingsystem": "FreeBSD",
+      "operatingsystemrelease": [
+        "12"
+      ]
+    },
+    {
       "operatingsystem": "SLES",
       "operatingsystemrelease": [
         "11 SP1"
@@ -60,6 +66,14 @@
       "operatingsystemrelease": [
         "16.04",
         "18.04"
+      ]
+    },
+    {
+      "operatingsystem": "Darwin",
+      "operatingsystemrelease": [
+        "18",
+        "19",
+        "20"
       ]
     }
   ],

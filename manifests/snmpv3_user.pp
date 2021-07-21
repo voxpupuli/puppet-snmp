@@ -75,7 +75,10 @@ define snmp::snmpv3_user (
         user    => 'root',
         cwd     => '/',
         path    => '/bin:/sbin:/usr/bin:/usr/sbin',
-        require => [Package['snmpd'], File['var-net-snmp'],],
+        require => File['var-net-snmp'],
+      }
+      if $snmp::manage_packages {
+        Package['snmpd'] -> Exec["stop-${service_name}"]
       }
     }
 

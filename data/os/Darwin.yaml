@@ -1,0 +1,21 @@
+---
+snmp::client::client_config: /private/etc/snmp/snmp.conf
+snmp::client::package_name: ~
+snmp::package_name: ~
+snmp::manage_packages: false
+snmp::manage_snmptrapd: false
+snmp::service_config: /private/etc/snmp/snmpd.conf
+snmp::service_config_dir_group: wheel
+snmp::service_config_perms: '0755'
+snmp::service_name: org.net-snmp.snmpd
+snmp::snmpd_options: d
+snmp::snmptrapd_options: ~
+snmp::snmptrapd_package_name: ~
+snmp::sysconfig: ~
+snmp::trap_service_config: /private/etc/snmp/snmptrapd.conf
+snmp::trap_service_name: ~
+snmp::var_net_snmp: /var/db/net-snmp
+snmp::varnetsnmp_group: wheel
+snmp::varnetsnmp_owner: root
+snmp::varnetsnmp_perms: '0600'
+...
