@@ -18,7 +18,7 @@
       "version_requirement": ">= 5.2.0 < 8.0.0"
     },
     {
-      "name": "camptocamp/systemd",
+      "name": "puppet/systemd",
       "version_requirement": ">= 2.5.1 < 4.0.0"
     }
   ],
