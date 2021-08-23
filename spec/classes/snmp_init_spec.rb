@@ -607,7 +607,7 @@ describe 'snmp' do
           ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         case facts[:os]['release']['major']
-        when '8', '9', '10', '16.04', '18.04'
+        when '8', '9', '10', '16.04', '18.04', '20.04'
           it {
             is_expected.to contain_file('snmptrapd.sysconfig').with(
               ensure: 'present',
@@ -674,7 +674,7 @@ describe 'snmp' do
               ).that_requires('Package[snmpd]')
             }
           end
-        when '18.04'
+        when '18.04', '20.04'
           describe 'Debian-snmp as snmp user' do
             it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
@@ -712,46 +712,25 @@ describe 'snmp' do
           end
         end
 
-        case facts[:os]['release']['major']
-        when '8', '9', '10', '16.04', '18.04'
-          describe 'service_ensure => stopped and trap_service_ensure => running' do
-            let :params do
-              {
-                service_ensure: 'stopped',
-                trap_service_ensure: 'running'
-              }
-            end
-
-            it { is_expected.to contain_service('snmpd').with_ensure('running') }
-            it { is_expected.to contain_service('snmptrapd').with_ensure('running') }
-            it 'contains File[snmpd.sysconfig] with content "SNMPDRUN=no"' do
-              verify_contents(catalogue, 'snmpd.sysconfig', [
-                                'SNMPDRUN=no'
-                              ])
-            end
-            it 'contains File[snmptrapd.sysconfig] with content "TRAPDRUN=yes"' do
-              verify_contents(catalogue, 'snmptrapd.sysconfig', [
-                                'TRAPDRUN=yes'
-                              ])
-            end
+        describe 'service_ensure => stopped and trap_service_ensure => running' do
+          let :params do
+            {
+              service_ensure: 'stopped',
+              trap_service_ensure: 'running'
+            }
           end
-        else
-          describe 'service_ensure => stopped and trap_service_ensure => running' do
-            let :params do
-              {
-                service_ensure: 'stopped',
-                trap_service_ensure: 'running'
-              }
-            end
 
-            it { is_expected.to contain_service('snmpd').with_ensure('running') }
-            it { is_expected.not_to contain_service('snmptrapd') }
-            it 'contains File[snmpd.sysconfig] with contents "SNMPDRUN=no" and "TRAPDRUN=yes"' do
-              verify_contents(catalogue, 'snmpd.sysconfig', [
-                                'SNMPDRUN=no',
-                                'TRAPDRUN=yes'
-                              ])
-            end
+          it { is_expected.to contain_service('snmpd').with_ensure('running') }
+          it { is_expected.to contain_service('snmptrapd').with_ensure('running') }
+          it 'contains File[snmpd.sysconfig] with content "SNMPDRUN=no"' do
+            verify_contents(catalogue, 'snmpd.sysconfig', [
+                              'SNMPDRUN=no'
+                            ])
+          end
+          it 'contains File[snmptrapd.sysconfig] with content "TRAPDRUN=yes"' do
+            verify_contents(catalogue, 'snmptrapd.sysconfig', [
+                              'TRAPDRUN=yes'
+                            ])
           end
         end
 
