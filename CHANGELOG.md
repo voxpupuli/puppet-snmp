@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v6.0.0](https://github.com/voxpupuli/puppet-snmp/tree/v6.0.0) (2021-08-26)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v5.1.1...v6.0.0)
+
+**Breaking changes:**
+
+- Support Ubuntu 20.04; Drop EoL Debian 8, Ubuntu 16.04 [\#247](https://github.com/voxpupuli/puppet-snmp/pull/247) ([kenyon](https://github.com/kenyon))
+- Drop Puppet 5 support; enable Puppet 7 support [\#242](https://github.com/voxpupuli/puppet-snmp/pull/242) ([bastelfreak](https://github.com/bastelfreak))
+- Drop EoL CentOS 6 [\#237](https://github.com/voxpupuli/puppet-snmp/pull/237) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- puppetlabs/stdlib: Allow 7.x [\#241](https://github.com/voxpupuli/puppet-snmp/pull/241) ([bastelfreak](https://github.com/bastelfreak))
+- camptocamp/systemd: allow 3.x [\#240](https://github.com/voxpupuli/puppet-snmp/pull/240) ([bastelfreak](https://github.com/bastelfreak))
+- Support management of snmptrapd [\#234](https://github.com/voxpupuli/puppet-snmp/pull/234) ([elmobp](https://github.com/elmobp))
+- Add parameters pass and pass\_persist. [\#233](https://github.com/voxpupuli/puppet-snmp/pull/233) ([olifre](https://github.com/olifre))
+
+**Closed issues:**
+
+- Doesn't work on ubuntu focal 20.04 [\#229](https://github.com/voxpupuli/puppet-snmp/issues/229)
+- remove hardcoded group 'root' [\#206](https://github.com/voxpupuli/puppet-snmp/issues/206)
+
+**Merged pull requests:**
+
+- Allow stdlib 8.0.0 [\#248](https://github.com/voxpupuli/puppet-snmp/pull/248) ([smortex](https://github.com/smortex))
+- switch from camptocamp/systemd to voxpupuli/systemd [\#245](https://github.com/voxpupuli/puppet-snmp/pull/245) ([bastelfreak](https://github.com/bastelfreak))
+- modulesync 3.0.0 & puppet-lint updates [\#230](https://github.com/voxpupuli/puppet-snmp/pull/230) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v5.1.1](https://github.com/voxpupuli/puppet-snmp/tree/v5.1.1) (2020-06-30)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v5.1.0...v5.1.1)
