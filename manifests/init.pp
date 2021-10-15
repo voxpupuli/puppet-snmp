@@ -390,17 +390,14 @@ class snmp (
     }
   }
 
-  package { 'snmpd':
-    ensure => $package_ensure,
-    name   => $package_name,
-  }
+  # install snmpd
+  ensure_packages([$package_name], {'ensure' => $package_ensure})
 
   # Since ubuntu 16.04 platforms, there is a differente snmptrad package
   if ($snmp::snmptrapd_package_name) and ($manage_snmptrapd) {
-    package { 'snmptrapd':
-      ensure => $package_ensure,
-      name   => $snmp::snmptrapd_package_name,
-    }
+
+    # install snmptrapd
+    ensure_packages([$snmp::snmptrapd_package_name], {'ensure' => $package_ensure})
   }
 
   file { 'var-net-snmp':
