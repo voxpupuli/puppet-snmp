@@ -406,7 +406,7 @@ class snmp (
     owner   => $varnetsnmp_owner,
     group   => $varnetsnmp_group,
     mode    => $varnetsnmp_perms,
-    require => Package['snmpd'],
+    require => Ensure_packages([$package_name], {'ensure' => $package_ensure}),
   }
 
   if ($facts['os']['family'] == 'Suse') and ($manage_snmptrapd) {
@@ -415,7 +415,7 @@ class snmp (
       owner   => 'root',
       group   => 'root',
       mode    => '0755',
-      require => Package['snmpd'],
+      require => Ensure_packages([$package_name], {'ensure' => $package_ensure}),
       before  => Service['snmptrapd'],
     }
   }
@@ -427,7 +427,7 @@ class snmp (
     group   => $service_config_dir_group,
     mode    => $service_config_perms,
     content => template($template_snmpd_conf),
-    require => Package['snmpd'],
+    require => Ensure_packages([$package_name], {'ensure' => $package_ensure}),
   }
   if ($manage_snmptrapd) {
     file { 'snmptrapd.conf':
@@ -437,7 +437,7 @@ class snmp (
       group   => $service_config_dir_group,
       mode    => $service_config_perms,
       content => template($template_snmptrapd),
-      require => Package['snmpd'],
+      require => Ensure_packages([$package_name], {'ensure' => $package_ensure}),
     }
   }
 
@@ -448,7 +448,7 @@ class snmp (
     group   => 'root',
     mode    => '0644',
     content => template($template_snmpd_sysconfig),
-    require => Package['snmpd'],
+    require => Ensure_packages([$package_name], {'ensure' => $package_ensure}),
     notify  => Service['snmpd'],
   }
 
@@ -468,7 +468,7 @@ class snmp (
       group   => 'root',
       mode    => '0644',
       content => template($template_snmptrapd_sysconfig),
-      require => Package['snmpd'],
+      require => Ensure_packages([$package_name], {'ensure' => $package_ensure}),
       notify  => Service['snmptrapd'],
     }
   } elsif
@@ -481,7 +481,7 @@ class snmp (
       group   => 'root',
       mode    => '0644',
       content => template($template_snmptrapd_sysconfig),
-      require => Package['snmptrapd'],
+      require => Ensure_packages([$snmp::snmptrapd_package_name], {'ensure' => $package_ensure}),
       notify  => Service['snmptrapd'],
     }
 
@@ -493,7 +493,7 @@ class snmp (
       hasrestart => $trap_service_hasrestart,
       require    => [
         File['var-net-snmp'],
-        Package['snmptrapd'],
+        Ensure_packages([$snmp::snmptrapd_package_name], {'ensure' => $package_ensure}),
       ],
       subscribe  => File['snmptrapd.conf'],
     }
