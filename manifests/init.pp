@@ -396,7 +396,6 @@ class snmp (
     name   => $package_name,
   })
 
-
   # Since ubuntu 16.04 platforms, there is a differente snmptrad package
   if ($snmp::snmptrapd_package_name) and ($manage_snmptrapd) {
 
