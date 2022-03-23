@@ -630,20 +630,20 @@ describe 'snmp' do
           it { is_expected.not_to contain_file('snmptrapd.sysconfig') }
           it { is_expected.not_to contain_service('snmptrapd') }
         end
-        it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\'"' do
+        it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'-LS6d -p /var/run/snmptrapd.pid\'"' do
           verify_contents(catalogue, 'snmpd.sysconfig', [
                             'TRAPDRUN=no',
-                            'TRAPDOPTS=\'-Lsd -p /var/run/snmptrapd.pid\''
+                            'TRAPDOPTS=\'-LS6d -p /var/run/snmptrapd.pid\''
                           ])
         end
 
         case facts[:os]['release']['major']
         when '9'
           describe 'Debian-snmp as snmp user' do
-            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-LS6d -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
                                 'SNMPDRUN=yes',
-                                'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f\''
+                                'SNMPDOPTS=\'-LS6d -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f\''
                               ])
             end
             it {
@@ -658,10 +658,10 @@ describe 'snmp' do
           end
         when '10'
           describe 'Debian-snmp as snmp user' do
-            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-LS6d -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
                                 'SNMPDRUN=yes',
-                                'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f -p /run/snmpd.pid\''
+                                'SNMPDOPTS=\'-LS6d -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f -p /run/snmpd.pid\''
                               ])
             end
             it {
@@ -676,10 +676,10 @@ describe 'snmp' do
           end
         when '18.04', '20.04'
           describe 'Debian-snmp as snmp user' do
-            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-LS6d -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
                                 'SNMPDRUN=yes',
-                                'SNMPDOPTS=\'-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\''
+                                'SNMPDOPTS=\'-LS6d -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid\''
                               ])
             end
             it {
@@ -694,10 +694,10 @@ describe 'snmp' do
           end
         else
           describe 'snmp as snmp user' do
-            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid""' do
+            it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-LS6d -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid""' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
                                 'SNMPDRUN=yes',
-                                'SNMPDOPTS=\'-Lsd -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\''
+                                'SNMPDOPTS=\'-LS6d -Lf /dev/null -u snmp -g snmp -I -smux -p /var/run/snmpd.pid\''
                               ])
             end
             it {
