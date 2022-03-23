@@ -55,6 +55,29 @@ describe 'snmp::client' do
             require: nil
           )
         }
+      when 'FreeBSD'
+        it {
+          is_expected.not_to contain_package('snmp-client').with(
+            ensure: 'present',
+            name: 'net-snmp'
+          )
+        }
+        it {
+          is_expected.to contain_file('snmp.conf').with(
+            path: '/usr/local/etc/snmp/snmp.conf'
+          )
+        }
+      when 'Darwin'
+        it {
+          is_expected.not_to contain_package('snmp-client').with(
+            ensure: 'present'
+          )
+        }
+        it {
+          is_expected.to contain_file('snmp.conf').with(
+            path: '/private/etc/snmp/snmp.conf'
+          )
+        }
       end
     end
 
@@ -65,8 +88,9 @@ describe 'snmp::client' do
       let(:params) { { ensure: 'absent' } }
 
       it { is_expected.to contain_file('snmp.conf').with_ensure('absent') }
+
       case facts[:os]['family']
-      when 'Suse'
+      when 'Suse', 'FreeBSD', 'Darwin'
         it { is_expected.not_to contain_package('snmp-client') }
       else
         it { is_expected.to contain_package('snmp-client').with_ensure('absent') }
@@ -81,7 +105,7 @@ describe 'snmp::client' do
 
       it { is_expected.to contain_file('snmp.conf').with_ensure('present') }
       case facts[:os]['family']
-      when 'Suse'
+      when 'Suse', 'FreeBSD', 'Darwin'
         it { is_expected.not_to contain_package('snmp-client') }
       else
         it { is_expected.to contain_package('snmp-client').with_ensure('latest') }

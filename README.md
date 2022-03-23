@@ -9,24 +9,31 @@
 
 #### Table of Contents
 
-1. [Overview](#overview)
-2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with this module](#setup)
-    * [What this module affects](#what-this-module-affects)
-    * [What this module requires](#requirements)
-    * [Beginning with this module](#beginning-with-this-module)
-    * [Upgrading](#upgrading)
-4. [Usage - Configuration options and additional functionality](#usage)
-    * [Client](#client)
-    * [Trap Daemon](#trap-daemon)
-    * [SNMPv3 Users](#snmpv3-users)
-    * [Access Control](#access-control)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-6. [Limitations - OS compatibility, etc.](#limitations)
-    * [OS Support](#os-support)
-    * [Notes](#notes)
-    * [Issues](#issues)
-7. [Development - Guide for contributing to the module](#development)
+- [Net-SNMP](#net-snmp)
+      - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Module Description](#module-description)
+  - [Setup](#setup)
+    - [What this module affects](#what-this-module-affects)
+    - [Beginning with this module](#beginning-with-this-module)
+    - [Upgrading](#upgrading)
+      - [Deprecation Warning](#deprecation-warning)
+        - [Past module 3.x series](#past-module-3x-series)
+        - [Current module 4.x series](#current-module-4x-series)
+        - [Future module 5.x series](#future-module-5x-series)
+  - [Usage](#usage)
+    - [Client](#client)
+    - [Trap Daemon](#trap-daemon)
+    - [SNMPv3 Users](#snmpv3-users)
+    - [Access Control](#access-control)
+      - [Multiple Network Restrictions](#multiple-network-restrictions)
+  - [Reference](#reference)
+  - [Limitations](#limitations)
+    - [OS Support:](#os-support)
+    - [Notes:](#notes)
+    - [Issues:](#issues)
+  - [Development](#development)
+    - [Authors](#authors)
 
 ## Overview
 
@@ -262,7 +269,9 @@ Net-SNMP module support is available with these operating systems:
 
 * RedHat family  - tested on CentOS 7
 * SuSE family    - tested on SLES 11 SP1
-* Debian family  - tested on Debian 9, Debian 10, Ubuntu 18.04, Ubuntu 20.04
+* Debian family  - tested on Debian 8, Debian 9, Ubuntu 18.04, Ubuntu 20.04
+* FreeBSD family - tested on FreeBSD 12.2 (uses ports/pkgng Net-SNMP, not system bsnmpd)
+* Darwin family  - tested on Darwin 18 (macOS 10.14 "Mojave"), 19 (macOS 10.15 "Catalina"), and 20 (macOS 11.1 "Big Sur").
 
 ### Notes:
 

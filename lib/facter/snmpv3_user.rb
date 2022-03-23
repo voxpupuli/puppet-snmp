@@ -1,7 +1,7 @@
 # snmpv3_user.rb --- Get SNMP usmUser data from configuration
 Facter.add(:snmpv3_user) do
   confine :os do |os|
-    %w[Debian RedHat Suse].include? os['family']
+    %w[Debian RedHat Suse FreeBSD].include? os['family']
   end
 
   setcode do
@@ -9,6 +9,7 @@ Facter.add(:snmpv3_user) do
 
     config = case Facter.value(:os)['family']
              when 'Debian'  then '/var/lib/snmp/snmpd.conf'
+             when 'FreeBSD' then '/var/net-snmp/snmpd.conf'
              when 'RedHat'  then '/var/lib/net-snmp/snmpd.conf'
              when 'Suse'    then '/var/lib/net-snmp/snmpd.conf'
              end
