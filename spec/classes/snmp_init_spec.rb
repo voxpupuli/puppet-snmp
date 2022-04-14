@@ -610,7 +610,7 @@ describe 'snmp' do
           ).that_requires('Package[snmpd]').that_notifies('Service[snmpd]')
         }
         case facts[:os]['release']['major']
-        when '8', '9', '10', '16.04', '18.04', '20.04'
+        when '8', '9', '10', '11', '16.04', '18.04', '20.04'
           it {
             is_expected.to contain_file('snmptrapd.sysconfig').with(
               ensure: 'present',
@@ -659,7 +659,7 @@ describe 'snmp' do
               ).that_requires('Package[snmpd]')
             }
           end
-        when '10'
+        when '10', '11'
           describe 'Debian-snmp as snmp user' do
             it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS="-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux -p /var/run/snmpd.pid""' do
               verify_contents(catalogue, 'snmpd.sysconfig', [
