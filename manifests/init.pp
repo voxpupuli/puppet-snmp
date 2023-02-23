@@ -357,6 +357,7 @@ class snmp (
     $file_ensure = 'present'
     $trap_service_ensure_real = $trap_service_ensure
     $trap_service_enable_real = $trap_service_enable
+    $var_net_snmp_ensure = 'directory'
 
     # Make sure that if $trap_service_ensure == 'running' that
     # $service_ensure_real == 'running' on Debian.
@@ -374,6 +375,7 @@ class snmp (
     $service_enable_real = false
     $trap_service_ensure_real = 'stopped'
     $trap_service_enable_real = false
+    $var_net_snmp_ensure = absent
   }
 
   if $service_ensure == 'running' {
@@ -425,7 +427,7 @@ class snmp (
 
   if $var_net_snmp {
     file { 'var-net-snmp':
-      ensure  => 'directory',
+      ensure  => $var_net_snmp_ensure,
       path    => $var_net_snmp,
       owner   => $varnetsnmp_owner,
       group   => $varnetsnmp_group,

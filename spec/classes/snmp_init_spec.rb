@@ -163,7 +163,7 @@ describe 'snmp' do
 
           it { is_expected.to contain_package('snmpd').with_ensure('absent') }
           it { is_expected.not_to contain_class('snmp::client') }
-          it { is_expected.to contain_file('var-net-snmp').with_ensure('directory') }
+          it { is_expected.to contain_file('var-net-snmp').with_ensure('absent') }
           it { is_expected.to contain_file('snmpd.conf').with_ensure('absent') }
           it { is_expected.to contain_file('snmpd.sysconfig').with_ensure('absent') }
           it { is_expected.to contain_service('snmpd').with_ensure('stopped') }
