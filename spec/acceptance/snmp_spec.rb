@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 case fact('os.family')
@@ -58,12 +60,15 @@ describe 'snmp class' do
       apply_manifest(pp, catch_failures: true)
       apply_manifest(pp, catch_changes: true)
     end
+
     describe process('snmpd') do
       it { is_expected.to be_running }
     end
+
     describe process('snmptrapd') do
       it { is_expected.not_to be_running }
     end
+
     describe file(service_config.to_s) do
       it { is_expected.to be_file }
       it { is_expected.not_to contain 'rocommunity' }
@@ -80,21 +85,26 @@ describe 'snmp class' do
       it { is_expected.to contain 'rouser myops authPriv -V all_view' }
       it { is_expected.to contain 'rouser mysubcontractor authPriv -V custom_view' }
     end
+
     describe file(service_varconfig.to_s) do
       it { is_expected.to be_file }
       it { is_expected.to contain 'usmUser ' }
     end
+
     describe package(client_package.to_s) do
       it { is_expected.to be_installed }
     end
+
     describe command('snmpget -v 3 -u myops -l authPriv -a SHA -A 1234authpass -x AES -X 5678privpass localhost iso.3.6.1.2.1.25.1.4.0') do
       its(:stdout) { is_expected.to match %r{.*iso.3.6.1.2.1.25.1.4.0 = STRING: "BOOT_IMAGE=.*} }
       its(:exit_status) { is_expected.to eq 0 }
     end
+
     describe command('snmpget -v 3 -u mysubcontractor -l authPriv -a SHA -A 456authpass -x AES -X 789privpass localhost iso.3.6.1.2.1.25.1.4.0') do
       its(:stdout) { is_expected.to match %r{iso.3.6.1.2.1.25.1.4.0 = No Such Object available on this agent at this OID.*} }
       its(:exit_status) { is_expected.to eq 0 }
     end
+
     describe command('snmpget -v 3 -u mysubcontractor -l authPriv -a SHA -A 456authpass -x AES -X 789privpass localhost iso.3.6.1.2.1.1.1.0') do
       its(:stdout) { is_expected.to match %r{iso.3.6.1.2.1.1.1.0 = STRING: "Linux.*} }
       its(:exit_status) { is_expected.to eq 0 }
@@ -113,9 +123,11 @@ describe 'snmp class' do
       apply_manifest(pp, catch_failures: true)
       apply_manifest(pp, catch_changes: true)
     end
+
     describe process('snmpd') do
       it { is_expected.to be_running }
     end
+
     describe process('snmptrapd') do
       it { is_expected.to be_running }
     end
