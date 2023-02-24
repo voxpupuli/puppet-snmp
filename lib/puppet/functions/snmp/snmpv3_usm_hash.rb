@@ -43,7 +43,7 @@ Puppet::Functions.create_function(:'snmp::snmpv3_usm_hash') do
     # use the incremental update functionality of the digest instance.
     remaining_chars = 1_048_576 # 1024 * 1024
 
-    while remaining_chars > 0
+    while remaining_chars.positive?
       if remaining_chars < passphrase.length
         # Only the first couple of characters are needed to fill the megabyte
         passphrase = passphrase.slice(0, remaining_chars)

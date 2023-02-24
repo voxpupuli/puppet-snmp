@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # snmpv3_user.rb --- Get SNMP usmUser data from configuration
 Facter.add(:snmpv3_user) do
   confine :os do |os|
@@ -61,7 +63,7 @@ Facter.add(:snmpv3_user) do
           privhash:  privhash
         }
       end
-    rescue
+    rescue StandardError
       fact = {}
     end
 
