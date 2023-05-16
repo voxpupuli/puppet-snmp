@@ -492,7 +492,7 @@ class snmp (
   }
 
   # Debian 9 use systemd
-  if ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '9') >= 0 ) {
+  if ( $facts['os']['name'] == 'Debian' ) {
     systemd::dropin_file { 'snmpd.conf':
       unit    => 'snmpd.service',
       content => epp($template_snmpd_service_dropin),
@@ -512,7 +512,7 @@ class snmp (
     }
   } elsif
   ( $facts['os']['name'] == 'Ubuntu' and versioncmp($facts['os']['release']['major'], '16.04') >= 0 and $manage_snmptrapd ) or
-  ( $facts['os']['name'] == 'Debian' and versioncmp($facts['os']['release']['major'], '8') >= 0 and $manage_snmptrapd ) {
+  ( $facts['os']['name'] == 'Debian' and $manage_snmptrapd ) {
     file { 'snmptrapd.sysconfig':
       ensure  => $file_ensure,
       path    => $trap_sysconfig,
