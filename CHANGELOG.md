@@ -135,7 +135,7 @@ After consulting with the community, it was decided **not** to remove traditiona
 **Fixed bugs:**
 
 - validate\_numeric\(\) and friends are deprecated in stdlib [\#111](https://github.com/voxpupuli/puppet-snmp/issues/111)
-- Unknown variable: '::snmp\_agentaddress' error [\#65](https://github.com/voxpupuli/puppet-snmp/issues/65)
+- Unknown variable: 'snmp\_agentaddress' error [\#65](https://github.com/voxpupuli/puppet-snmp/issues/65)
 - Fix typo in snmp::params: s/extemds/extends/ [\#133](https://github.com/voxpupuli/puppet-snmp/pull/133) ([chundaoc](https://github.com/chundaoc))
 
 **Closed issues:**
