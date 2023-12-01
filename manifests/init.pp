@@ -331,7 +331,7 @@ class snmp (
   Boolean                    $trap_service_enable          = false,
   Boolean                    $trap_service_hasstatus       = true,
   Boolean                    $trap_service_hasrestart      = true,
-  String[1]                  $service_restart              = "/bin/systemctl reload $service_name",
+  String[1]                  $service_restart              = "/bin/systemctl reload ${service_name}",
   Boolean                    $openmanage_enable            = false,
   Boolean                    $master                       = false,
   Optional[Stdlib::Filemode] $agentx_perms                 = undef,
