@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # snmpv3_user.rb --- Get SNMP usmUser data from configuration
 Facter.add(:snmpv3_user) do
   confine :os do |os|
@@ -29,7 +31,7 @@ Facter.add(:snmpv3_user) do
 
         # convert hex string to ascii if necessary
         # handle '0x' prefix and trailing NULL
-        user = [user[2..-1]].pack('H*').delete("\000") if %r{^0x} =~ user
+        user = [user[2..]].pack('H*').delete("\000") if %r{^0x} =~ user
 
         # map OID to string for auth protocol
         authproto = case items[7]
@@ -61,7 +63,7 @@ Facter.add(:snmpv3_user) do
           privhash:  privhash
         }
       end
-    rescue
+    rescue StandardError
       fact = {}
     end
 
