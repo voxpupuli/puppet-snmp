@@ -1,3 +1,4 @@
 ---
 snmp::snmpd_options: "-Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f -p /run/snmpd.pid"
 snmp::snmptrapd_options: "-Lsd -f -p /run/snmptrapd.pid"
+
