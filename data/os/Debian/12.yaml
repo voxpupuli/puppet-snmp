@@ -1,0 +1,2 @@
+---
+snmp::snmpd_options: "-LOw -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f"
