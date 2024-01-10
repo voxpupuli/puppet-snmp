@@ -1,7 +1,12 @@
 ###
 ### File managed by Puppet
 ###
-# This file controls the activity of snmpd and snmptrapd
+# This file controls the behaviour of /etc/init.d/snmpd and /etc/init.d/snmptrapd
+# but not of the corresponding systemd service file.
+# If needed, create an override file in
+# /etc/systemd/system/snmpd.service.d/ or
+# /etc/systemd/system/snmptrapd.service.d/.
+# see man 5 systemd.unit and man 5 systemd.service.
 
 # Don't load any MIBs by default.
 # You might comment this lines once you have the MIBs downloaded.

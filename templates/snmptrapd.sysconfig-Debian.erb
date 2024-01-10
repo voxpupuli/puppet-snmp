@@ -2,9 +2,14 @@
 ### File managed by Puppet
 ###
 
-# snmptrapd control (yes means start daemon).  As of net-snmp version
-# 5.0, master agentx support must be enabled in snmpd before snmptrapd
-# can be run.  See snmpd.conf(5) for how to do this.
+# This file controls the behaviour of /etc/init.d/snmptrapd but not of the
+# corresponding systemd service file.  If needed, create an override file in
+# /etc/systemd/system/snmptrapd.service.d/.
+# see man 5 systemd.unit and man 5 systemd.service
+#
+# snmptrapd control (yes means start daemon).  As of net-snmp version 5.0,
+# master agentx support must be enabled in snmpd before snmptrapd can be run.
+# See snmpd.conf(5) for how to do this.
 TRAPDRUN=<%= @trapdrun %>
 
 # snmptrapd command line options

@@ -347,6 +347,7 @@ class snmp (
 
   $template_snmptrapd            = 'snmp/snmptrapd.conf.erb'
   $template_snmptrapd_sysconfig  = "snmp/snmptrapd.sysconfig-${facts['os']['family']}.erb"
+  $template_snmptrapd_service_dropin = "snmp/snmptrapd.service-dropin-${facts['os']['family']}.epp"
 
   if $ensure == 'present' {
     if $autoupgrade {
@@ -479,6 +480,9 @@ class snmp (
   }
 
   unless $facts['os']['family'] in ['FreeBSD', 'Darwin'] {
+    # Note: The snmpd.systemd file is ignored in current versions of Debian
+    # and Ubuntu where the snmp daemons are managed by systemd. This is for
+    # backwards compatibility with other tools.
     file { 'snmpd.sysconfig':
       ensure  => $file_ensure,
       path    => $sysconfig,
@@ -491,8 +495,8 @@ class snmp (
     }
   }
 
-  # Debian 9 use systemd
-  if ( $facts['os']['name'] == 'Debian' ) {
+  # Debian (as of v9) and Ubuntu (as of v18.04) use systemd
+  if ( $facts['os']['family'] == 'Debian' ) {
     systemd::dropin_file { 'snmpd.conf':
       unit    => 'snmpd.service',
       content => epp($template_snmpd_service_dropin),
@@ -510,9 +514,15 @@ class snmp (
       require => $manage_snmp_trap_conf_requires,
       notify  => Service['snmptrapd'],
     }
-  } elsif
-  ( $facts['os']['name'] == 'Ubuntu' and versioncmp($facts['os']['release']['major'], '16.04') >= 0 and $manage_snmptrapd ) or
-  ( $facts['os']['name'] == 'Debian' and $manage_snmptrapd ) {
+  } elsif $facts['os']['family'] == 'Debian' and $manage_snmptrapd {
+    systemd::dropin_file { 'snmptrapd.conf':
+      unit    => 'snmptrapd.service',
+      content => epp($template_snmptrapd_service_dropin),
+    } ~> Service['snmpd']
+
+    # Note: The snmptrapd.systemd file is ignored in current versions of Debian
+    # and Ubuntu where the snmp daemons are managed by systemd. This is for
+    # backwards compatibility with other tools.
     file { 'snmptrapd.sysconfig':
       ensure  => $file_ensure,
       path    => $trap_sysconfig,
