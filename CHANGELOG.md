@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v7.0.0](https://github.com/voxpupuli/puppet-snmp/tree/v7.0.0) (2024-01-12)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v6.0.0...v7.0.0)
+
+**Breaking changes:**
+
+- Drop Debian 9 support [\#272](https://github.com/voxpupuli/puppet-snmp/pull/272) ([traylenator](https://github.com/traylenator))
+- Drop Puppet 6 support [\#270](https://github.com/voxpupuli/puppet-snmp/pull/270) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- add support for systemd on Ubuntu and improve it on Debian [\#281](https://github.com/voxpupuli/puppet-snmp/pull/281) ([hbog](https://github.com/hbog))
+- Add Debian 12 \(bookworm\) support. [\#279](https://github.com/voxpupuli/puppet-snmp/pull/279) ([hbog](https://github.com/hbog))
+- Add Puppet 8 support [\#274](https://github.com/voxpupuli/puppet-snmp/pull/274) ([bastelfreak](https://github.com/bastelfreak))
+- puppetlabs/stdlib: Allow 9.x [\#273](https://github.com/voxpupuli/puppet-snmp/pull/273) ([bastelfreak](https://github.com/bastelfreak))
+- Add Ubuntu 22.04 support [\#268](https://github.com/voxpupuli/puppet-snmp/pull/268) ([skylar2-uw](https://github.com/skylar2-uw))
+- bump puppet/systemd to \< 5.0.0 [\#266](https://github.com/voxpupuli/puppet-snmp/pull/266) ([jhoblitt](https://github.com/jhoblitt))
+- Support CentOS 9 and RHEL 9 [\#260](https://github.com/voxpupuli/puppet-snmp/pull/260) ([kajinamit](https://github.com/kajinamit))
+- Support Debian 11 Bullseye [\#259](https://github.com/voxpupuli/puppet-snmp/pull/259) ([antondollmaier](https://github.com/antondollmaier))
+- Support CentOS 8 and RHEL 8 [\#258](https://github.com/voxpupuli/puppet-snmp/pull/258) ([kajinamit](https://github.com/kajinamit))
+
+**Closed issues:**
+
+- snmpd\_options and/or snmptrapd\_options are ignored on Ubuntu and Debian due to lack of systemd support [\#280](https://github.com/voxpupuli/puppet-snmp/issues/280)
+- Support for Ubuntu 22.04 [\#263](https://github.com/voxpupuli/puppet-snmp/issues/263)
+- snmpd starts on each puppet run [\#252](https://github.com/voxpupuli/puppet-snmp/issues/252)
+- systemd daemon-reload restarts snmpd [\#244](https://github.com/voxpupuli/puppet-snmp/issues/244)
+- Support Debian Bullseye 11 \(to be released in may or june\) [\#243](https://github.com/voxpupuli/puppet-snmp/issues/243)
+- FreeBSD Support [\#238](https://github.com/voxpupuli/puppet-snmp/issues/238)
+- To support CentOS 8 [\#217](https://github.com/voxpupuli/puppet-snmp/issues/217)
+
+**Merged pull requests:**
+
+- Set 'var-net-snmp' ensure to absent when removing snmp [\#267](https://github.com/voxpupuli/puppet-snmp/pull/267) ([AlexandarY](https://github.com/AlexandarY))
+- Cleanup Debian Hieradata [\#257](https://github.com/voxpupuli/puppet-snmp/pull/257) ([ardichoke](https://github.com/ardichoke))
+- Support FreeBSD and Darwin [\#239](https://github.com/voxpupuli/puppet-snmp/pull/239) ([geoffdavis](https://github.com/geoffdavis))
+
 ## [v6.0.0](https://github.com/voxpupuli/puppet-snmp/tree/v6.0.0) (2021-08-26)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v5.1.1...v6.0.0)
@@ -135,7 +172,7 @@ After consulting with the community, it was decided **not** to remove traditiona
 **Fixed bugs:**
 
 - validate\_numeric\(\) and friends are deprecated in stdlib [\#111](https://github.com/voxpupuli/puppet-snmp/issues/111)
-- Unknown variable: '::snmp\_agentaddress' error [\#65](https://github.com/voxpupuli/puppet-snmp/issues/65)
+- Unknown variable: 'snmp\_agentaddress' error [\#65](https://github.com/voxpupuli/puppet-snmp/issues/65)
 - Fix typo in snmp::params: s/extemds/extends/ [\#133](https://github.com/voxpupuli/puppet-snmp/pull/133) ([chundaoc](https://github.com/chundaoc))
 
 **Closed issues:**
