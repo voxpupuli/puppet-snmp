@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v7.1.0](https://github.com/voxpupuli/puppet-snmp/tree/v7.1.0) (2024-01-24)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v7.0.0...v7.1.0)
+
+**Merged pull requests:**
+
+- Support puppet-systemd 5.x and 6.x [\#283](https://github.com/voxpupuli/puppet-snmp/pull/283) ([silug](https://github.com/silug))
+
 ## [v7.0.0](https://github.com/voxpupuli/puppet-snmp/tree/v7.0.0) (2024-01-12)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v6.0.0...v7.0.0)
