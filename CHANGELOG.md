@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v7.2.0](https://github.com/voxpupuli/puppet-snmp/tree/v7.2.0) (2024-10-01)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v7.1.0...v7.2.0)
+
+**Breaking changes:**
+
+- Drop ubuntu 18.04 support [\#302](https://github.com/voxpupuli/puppet-snmp/pull/302) ([bastelfreak](https://github.com/bastelfreak))
+- Drop FreeBSD 12 support [\#301](https://github.com/voxpupuli/puppet-snmp/pull/301) ([bastelfreak](https://github.com/bastelfreak))
+- Drop EoL Debian 10 [\#298](https://github.com/voxpupuli/puppet-snmp/pull/298) ([bastelfreak](https://github.com/bastelfreak))
+- Drop EoL CentOS 8 [\#297](https://github.com/voxpupuli/puppet-snmp/pull/297) ([bastelfreak](https://github.com/bastelfreak))
+- Drop EL7 support [\#296](https://github.com/voxpupuli/puppet-snmp/pull/296) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add support for Rocky and AlmaLinux [\#303](https://github.com/voxpupuli/puppet-snmp/pull/303) ([silug](https://github.com/silug))
+- Add FreeBSD 14 support [\#300](https://github.com/voxpupuli/puppet-snmp/pull/300) ([bastelfreak](https://github.com/bastelfreak))
+- Add Ubuntu 24.04 support [\#299](https://github.com/voxpupuli/puppet-snmp/pull/299) ([bastelfreak](https://github.com/bastelfreak))
+- Add OracleLinux 8 / 9 support [\#295](https://github.com/voxpupuli/puppet-snmp/pull/295) ([bastelfreak](https://github.com/bastelfreak))
+
+**Merged pull requests:**
+
+- update puppet-systemd upper bound to 8.0.0 [\#289](https://github.com/voxpupuli/puppet-snmp/pull/289) ([TheMeier](https://github.com/TheMeier))
+
 ## [v7.1.0](https://github.com/voxpupuli/puppet-snmp/tree/v7.1.0) (2024-01-24)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v7.0.0...v7.1.0)
