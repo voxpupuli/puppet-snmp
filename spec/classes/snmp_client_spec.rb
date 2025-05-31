@@ -126,13 +126,10 @@ describe 'snmp::client' do
       end
       let(:params) { { snmp_config: ['defVersion 2c', 'defCommunity public'] } }
 
-      it { is_expected.to contain_file('snmp.conf') }
-
-      it 'contains File[snmp.conf] with contents "defVersion 2c" and "defCommunity public"' do
-        verify_contents(catalogue, 'snmp.conf', [
-                          'defVersion 2c',
-                          'defCommunity public'
-                        ])
+      it do
+        is_expected.to contain_file('snmp.conf').
+          with_content(%r{defVersion 2c}).
+          with_content(%r{defCommunity public})
       end
     end
   end
