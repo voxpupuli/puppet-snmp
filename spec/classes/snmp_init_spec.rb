@@ -20,33 +20,31 @@ describe 'snmp' do
 
         # TODO: add more contents for File[snmpd.conf]
         it 'contains File[snmpd.conf] with expected contents' do
-          verify_contents(catalogue, 'snmpd.conf', [
-                            'agentaddress udp:127.0.0.1:161,udp6:[::1]:161',
-                            'rocommunity public 127.0.0.1',
-                            'rocommunity6 public ::1',
-                            'com2sec notConfigUser  default       public',
-                            'com2sec6 notConfigUser  default       public',
-                            'group   notConfigGroup v1            notConfigUser',
-                            'group   notConfigGroup v2c           notConfigUser',
-                            'view    systemview    included   .1.3.6.1.2.1.1',
-                            'view    systemview    included   .1.3.6.1.2.1.25.1.1',
-                            'access  notConfigGroup ""      any       noauth    exact  systemview none  none',
-                            'sysLocation Unknown',
-                            'sysContact Unknown',
-                            'sysServices 72',
-                            'dontLogTCPWrappersConnects no'
-                          ])
+          is_expected.to contain_file('snmpd.conf').
+            with_content(%r{agentaddress udp:127.0.0.1:161,udp6:\[::1\]:161}).
+            with_content(%r{rocommunity public 127.0.0.1}).
+            with_content(%r{rocommunity6 public ::1}).
+            with_content(%r{com2sec notConfigUser  default       public}).
+            with_content(%r{com2sec6 notConfigUser  default       public}).
+            with_content(%r{group   notConfigGroup v1            notConfigUser}).
+            with_content(%r{group   notConfigGroup v2c           notConfigUser}).
+            with_content(%r{view    systemview    included   .1.3.6.1.2.1.1}).
+            with_content(%r{view    systemview    included   .1.3.6.1.2.1.25.1.1}).
+            with_content(%r{access  notConfigGroup ""      any       noauth    exact  systemview none  none}).
+            with_content(%r{sysLocation Unknown}).
+            with_content(%r{sysContact Unknown}).
+            with_content(%r{sysServices 72}).
+            with_content(%r{dontLogTCPWrappersConnects no})
         end
       end
 
       unless NO_SNMPTRAPD.include?(facts[:os]['family'])
         # TODO: add more contents for File[snmptrapd.conf]
         it 'contains File[snmptrapd.conf] with correct contents' do
-          verify_contents(catalogue, 'snmptrapd.conf', [
-                            'doNotLogTraps no',
-                            'authCommunity log,execute,net public',
-                            'disableAuthorization no'
-                          ])
+          is_expected.to contain_file('snmptrapd.conf').
+            with_content(%r{doNotLogTraps no}).
+            with_content(%r{authCommunity log,execute,net public}).
+            with_content(%r{disableAuthorization no})
         end
       end
 
@@ -139,27 +137,23 @@ describe 'snmp' do
         case facts[:os]['release']['major']
         when '6'
           it 'contains File[snmpd.sysconfig] with contents "OPTIONS="-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'OPTIONS="-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid"'
-                            ])
+            is_expected.to contain_file('snmpd.sysconfig').
+              with_content(%r{OPTIONS="-LS0-6d -Lf /dev/null -p /var/run/snmpd.pid"})
           end
 
           it 'contains File[snmptrapd.sysconfig] with contents "OPTIONS="-Lsd -p /var/run/snmptrapd.pid""' do
-            verify_contents(catalogue, 'snmptrapd.sysconfig', [
-                              'OPTIONS="-Lsd -p /var/run/snmptrapd.pid"'
-                            ])
+            is_expected.to contain_file('snmptrapd.sysconfig').
+              with_content(%r{OPTIONS="-Lsd -p /var/run/snmptrapd.pid"})
           end
         else
           it 'contains File[snmpd.sysconfig] with contents "OPTIONS="-LS0-6d"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'OPTIONS="-LS0-6d"'
-                            ])
+            is_expected.to contain_file('snmpd.sysconfig').
+              with_content(%r{OPTIONS="-LS0-6d"})
           end
 
           it 'contains File[snmptrapd.sysconfig] with contents "OPTIONS="-Lsd"' do
-            verify_contents(catalogue, 'snmptrapd.sysconfig', [
-                              'OPTIONS="-Lsd"'
-                            ])
+            is_expected.to contain_file('snmptrapd.sysconfig').
+              with_content(%r{OPTIONS="-Lsd"})
           end
         end
 
@@ -293,9 +287,8 @@ describe 'snmp' do
           it { is_expected.to contain_file('snmpd.sysconfig') }
 
           it 'contains File[snmpd.sysconfig] with contents "OPTIONS=\'blah\'"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'OPTIONS="blah"'
-                            ])
+            is_expected.to contain_file('snmpd.sysconfig').
+              with_content(%r{OPTIONS="blah"})
           end
         end
 
@@ -305,9 +298,8 @@ describe 'snmp' do
           it { is_expected.to contain_file('snmptrapd.sysconfig') }
 
           it 'contains File[snmptrapd.sysconfig] with contents "OPTIONS=\'bleh\'"' do
-            verify_contents(catalogue, 'snmptrapd.sysconfig', [
-                              'OPTIONS="bleh"'
-                            ])
+            is_expected.to contain_file('snmptrapd.sysconfig').
+              with_content(%r{OPTIONS="bleh"})
           end
         end
 
@@ -315,9 +307,8 @@ describe 'snmp' do
           let(:params) { { com2sec: ['SomeString'] } }
 
           it 'contains File[snmpd.conf] with contents "com2sec SomeString"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'com2sec SomeString'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{com2sec SomeString})
           end
         end
 
@@ -325,9 +316,8 @@ describe 'snmp' do
           let(:params) { { com2sec6: ['SomeString'] } }
 
           it 'contains File[snmpd.conf] with contents "com2sec6 SomeString"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'com2sec6 SomeString'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{com2sec6 SomeString})
           end
         end
 
@@ -335,9 +325,8 @@ describe 'snmp' do
           let(:params) { { groups: ['SomeString'] } }
 
           it 'contains File[snmpd.conf] with contents "group SomeString"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'group   SomeString'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{group   SomeString})
           end
         end
 
@@ -345,10 +334,9 @@ describe 'snmp' do
           let(:params) { { views: %w[SomeArray1 SomeArray2] } }
 
           it 'contains File[snmpd.conf] with contents from array' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'view    SomeArray1',
-                              'view    SomeArray2'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{view    SomeArray1}).
+              with_content(%r{view    SomeArray2})
           end
         end
 
@@ -356,10 +344,9 @@ describe 'snmp' do
           let(:params) { { accesses: %w[SomeArray1 SomeArray2] } }
 
           it 'contains File[snmpd.conf] with contents from array' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'access  SomeArray1',
-                              'access  SomeArray2'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{access  SomeArray1}).
+              with_content(%r{access  SomeArray2})
           end
         end
 
@@ -367,9 +354,8 @@ describe 'snmp' do
           let(:params) { { dlmod: ['SomeString'] } }
 
           it 'contains File[snmpd.conf] with contents "dlmod SomeString"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'dlmod SomeString'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{dlmod SomeString})
           end
         end
 
@@ -377,10 +363,9 @@ describe 'snmp' do
           let(:params) { { extends: %w[SomeArray1 SomeArray2] } }
 
           it 'contains File[snmpd.conf] with contents from array' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'extend SomeArray1',
-                              'extend SomeArray2'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{extend SomeArray1}).
+              with_content(%r{extend SomeArray2})
           end
         end
 
@@ -388,10 +373,9 @@ describe 'snmp' do
           let(:params) { { pass: %w[SomeArray1 SomeArray2] } }
 
           it 'contains File[snmpd.conf] with contents from array' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'pass SomeArray1',
-                              'pass SomeArray2'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{pass SomeArray1}).
+              with_content(%r{pass SomeArray2})
           end
         end
 
@@ -399,26 +383,19 @@ describe 'snmp' do
           let(:params) { { pass_persist: %w[SomeArray1 SomeArray2] } }
 
           it 'contains File[snmpd.conf] with contents from array' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'pass_persist SomeArray1',
-                              'pass_persist SomeArray2'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{pass_persist SomeArray1}).
+              with_content(%r{pass_persist SomeArray2})
           end
         end
 
         describe 'openmanage_enable => true' do
           let(:params) { { openmanage_enable: true } }
 
-          it 'contains File[snmpd.conf] with contents "smuxpeer .1.3.6.1.4.1.674.10892.1"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'smuxpeer .1.3.6.1.4.1.674.10892.1'
-                            ])
-          end
-
-          it 'contains File[snmpd.conf] with contents "smuxpeer .1.3.6.1.4.1.674.10893.1"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'smuxpeer .1.3.6.1.4.1.674.10893.1'
-                            ])
+          it 'contains File[snmpd.conf] with smuxpeers content' do
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{smuxpeer .1.3.6.1.4.1.674.10892.1}).
+              with_content(%r{smuxpeer .1.3.6.1.4.1.674.10893.1})
           end
         end
 
@@ -426,9 +403,8 @@ describe 'snmp' do
           let(:params) { { agentaddress: ['1.2.3.4', '8.6.7.5:222'] } }
 
           it 'contains File[snmpd.conf] with contents "agentaddress 1.2.3.4,8.6.7.5:222"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'agentaddress 1.2.3.4,8.6.7.5:222'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{agentaddress 1.2.3.4,8.6.7.5:222})
           end
         end
 
@@ -436,9 +412,8 @@ describe 'snmp' do
           let(:params) { { do_not_log_tcpwrappers: 'yes' } }
 
           it 'contains File[snmpd.conf] with contents "dontLogTCPWrappersConnects yes' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'dontLogTCPWrappersConnects yes'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{dontLogTCPWrappersConnects yes})
           end
         end
 
@@ -446,9 +421,8 @@ describe 'snmp' do
           let(:params) { { snmptrapdaddr: ['5.6.7.8', '2.3.4.5:3333'] } }
 
           it 'contains File[snmptrapd.conf] with contents "snmpTrapdAddr 5.6.7.8,2.3.4.5:3333"' do
-            verify_contents(catalogue, 'snmptrapd.conf', [
-                              'snmpTrapdAddr 5.6.7.8,2.3.4.5:3333'
-                            ])
+            is_expected.to contain_file('snmptrapd.conf').
+              with_content(%r{snmpTrapdAddr 5.6.7.8,2.3.4.5:3333})
           end
         end
 
@@ -456,10 +430,9 @@ describe 'snmp' do
           let(:params) { { snmpd_config: ['option 1', 'option 2'] } }
 
           it 'contains File[snmpd.conf] with contents "option1" and "option 2"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'option 1',
-                              'option 2'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{option 1}).
+              with_content(%r{option 1})
           end
         end
 
@@ -467,10 +440,9 @@ describe 'snmp' do
           let(:params) { { snmptrapd_config: ['option 3', 'option 4'] } }
 
           it 'contains File[snmptrapd.conf] with contents "option 3" and "option 4"' do
-            verify_contents(catalogue, 'snmptrapd.conf', [
-                              'option 3',
-                              'option 4'
-                            ])
+            is_expected.to contain_file('snmptrapd.conf').
+              with_content(%r{option 3}).
+              with_content(%r{option 4})
           end
         end
 
@@ -478,10 +450,9 @@ describe 'snmp' do
           let(:params) { { ro_network: ['127.0.0.1', '192.168.1.1/24'] } }
 
           it 'contains File[snmpd.conf] with contents "127.0.0.1" and "192.168.1.1/24"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'rocommunity public 127.0.0.1',
-                              'rocommunity public 192.168.1.1/24'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{rocommunity public 127.0.0.1}).
+              with_content(%r{rocommunity public 192.168.1.1/24})
           end
         end
 
@@ -489,9 +460,8 @@ describe 'snmp' do
           let(:params) { { ro_network: '127.0.0.2' } }
 
           it 'contains File[snmpd.conf] with contents "127.0.0.2"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'rocommunity public 127.0.0.2'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{rocommunity public 127.0.0.2})
           end
         end
 
@@ -499,17 +469,15 @@ describe 'snmp' do
           let(:params) { { ro_community: %w[a b], ro_network: '127.0.0.2' } }
 
           it 'contains File[snmpd.conf] with contents "a 127.0.0.2" and "b 127.0.0.2"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'rocommunity a 127.0.0.2',
-                              'rocommunity b 127.0.0.2'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{rocommunity a 127.0.0.2}).
+              with_content(%r{rocommunity b 127.0.0.2})
           end
 
           it 'contains File[snmptrapd.conf] with contents "a" and "b"' do
-            verify_contents(catalogue, 'snmptrapd.conf', [
-                              'authCommunity log,execute,net a',
-                              'authCommunity log,execute,net b'
-                            ])
+            is_expected.to contain_file('snmptrapd.conf').
+              with_content(%r{authCommunity log,execute,net a}).
+              with_content(%r{authCommunity log,execute,net b})
           end
         end
 
@@ -517,9 +485,8 @@ describe 'snmp' do
           let(:params) { { master: true } }
 
           it 'contains File[snmpd.conf] with contents "master agentx"' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'master agentx'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{master agentx})
           end
         end
 
@@ -536,14 +503,13 @@ describe 'snmp' do
           end
 
           it 'contains File[snmpd.conf] with correct contents' do
-            verify_contents(catalogue, 'snmpd.conf', [
-                              'master agentx',
-                              'agentXPerms 0644',
-                              'agentXPingInterval 5',
-                              'agentXSocket unix:/var/agentx/master',
-                              'agentXTimeout 10',
-                              'agentXRetries 10'
-                            ])
+            is_expected.to contain_file('snmpd.conf').
+              with_content(%r{master agentx}).
+              with_content(%r{agentXPerms 0644}).
+              with_content(%r{agentXPingInterval 5}).
+              with_content(%r{agentXSocket unix:/var/agentx/master}).
+              with_content(%r{agentXTimeout 10}).
+              with_content(%r{agentXRetries 10})
           end
         end
 
@@ -719,15 +685,13 @@ describe 'snmp' do
           it { is_expected.to contain_service('snmptrapd').with_ensure('running') }
 
           it 'contains File[snmpd.sysconfig] with content "SNMPDRUN=no"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'SNMPDRUN=no'
-                            ])
+            is_expected.to contain_file('snmpd.sysconfig').
+              with_content(%r{SNMPDRUN=no})
           end
 
           it 'contains File[snmptrapd.sysconfig] with content "TRAPDRUN=yes"' do
-            verify_contents(catalogue, 'snmptrapd.sysconfig', [
-                              'TRAPDRUN=yes'
-                            ])
+            is_expected.to contain_file('snmptrapd.sysconfig').
+              with_content(%r{TRAPDRUN=yes})
           end
         end
 
@@ -743,9 +707,8 @@ describe 'snmp' do
           it { is_expected.to contain_file('snmpd.sysconfig') }
 
           it 'contains File[snmpd.sysconfig] with contents "SNMPDOPTS=\'blah\'"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'SNMPDOPTS=\'blah\''
-                            ])
+            is_expected.to contain_file('snmpd.sysconfig').
+              with_content(%r{SNMPDOPTS='blah'})
           end
         end
 
@@ -761,9 +724,8 @@ describe 'snmp' do
           it { is_expected.to contain_file('snmpd.sysconfig') }
 
           it 'contains File[snmpd.sysconfig] with contents "TRAPDOPTS=\'bleh\'"' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'TRAPDOPTS=\'bleh\''
-                            ])
+            is_expected.to contain_file('snmpd.sysconfig').
+              with_content(%r{TRAPDOPTS='bleh'})
           end
         end
       when 'Suse'
@@ -805,9 +767,8 @@ describe 'snmp' do
         }
 
         it 'contains File[snmpd.sysconfig] with contents "SNMPD_LOGLEVEL="d""' do
-          verify_contents(catalogue, 'snmpd.sysconfig', [
-                            'SNMPD_LOGLEVEL="d"'
-                          ])
+          is_expected.to contain_file('snmpd.sysconfig').
+            with_content(%r{SNMPD_LOGLEVEL="d"})
         end
 
         it {
@@ -883,9 +844,8 @@ describe 'snmp' do
           it { is_expected.to contain_file('snmpd.sysconfig') }
 
           it 'contains File[snmpd.sysconfig] with contents "SNMPD_LOGLEVEL="blah""' do
-            verify_contents(catalogue, 'snmpd.sysconfig', [
-                              'SNMPD_LOGLEVEL="blah"'
-                            ])
+            is_expected.to contain_file('snmpd.sysconfig').
+              with_content(%r{SNMPD_LOGLEVEL="blah"})
           end
         end
       when 'FreeBSD'
