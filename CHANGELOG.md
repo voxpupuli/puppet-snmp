@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v7.3.0](https://github.com/voxpupuli/puppet-snmp/tree/v7.3.0) (2025-06-02)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v7.2.0...v7.3.0)
+
+**Implemented enhancements:**
+
+- metadata.json: Add OpenVox [\#308](https://github.com/voxpupuli/puppet-snmp/pull/308) ([jstraw](https://github.com/jstraw))
+- puppet/systemd: allow 8.x [\#305](https://github.com/voxpupuli/puppet-snmp/pull/305) ([jay7x](https://github.com/jay7x))
+
+**Merged pull requests:**
+
+- unit tests: replace PSH function verify\_contents [\#310](https://github.com/voxpupuli/puppet-snmp/pull/310) ([h-haaks](https://github.com/h-haaks))
+
 ## [v7.2.0](https://github.com/voxpupuli/puppet-snmp/tree/v7.2.0) (2024-10-01)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v7.1.0...v7.2.0)
@@ -378,10 +391,6 @@ After consulting with the community, it was decided **not** to remove traditiona
 ## [3.0.0](https://github.com/voxpupuli/puppet-snmp/tree/3.0.0) (2013-07-13)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/2.0.0...3.0.0)
-
-**Implemented enhancements:**
-
-- Trapd extended [\#7](https://github.com/voxpupuli/puppet-snmp/pull/7) ([ghost](https://github.com/ghost))
 
 ## [2.0.0](https://github.com/voxpupuli/puppet-snmp/tree/2.0.0) (2013-06-23)
 
