@@ -541,7 +541,7 @@ describe 'snmp' do
           # TRAPDOPTS begins being set by the package in Ubuntu 22.04; we should not log a failure
           # in this case
           case facts[:os]['release']['major']
-          when '11', '12', '13', '20.04', '22.04', '24.04'
+          when '11', '12', '13', '22.04', '24.04'
             it { is_expected.to contain_file('snmpd.sysconfig').without_content(%r{TRAPDRUN|TRAPDOPTS}) }
           end
         end
@@ -622,20 +622,7 @@ describe 'snmp' do
         }
 
         case facts[:os]['release']['major']
-        when '10', '18.04'
-          it {
-            is_expected.to contain_systemd__dropin_file('snmpd.conf').with_content(
-              %r{ExecStart=\nExecStart=/usr/sbin/snmpd -Lsd -Lf /dev/null -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f -p /run/snmpd.pid}
-            )
-          }
-
-          it {
-            is_expected.to contain_systemd__dropin_file('snmptrapd.conf').with_content(
-              %r{ExecStart=\nExecStart=/usr/sbin/snmptrapd -Lsd -f -p /run/snmptrapd.pid}
-            )
-          }
-
-        when '11', '20.04'
+        when '11'
           it {
             is_expected.to contain_systemd__dropin_file('snmpd.conf').with_content(
               %r{ExecStart=\nExecStart=/usr/sbin/snmpd -LOw -u Debian-snmp -g Debian-snmp -I -smux,mteTrigger,mteTriggerConf -f -p /run/snmpd.pid}
