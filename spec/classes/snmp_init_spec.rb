@@ -541,7 +541,7 @@ describe 'snmp' do
           # TRAPDOPTS begins being set by the package in Ubuntu 22.04; we should not log a failure
           # in this case
           case facts[:os]['release']['major']
-          when '10', '11', '12', '18.04', '20.04'
+          when '11', '12', '13', '20.04', '22.04', '24.04'
             it { is_expected.to contain_file('snmpd.sysconfig').without_content(%r{TRAPDRUN|TRAPDOPTS}) }
           end
         end
