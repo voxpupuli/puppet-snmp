@@ -1,7 +1,7 @@
 # Net-SNMP
 
 [![License](https://img.shields.io/github/license/voxpupuli/puppet-snmp.svg)](https://github.com/voxpupuli/puppet-snmp/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/voxpupuli/puppet-snmp.svg?branch=master)](https://travis-ci.org/voxpupuli/puppet-snmp)
+![Build Status](https://github.com/voxpupuli/puppet-snmp/actions/workflows/ci.yml/badge.svg?branch=master)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/snmp.svg)](https://forge.puppetlabs.com/puppet/snmp)
 [![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/snmp.svg)](https://forge.puppetlabs.com/puppet/snmp)
 [![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/snmp.svg)](https://forge.puppetlabs.com/puppet/snmp)
