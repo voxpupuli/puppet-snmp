@@ -160,7 +160,7 @@ Default value: `'public'`
 
 ##### <a name="-snmp--rw_community"></a>`rw_community`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
 Read-write (RW) community string or array agent.
 
@@ -168,7 +168,7 @@ Default value: `undef`
 
 ##### <a name="-snmp--rw_community6"></a>`rw_community6`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
 Read-write (RW) community string or array for IPv6 agent.
 

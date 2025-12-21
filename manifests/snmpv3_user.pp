@@ -65,9 +65,12 @@ define snmp::snmpv3_user (
 
   if $create {
     unless defined(Exec["stop-${service_name}"]) {
-      $command = $facts['service_provider'] ? {
-        'systemd' => "systemctl stop ${service_name}; sleep 5",
-        default   => "service ${service_name} stop ; sleep 5",
+      if $facts['service_provider'] == 'systemd' {
+        $command = "systemctl stop ${service_name}; sleep 5"
+        $check_status_command = "systemctl is-active --quiet ${service_name}"
+      } else {
+        $command = "service ${service_name} stop ; sleep 5"
+        $check_status_command = "service ${service_name} status | grep -q running"
       }
 
       exec { "stop-${service_name}":
@@ -75,6 +78,7 @@ define snmp::snmpv3_user (
         user    => 'root',
         cwd     => '/',
         path    => '/bin:/sbin:/usr/bin:/usr/sbin',
+        unless  => $check_status_command,
         require => File['var-net-snmp'],
       }
       if $snmp::manage_packages {
