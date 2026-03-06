@@ -7,8 +7,8 @@ describe 'snmp::snmpv3_usm_hash' do
     it {
       is_expected.to run.with_params('MD5',
                                      '0x000000000000000000000002',
-                                     'maplesyrup').
-        and_return('0x526f5eed9fcce26f8964c2930787d82b')
+                                     'maplesyrup')
+                        .and_return('0x526f5eed9fcce26f8964c2930787d82b')
     }
   end
 
@@ -16,8 +16,8 @@ describe 'snmp::snmpv3_usm_hash' do
     it {
       is_expected.to run.with_params('SHA',
                                      '0x000000000000000000000002',
-                                     'maplesyrup').
-        and_return('0x6695febc9288e36282235fc7151f128497b38f3f')
+                                     'maplesyrup')
+                        .and_return('0x6695febc9288e36282235fc7151f128497b38f3f')
     }
   end
 
@@ -26,8 +26,8 @@ describe 'snmp::snmpv3_usm_hash' do
       is_expected.to run.with_params('SHA',
                                      '0x000000000000000000000002',
                                      'maplesyrup',
-                                     128).
-        and_return('0x6695febc9288e36282235fc7151f1284')
+                                     128)
+                        .and_return('0x6695febc9288e36282235fc7151f1284')
     }
   end
 end
