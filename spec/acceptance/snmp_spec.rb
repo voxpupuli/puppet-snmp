@@ -116,8 +116,9 @@ describe 'snmp class' do
       pp = %(
         class { 'snmp':
           trap_service_ensure => 'running',
-          agentaddress  => [ 'udp:127.0.0.1:1161' ],
-          snmptrapdaddr => [ 'udp:127.0.0.1:1162' ],
+          agentaddress        => [ 'udp:127.0.0.1:1161' ],
+          snmptrapdaddr       => [ 'udp:127.0.0.1:1162' ],
+          snmptrapd_options   => '-LOw -f udp:127.0.0.1:1162 udp6:1162',
         }
       )
       apply_manifest(pp, catch_failures: true)

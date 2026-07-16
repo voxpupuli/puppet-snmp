@@ -518,7 +518,7 @@ class snmp (
     systemd::dropin_file { 'snmptrapd.conf':
       unit    => 'snmptrapd.service',
       content => epp($template_snmptrapd_service_dropin),
-    } ~> Service['snmpd']
+    } ~> Service['snmptrapd']
 
     # Note: The snmptrapd.systemd file is ignored in current versions of Debian
     # and Ubuntu where the snmp daemons are managed by systemd. This is for
