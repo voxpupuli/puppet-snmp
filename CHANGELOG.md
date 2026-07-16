@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v8.0.0](https://github.com/voxpupuli/puppet-snmp/tree/v8.0.0) (2026-07-16)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v7.3.0...v8.0.0)
+
+**Breaking changes:**
+
+- drop EOL Debian 9 and 10 leftovers [\#320](https://github.com/voxpupuli/puppet-snmp/pull/320) ([alaunay](https://github.com/alaunay))
+- Drop EOL Ubuntu 18.04 and 20.04 [\#319](https://github.com/voxpupuli/puppet-snmp/pull/319) ([alaunay](https://github.com/alaunay))
+- Drop puppet, update openvox minimum version to 8.19 [\#314](https://github.com/voxpupuli/puppet-snmp/pull/314) ([TheMeier](https://github.com/TheMeier))
+
+**Implemented enhancements:**
+
+- Add support for FreeBSD 15 [\#324](https://github.com/voxpupuli/puppet-snmp/pull/324) ([smortex](https://github.com/smortex))
+- add support for Debian 13 [\#321](https://github.com/voxpupuli/puppet-snmp/pull/321) ([alaunay](https://github.com/alaunay))
+
+**Fixed bugs:**
+
+- fix: notifying snmptrapd service on Debian/Ubuntu  [\#317](https://github.com/voxpupuli/puppet-snmp/pull/317) ([pccibot](https://github.com/pccibot))
+
+**Merged pull requests:**
+
+- Update  systemd module version [\#326](https://github.com/voxpupuli/puppet-snmp/pull/326) ([ndubois](https://github.com/ndubois))
+
 ## [v7.3.0](https://github.com/voxpupuli/puppet-snmp/tree/v7.3.0) (2025-06-06)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-snmp/compare/v7.2.0...v7.3.0)
