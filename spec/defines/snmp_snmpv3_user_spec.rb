@@ -16,14 +16,14 @@ describe 'snmp::snmpv3_user' do
 
           let :params do
             {
-              authpass: 'myauthpass'
+              authpass: 'myauthpass',
             }
           end
 
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              user: 'root'
+              user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
@@ -31,7 +31,7 @@ describe 'snmp::snmpv3_user' do
             is_expected.to contain_file_line('create-snmpv3-user-myDEFAULTuser').with(
               path:  '/var/lib/net-snmp/snmpd.conf',
               line:  'createUser myDEFAULTuser SHA "myauthpass"',
-              match: '^createUser myDEFAULTuser '
+              match: '^createUser myDEFAULTuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -44,14 +44,14 @@ describe 'snmp::snmpv3_user' do
               authpass: 'myauthpass',
               authtype: 'MD5',
               privpass: 'myprivpass',
-              privtype: 'DES'
+              privtype: 'DES',
             }
           end
 
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              user: 'root'
+              user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
@@ -59,7 +59,7 @@ describe 'snmp::snmpv3_user' do
             is_expected.to contain_file_line('create-snmpv3-user-myALLuser').with(
               path:  '/var/lib/net-snmp/snmpd.conf',
               line:  'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
-              match: '^createUser myALLuser '
+              match: '^createUser myALLuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -70,14 +70,14 @@ describe 'snmp::snmpv3_user' do
           let :params do
             {
               authpass: 'myauthpass',
-              daemon: 'snmptrapd'
+              daemon: 'snmptrapd',
             }
           end
 
           it {
             is_expected.to contain_exec('stop-snmptrapd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              user: 'root'
+              user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmptrapd.conf')
@@ -85,7 +85,7 @@ describe 'snmp::snmpv3_user' do
             is_expected.to contain_file_line('create-snmpv3-user-myTRAPuser').with(
               path:  '/var/lib/net-snmp/snmptrapd.conf',
               line:  'createUser myTRAPuser SHA "myauthpass"',
-              match: '^createUser myTRAPuser '
+              match: '^createUser myTRAPuser ',
             ).that_subscribes_to(['Exec[stop-snmptrapd]']).that_comes_before('Service[snmptrapd]')
           }
         end
@@ -95,14 +95,14 @@ describe 'snmp::snmpv3_user' do
 
           let :params do
             {
-              authpass: 'myauthpass'
+              authpass: 'myauthpass',
             }
           end
 
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              user: 'root'
+              user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/snmp/snmpd.conf')
@@ -110,7 +110,7 @@ describe 'snmp::snmpv3_user' do
             is_expected.to contain_file_line('create-snmpv3-user-myDEFAULTuser').with(
               path:  '/var/lib/snmp/snmpd.conf',
               line:  'createUser myDEFAULTuser SHA "myauthpass"',
-              match: '^createUser myDEFAULTuser '
+              match: '^createUser myDEFAULTuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -123,14 +123,14 @@ describe 'snmp::snmpv3_user' do
               authpass: 'myauthpass',
               authtype: 'MD5',
               privpass: 'myprivpass',
-              privtype: 'DES'
+              privtype: 'DES',
             }
           end
 
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              user: 'root'
+              user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/snmp/snmpd.conf')
@@ -138,7 +138,7 @@ describe 'snmp::snmpv3_user' do
             is_expected.to contain_file_line('create-snmpv3-user-myALLuser').with(
               path:  '/var/lib/snmp/snmpd.conf',
               line:  'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
-              match: '^createUser myALLuser '
+              match: '^createUser myALLuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -149,14 +149,14 @@ describe 'snmp::snmpv3_user' do
           let :params do
             {
               authpass: 'myauthpass',
-              daemon: 'snmptrapd'
+              daemon: 'snmptrapd',
             }
           end
 
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              user: 'root'
+              user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/snmp/snmpd.conf')
@@ -164,7 +164,7 @@ describe 'snmp::snmpv3_user' do
             is_expected.to contain_file_line('create-snmpv3-user-myTRAPuser').with(
               path:  '/var/lib/snmp/snmpd.conf',
               line:  'createUser myTRAPuser SHA "myauthpass"',
-              match: '^createUser myTRAPuser '
+              match: '^createUser myTRAPuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -174,14 +174,14 @@ describe 'snmp::snmpv3_user' do
 
           let :params do
             {
-              authpass: 'myauthpass'
+              authpass: 'myauthpass',
             }
           end
 
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              user: 'root'
+              user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
@@ -189,7 +189,7 @@ describe 'snmp::snmpv3_user' do
             is_expected.to contain_file_line('create-snmpv3-user-myDEFAULTuser').with(
               path:  '/var/lib/net-snmp/snmpd.conf',
               line:  'createUser myDEFAULTuser SHA "myauthpass"',
-              match: '^createUser myDEFAULTuser '
+              match: '^createUser myDEFAULTuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -202,14 +202,14 @@ describe 'snmp::snmpv3_user' do
               authpass: 'myauthpass',
               authtype: 'MD5',
               privpass: 'myprivpass',
-              privtype: 'DES'
+              privtype: 'DES',
             }
           end
 
           it {
             is_expected.to contain_exec('stop-snmpd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              user: 'root'
+              user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
@@ -217,7 +217,7 @@ describe 'snmp::snmpv3_user' do
             is_expected.to contain_file_line('create-snmpv3-user-myALLuser').with(
               path:  '/var/lib/net-snmp/snmpd.conf',
               line:  'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
-              match: '^createUser myALLuser '
+              match: '^createUser myALLuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -228,14 +228,14 @@ describe 'snmp::snmpv3_user' do
           let :params do
             {
               authpass: 'myauthpass',
-              daemon: 'snmptrapd'
+              daemon: 'snmptrapd',
             }
           end
 
           it {
             is_expected.to contain_exec('stop-snmptrapd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
-              user: 'root'
+              user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmptrapd.conf')
@@ -243,7 +243,7 @@ describe 'snmp::snmpv3_user' do
             is_expected.to contain_file_line('create-snmpv3-user-myTRAPuser').with(
               path:  '/var/lib/net-snmp/snmptrapd.conf',
               line:  'createUser myTRAPuser SHA "myauthpass"',
-              match: '^createUser myTRAPuser '
+              match: '^createUser myTRAPuser ',
             ).that_subscribes_to(['Exec[stop-snmptrapd]']).that_comes_before('Service[snmptrapd]')
           }
         end
@@ -257,7 +257,7 @@ describe 'snmp::snmpv3_user' do
             authpass: 'maplesyrup',
             authtype: 'MD5',
             privpass: 'maplesyrup',
-            privtype: 'AES'
+            privtype: 'AES',
           }
         end
 
@@ -274,7 +274,7 @@ describe 'snmp::snmpv3_user' do
             authpass: 'maplesyrup',
             authtype: 'MD5',
             privpass: 'cornsyrup',
-            privtype: 'AES'
+            privtype: 'AES',
           }
         end
 
@@ -291,7 +291,7 @@ describe 'snmp::snmpv3_user' do
             authpass: 'cornsyrup',
             authtype: 'MD5',
             privpass: 'maplesyrup',
-            privtype: 'AES'
+            privtype: 'AES',
           }
         end
 
@@ -308,7 +308,7 @@ describe 'snmp::snmpv3_user' do
             authpass: 'cornsyrup',
             authtype: 'MD5',
             privpass: 'cornsyrup',
-            privtype: 'AES'
+            privtype: 'AES',
           }
         end
 
@@ -325,7 +325,7 @@ describe 'snmp::snmpv3_user' do
             authpass: 'maplesyrup',
             authtype: 'SHA',
             privpass: 'maplesyrup',
-            privtype: 'AES'
+            privtype: 'AES',
           }
         end
 
@@ -342,7 +342,7 @@ describe 'snmp::snmpv3_user' do
             authpass: 'maplesyrup',
             authtype: 'SHA',
             privpass: 'cornsyrup',
-            privtype: 'AES'
+            privtype: 'AES',
           }
         end
 
@@ -359,7 +359,7 @@ describe 'snmp::snmpv3_user' do
             authpass: 'cornsyrup',
             authtype: 'SHA',
             privpass: 'maplesyrup',
-            privtype: 'AES'
+            privtype: 'AES',
           }
         end
 
@@ -376,7 +376,7 @@ describe 'snmp::snmpv3_user' do
             authpass: 'cornsyrup',
             authtype: 'SHA',
             privpass: 'cornsyrup',
-            privtype: 'AES'
+            privtype: 'AES',
           }
         end
 
@@ -391,7 +391,7 @@ describe 'snmp::snmpv3_user' do
         let :params do
           {
             authpass: 'maplesyrup',
-            authtype: 'SHA'
+            authtype: 'SHA',
           }
         end
 
@@ -406,7 +406,7 @@ describe 'snmp::snmpv3_user' do
         let :params do
           {
             authpass: 'cornsyrup',
-            authtype: 'SHA'
+            authtype: 'SHA',
           }
         end
 
@@ -423,7 +423,7 @@ describe 'snmp::snmpv3_user' do
             authpass: 'cornsyrup',
             authtype: 'SHA',
             privpass: 'cornsyrup',
-            privtype: 'AES'
+            privtype: 'AES',
           }
         end
 

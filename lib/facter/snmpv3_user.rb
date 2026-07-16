@@ -60,7 +60,7 @@ Facter.add(:snmpv3_user) do
           authproto: authproto,
           authhash:  authhash,
           privproto: privproto,
-          privhash:  privhash
+          privhash:  privhash,
         }
       end
     rescue StandardError

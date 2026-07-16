@@ -264,10 +264,10 @@ class snmp (
   Enum['present','absent']                                        $ensure        = 'present',
   Array[String[1]]                                                $agentaddress  = ['udp:127.0.0.1:161', 'udp6:[::1]:161'],
   Array[String[1]]                                                $snmptrapdaddr = ['udp:127.0.0.1:162', 'udp6:[::1]:162'],
-  Variant[Undef, String[1], Array[String[1]]]                     $ro_community  = 'public',
-  Variant[Undef, String[1], Array[String[1]]]                     $ro_community6 = 'public',
-  Variant[Undef, String[1], Array[String[1]]]                     $rw_community  = undef,
-  Variant[Undef, String[1], Array[String[1]]]                     $rw_community6 = undef,
+  Variant[String[1], Array[String[1]]]                            $ro_community  = 'public',
+  Variant[String[1], Array[String[1]]]                            $ro_community6 = 'public',
+  Optional[Variant[String[1], Array[String[1]]]]                  $rw_community  = undef,
+  Optional[Variant[String[1], Array[String[1]]]]                  $rw_community6 = undef,
   Variant[Array, Stdlib::IP::Address::V4, Stdlib::IP::Address::V4::CIDR] $ro_network    = '127.0.0.1',
   Variant[Array, Stdlib::IP::Address::V6, Stdlib::IP::Address::V6::CIDR] $ro_network6   = '::1',
   Variant[Array, Stdlib::IP::Address::V4, Stdlib::IP::Address::V4::CIDR] $rw_network    = '127.0.0.1',
@@ -518,7 +518,7 @@ class snmp (
     systemd::dropin_file { 'snmptrapd.conf':
       unit    => 'snmptrapd.service',
       content => epp($template_snmptrapd_service_dropin),
-    } ~> Service['snmpd']
+    } ~> Service['snmptrapd']
 
     # Note: The snmptrapd.systemd file is ignored in current versions of Debian
     # and Ubuntu where the snmp daemons are managed by systemd. This is for

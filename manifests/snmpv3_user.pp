@@ -70,7 +70,7 @@ define snmp::snmpv3_user (
         default   => "service ${service_name} stop ; sleep 5",
       }
 
-      exec { "stop-${service_name}":
+      exec { "stop-${service_name}": # lint:ignore:exec_idempotency
         command => $command,
         user    => 'root',
         cwd     => '/',

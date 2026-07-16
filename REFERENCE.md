@@ -144,7 +144,7 @@ Default value: `['udp:127.0.0.1:162', 'udp6:[::1]:162']`
 
 ##### <a name="-snmp--ro_community"></a>`ro_community`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Read-only (RO) community string or array for agent and snmptrap daemon.
 
@@ -152,7 +152,7 @@ Default value: `'public'`
 
 ##### <a name="-snmp--ro_community6"></a>`ro_community6`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Variant[String[1], Array[String[1]]]`
 
 Read-only (RO) community string or array for IPv6 agent.
 
@@ -160,7 +160,7 @@ Default value: `'public'`
 
 ##### <a name="-snmp--rw_community"></a>`rw_community`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
 Read-write (RW) community string or array agent.
 
@@ -168,7 +168,7 @@ Default value: `undef`
 
 ##### <a name="-snmp--rw_community6"></a>`rw_community6`
 
-Data type: `Variant[Undef, String[1], Array[String[1]]]`
+Data type: `Optional[Variant[String[1], Array[String[1]]]]`
 
 Read-write (RW) community string or array for IPv6 agent.
 

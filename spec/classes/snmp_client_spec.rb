@@ -17,7 +17,7 @@ describe 'snmp::client' do
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
-            name: 'net-snmp-utils'
+            name: 'net-snmp-utils',
           )
         }
 
@@ -27,14 +27,14 @@ describe 'snmp::client' do
             mode: '0644',
             owner: 'root',
             group: 'root',
-            path: '/etc/snmp/snmp.conf'
+            path: '/etc/snmp/snmp.conf',
           ).that_requires(['Package[snmp-client]', 'File[/etc/snmp]'])
         }
       when 'Debian'
         it {
           is_expected.to contain_package('snmp-client').with(
             ensure: 'present',
-            name: 'snmp'
+            name: 'snmp',
           )
         }
 
@@ -44,7 +44,7 @@ describe 'snmp::client' do
             mode: '0644',
             owner: 'root',
             group: 'root',
-            path: '/etc/snmp/snmp.conf'
+            path: '/etc/snmp/snmp.conf',
           ).that_requires('Package[snmp-client]')
         }
       when 'Suse'
@@ -57,32 +57,32 @@ describe 'snmp::client' do
             owner: 'root',
             group: 'root',
             path: '/etc/snmp/snmp.conf',
-            require: nil
+            require: nil,
           )
         }
       when 'FreeBSD'
         it {
           is_expected.not_to contain_package('snmp-client').with(
             ensure: 'present',
-            name: 'net-snmp'
+            name: 'net-snmp',
           )
         }
 
         it {
           is_expected.to contain_file('snmp.conf').with(
-            path: '/usr/local/etc/snmp/snmp.conf'
+            path: '/usr/local/etc/snmp/snmp.conf',
           )
         }
       when 'Darwin'
         it {
           is_expected.not_to contain_package('snmp-client').with(
-            ensure: 'present'
+            ensure: 'present',
           )
         }
 
         it {
           is_expected.to contain_file('snmp.conf').with(
-            path: '/private/etc/snmp/snmp.conf'
+            path: '/private/etc/snmp/snmp.conf',
           )
         }
       end
@@ -127,9 +127,9 @@ describe 'snmp::client' do
       let(:params) { { snmp_config: ['defVersion 2c', 'defCommunity public'] } }
 
       it do
-        is_expected.to contain_file('snmp.conf').
-          with_content(%r{defVersion 2c}).
-          with_content(%r{defCommunity public})
+        is_expected.to contain_file('snmp.conf')
+          .with_content(%r{defVersion 2c})
+          .with_content(%r{defCommunity public})
       end
     end
   end
