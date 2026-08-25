@@ -189,6 +189,17 @@ class { 'snmp':
 }
 ```
 
+The passwords may be passed as `Sensitive` (e.g. via Hiera `lookup_options`
+`convert_to: Sensitive`); the generated `createUser` line is then marked
+`Sensitive` as well, so it is redacted in reports and not stored in PuppetDB:
+
+```puppet
+snmp::snmpv3_user { 'myuser':
+  authpass => Sensitive('1234auth'),
+  privpass => Sensitive('5678priv'),
+}
+```
+
 To install a SNMP version 3 user for snmptrapd:
 
 ```puppet

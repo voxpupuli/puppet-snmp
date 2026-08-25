@@ -249,6 +249,24 @@ describe 'snmp::snmpv3_user' do
         end
       end
 
+      describe 'with Sensitive passwords' do
+        let(:title) { 'sensuser' }
+
+        let :params do
+          {
+            authpass: sensitive('myauthpass'),
+            privpass: sensitive('myprivpass'),
+          }
+        end
+
+        it {
+          is_expected.to contain_file_line('create-snmpv3-user-sensuser').with(
+            line: sensitive('createUser sensuser SHA "myauthpass" AES "myprivpass"'),
+            match: '^createUser sensuser ',
+          )
+        }
+      end
+
       describe 'with correct authpass and privpass for md5user' do
         let(:title) { 'md5user' }
 
