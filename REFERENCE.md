@@ -841,9 +841,10 @@ The following parameters are available in the `snmp::snmpv3_user` defined type:
 
 ##### <a name="-snmp--snmpv3_user--authpass"></a>`authpass`
 
-Data type: `String[8]`
+Data type: `Variant[String[8], Sensitive[String[8]]]`
 
-Authentication password for the user.
+Authentication password for the user. May be given as Sensitive; the
+createUser line is then marked Sensitive too (redacted in reports/PuppetDB).
 
 ##### <a name="-snmp--snmpv3_user--authtype"></a>`authtype`
 
@@ -855,9 +856,9 @@ Default value: `'SHA'`
 
 ##### <a name="-snmp--snmpv3_user--privpass"></a>`privpass`
 
-Data type: `Optional[String[8]]`
+Data type: `Optional[Variant[String[8], Sensitive[String[8]]]]`
 
-Encryption password for the user.
+Encryption password for the user. May be given as Sensitive.
 
 Default value: `undef`
 
