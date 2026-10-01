@@ -52,6 +52,13 @@ Facter.add(:snmpv3_user) do
                     when '.1.3.6.1.6.3.10.1.2.4' then 'usmAESPrivProtocol'
                     else 'usmUnknownPrivProtocol'
                     end
+        privproto = case items[9]
+                    when '.1.3.6.1.6.3.10.1.2.1' then 'usmNoPrivProtocol'
+                    when '.1.3.6.1.6.3.10.1.2.2' then 'usmDESPrivProtocol'
+                    when '.1.3.6.1.6.3.10.1.2.4' then 'usmAESPrivProtocol'
+                    when '.1.3.6.1.4.1.14832.1.4' then 'usmAES256PrivProtocol'
+                    else 'usmUnknownPrivProtocol'
+                    end
 
         privhash = items[10].gsub(%r{\A['"]+|['"]+\Z}, '')
         privhash = '' if privhash == '0x'

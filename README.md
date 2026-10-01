@@ -200,14 +200,14 @@ snmp::snmpv3_user { 'myuser':
 }
 ```
 
-To create a SNMP version 3 user with SHA-256 authentication and AES privacy:
+To create a SNMP version 3 user with SHA-256 authentication and AES-256 privacy:
 
 ```puppet
 snmp::snmpv3_user { 'myuser':
   authpass => 'myauthpass',
   authtype => 'SHA-256',
   privpass => 'myprivpass',
-  privtype => 'AES',
+  privtype => 'AES-256',
 }
 ```
 
