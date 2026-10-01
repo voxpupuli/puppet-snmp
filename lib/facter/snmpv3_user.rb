@@ -38,6 +38,7 @@ Facter.add(:snmpv3_user) do
                     when '.1.3.6.1.6.3.10.1.1.1' then 'usmNoAuthProtocol'
                     when '.1.3.6.1.6.3.10.1.1.2' then 'usmHMACMD5AuthProtocol'
                     when '.1.3.6.1.6.3.10.1.1.3' then 'usmHMACSHA1AuthProtocol'
+                    when '.1.3.6.1.6.3.10.1.1.5' then 'usmHMAC192SHA256AuthProtocol'
                     else 'usmUnknownAuthProtocol'
                     end
 

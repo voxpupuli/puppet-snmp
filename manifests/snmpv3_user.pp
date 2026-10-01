@@ -12,7 +12,7 @@
 #   Authentication password for the user.
 #
 # @param authtype
-#   Authentication type for the user.  SHA or MD5
+#   Authentication type for the user. SHA, SHA-256 or MD5
 #
 # @param privpass
 #   Encryption password for the user.
@@ -25,7 +25,7 @@
 #
 define snmp::snmpv3_user (
   String[8]                 $authpass,
-  Enum['SHA','MD5']         $authtype = 'SHA',
+  Enum['SHA','SHA-256','MD5'] $authtype = 'SHA',
   Optional[String[8]]       $privpass = undef,
   Enum['AES','DES']         $privtype = 'AES',
   Enum['snmpd','snmptrapd'] $daemon   = 'snmpd'

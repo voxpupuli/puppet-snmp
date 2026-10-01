@@ -184,6 +184,7 @@ snmp::snmpv3_user { 'myuser':
   authpass => '1234auth',
   privpass => '5678priv',
 }
+
 class { 'snmp':
   snmpd_config => [ 'rouser myuser authPriv' ],
 }
@@ -199,7 +200,21 @@ snmp::snmpv3_user { 'myuser':
 }
 ```
 
+To create a SNMP version 3 user with SHA-256 authentication and AES privacy:
+
+```puppet
+snmp::snmpv3_user { 'myuser':
+  authpass => 'myauthpass',
+  authtype => 'SHA-256',
+  privpass => 'myprivpass',
+  privtype => 'AES',
+}
+```
+
+The `authtype` parameter supports `MD5`, `SHA`, and `SHA-256`. The default remains `SHA`.
+
 ### Access Control
+
 
 With traditional access control, you can give a simple password and (optional) network restriction:
 ```puppet

@@ -27,10 +27,9 @@ describe 'snmp::snmpv3_user' do
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
-
             is_expected.to contain_file_line('create-snmpv3-user-myDEFAULTuser').with(
-              path:  '/var/lib/net-snmp/snmpd.conf',
-              line:  'createUser myDEFAULTuser SHA "myauthpass"',
+              path: '/var/lib/net-snmp/snmpd.conf',
+              line: 'createUser myDEFAULTuser SHA "myauthpass"',
               match: '^createUser myDEFAULTuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
@@ -55,11 +54,37 @@ describe 'snmp::snmpv3_user' do
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
-
             is_expected.to contain_file_line('create-snmpv3-user-myALLuser').with(
-              path:  '/var/lib/net-snmp/snmpd.conf',
-              line:  'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
+              path: '/var/lib/net-snmp/snmpd.conf',
+              line: 'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
               match: '^createUser myALLuser ',
+            ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
+          }
+        end
+
+        describe 'with SHA-256 authentication' do
+          let(:title) { 'sha256user' }
+
+          let :params do
+            {
+              authpass: 'myauthpass',
+              authtype: 'SHA-256',
+              privpass: 'myprivpass',
+              privtype: 'AES',
+            }
+          end
+
+          it {
+            is_expected.to contain_exec('stop-snmpd').with(
+              path: '/bin:/sbin:/usr/bin:/usr/sbin',
+              user: 'root',
+            ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
+
+            is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
+            is_expected.to contain_file_line('create-snmpv3-user-sha256user').with(
+              path: '/var/lib/net-snmp/snmpd.conf',
+              line: 'createUser sha256user SHA-256 "myauthpass" AES "myprivpass"',
+              match: '^createUser sha256user ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -81,14 +106,14 @@ describe 'snmp::snmpv3_user' do
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmptrapd.conf')
-
             is_expected.to contain_file_line('create-snmpv3-user-myTRAPuser').with(
-              path:  '/var/lib/net-snmp/snmptrapd.conf',
-              line:  'createUser myTRAPuser SHA "myauthpass"',
+              path: '/var/lib/net-snmp/snmptrapd.conf',
+              line: 'createUser myTRAPuser SHA "myauthpass"',
               match: '^createUser myTRAPuser ',
             ).that_subscribes_to(['Exec[stop-snmptrapd]']).that_comes_before('Service[snmptrapd]')
           }
         end
+
       when 'Debian'
         describe 'with default settings' do
           let(:title) { 'myDEFAULTuser' }
@@ -106,10 +131,9 @@ describe 'snmp::snmpv3_user' do
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/snmp/snmpd.conf')
-
             is_expected.to contain_file_line('create-snmpv3-user-myDEFAULTuser').with(
-              path:  '/var/lib/snmp/snmpd.conf',
-              line:  'createUser myDEFAULTuser SHA "myauthpass"',
+              path: '/var/lib/snmp/snmpd.conf',
+              line: 'createUser myDEFAULTuser SHA "myauthpass"',
               match: '^createUser myDEFAULTuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
@@ -134,11 +158,37 @@ describe 'snmp::snmpv3_user' do
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/snmp/snmpd.conf')
-
             is_expected.to contain_file_line('create-snmpv3-user-myALLuser').with(
-              path:  '/var/lib/snmp/snmpd.conf',
-              line:  'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
+              path: '/var/lib/snmp/snmpd.conf',
+              line: 'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
               match: '^createUser myALLuser ',
+            ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
+          }
+        end
+
+        describe 'with SHA-256 authentication' do
+          let(:title) { 'sha256user' }
+
+          let :params do
+            {
+              authpass: 'myauthpass',
+              authtype: 'SHA-256',
+              privpass: 'myprivpass',
+              privtype: 'AES',
+            }
+          end
+
+          it {
+            is_expected.to contain_exec('stop-snmpd').with(
+              path: '/bin:/sbin:/usr/bin:/usr/sbin',
+              user: 'root',
+            ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
+
+            is_expected.to contain_file('/var/lib/snmp/snmpd.conf')
+            is_expected.to contain_file_line('create-snmpv3-user-sha256user').with(
+              path: '/var/lib/snmp/snmpd.conf',
+              line: 'createUser sha256user SHA-256 "myauthpass" AES "myprivpass"',
+              match: '^createUser sha256user ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -154,20 +204,20 @@ describe 'snmp::snmpv3_user' do
           end
 
           it {
-            is_expected.to contain_exec('stop-snmpd').with(
+            is_expected.to contain_exec('stop-snmptrapd').with(
               path: '/bin:/sbin:/usr/bin:/usr/sbin',
               user: 'root',
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/snmp/snmpd.conf')
-
             is_expected.to contain_file_line('create-snmpv3-user-myTRAPuser').with(
-              path:  '/var/lib/snmp/snmpd.conf',
-              line:  'createUser myTRAPuser SHA "myauthpass"',
+              path: '/var/lib/snmp/snmpd.conf',
+              line: 'createUser myTRAPuser SHA "myauthpass"',
               match: '^createUser myTRAPuser ',
-            ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
+            ).that_subscribes_to(['Exec[stop-snmptrapd]']).that_comes_before('Service[snmptrapd]')
           }
         end
+
       when 'Suse'
         describe 'with default settings' do
           let(:title) { 'myDEFAULTuser' }
@@ -185,10 +235,9 @@ describe 'snmp::snmpv3_user' do
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
-
             is_expected.to contain_file_line('create-snmpv3-user-myDEFAULTuser').with(
-              path:  '/var/lib/net-snmp/snmpd.conf',
-              line:  'createUser myDEFAULTuser SHA "myauthpass"',
+              path: '/var/lib/net-snmp/snmpd.conf',
+              line: 'createUser myDEFAULTuser SHA "myauthpass"',
               match: '^createUser myDEFAULTuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
@@ -213,11 +262,37 @@ describe 'snmp::snmpv3_user' do
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
-
             is_expected.to contain_file_line('create-snmpv3-user-myALLuser').with(
-              path:  '/var/lib/net-snmp/snmpd.conf',
-              line:  'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
+              path: '/var/lib/net-snmp/snmpd.conf',
+              line: 'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
               match: '^createUser myALLuser ',
+            ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
+          }
+        end
+
+        describe 'with SHA-256 authentication' do
+          let(:title) { 'sha256user' }
+
+          let :params do
+            {
+              authpass: 'myauthpass',
+              authtype: 'SHA-256',
+              privpass: 'myprivpass',
+              privtype: 'AES',
+            }
+          end
+
+          it {
+            is_expected.to contain_exec('stop-snmpd').with(
+              path: '/bin:/sbin:/usr/bin:/usr/sbin',
+              user: 'root',
+            ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
+
+            is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
+            is_expected.to contain_file_line('create-snmpv3-user-sha256user').with(
+              path: '/var/lib/net-snmp/snmpd.conf',
+              line: 'createUser sha256user SHA-256 "myauthpass" AES "myprivpass"',
+              match: '^createUser sha256user ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
           }
         end
@@ -239,10 +314,9 @@ describe 'snmp::snmpv3_user' do
             ).that_requires(['Package[snmpd]', 'File[var-net-snmp]'])
 
             is_expected.to contain_file('/var/lib/net-snmp/snmptrapd.conf')
-
             is_expected.to contain_file_line('create-snmpv3-user-myTRAPuser').with(
-              path:  '/var/lib/net-snmp/snmptrapd.conf',
-              line:  'createUser myTRAPuser SHA "myauthpass"',
+              path: '/var/lib/net-snmp/snmptrapd.conf',
+              line: 'createUser myTRAPuser SHA "myauthpass"',
               match: '^createUser myTRAPuser ',
             ).that_subscribes_to(['Exec[stop-snmptrapd]']).that_comes_before('Service[snmptrapd]')
           }

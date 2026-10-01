@@ -847,9 +847,9 @@ Authentication password for the user.
 
 ##### <a name="-snmp--snmpv3_user--authtype"></a>`authtype`
 
-Data type: `Enum['SHA','MD5']`
+Data type: `Enum['SHA','SHA-256','MD5']`
 
-Authentication type for the user.  SHA or MD5
+Authentication type for the user. SHA, SHA-256 or MD5
 
 Default value: `'SHA'`
 

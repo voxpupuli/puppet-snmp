@@ -20,7 +20,7 @@ Puppet::Functions.create_function(:'snmp::snmpv3_usm_hash') do
   # @return [String] The calculated hash.
   #
   dispatch :snmpv3_usm_hash do
-    required_param "Enum['SHA','MD5']", :authtype
+    required_param "Enum['SHA','SHA-256','MD5']", :authtype
     required_param 'String', :engine
     required_param 'String[8]', :passphrase
     optional_param 'Integer', :bits
@@ -34,6 +34,8 @@ Puppet::Functions.create_function(:'snmp::snmpv3_usm_hash') do
     digest_instance = case authtype
                       when 'SHA'
                         Digest::SHA1.new
+                      when 'SHA-256'
+                        Digest::SHA256.new
                       when 'MD5'
                         Digest::MD5.new
                       end
