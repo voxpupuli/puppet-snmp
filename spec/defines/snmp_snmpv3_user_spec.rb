@@ -317,7 +317,7 @@ describe 'snmp::snmpv3_user' do
 
             is_expected.to contain_file('/var/lib/net-snmp/snmpd.conf')
             is_expected.to contain_file_line('create-snmpv3-user-myALLuser').with(
-              path: '/var/lib/snmp/snmpd.conf',
+              path: '/var/lib/net-snmp/snmpd.conf',
               line: 'createUser myALLuser MD5 "myauthpass" DES "myprivpass"',
               match: '^createUser myALLuser ',
             ).that_subscribes_to(['Exec[stop-snmpd]']).that_comes_before('Service[snmpd]')
