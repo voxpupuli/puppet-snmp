@@ -863,9 +863,9 @@ Default value: `undef`
 
 ##### <a name="-snmp--snmpv3_user--privtype"></a>`privtype`
 
-Data type: `Enum['AES','DES']`
+Data type: `Enum['AES','AES-256','DES']`
 
-Encryption type for the user.  AES or DES
+Encryption type for the user. AES, AES-256 or DES
 
 Default value: `'AES'`
 
