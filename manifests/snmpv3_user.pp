@@ -48,9 +48,9 @@ define snmp::snmpv3_user (
     $usm_user = $facts['snmpv3_user'][$title]
 
     $authhash = snmp::snmpv3_usm_hash($authtype, $usm_user['engine'], $authpass)
-    
-    # privacy protocol key may be empty; truncate to the required key length
-    # AES-256 requires a 256-bit localized key, while AES and DES use 128 bits.
+
+# privacy protocol key may be empty; truncate to the required key length
+# AES-256 requires a 256-bit localized key, while AES and DES use 128 bits.
     $privhash = empty($privpass) ? {
       true    => '',
       default => snmp::snmpv3_usm_hash(

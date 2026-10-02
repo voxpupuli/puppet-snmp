@@ -210,7 +210,9 @@ snmp::snmpv3_user { 'myuser':
   privtype => 'AES-256',
 }
 ```
-
+> **Note:** AES-256 privacy support requires a Net-SNMP build that includes the
+> relevant AES-256/Blumenthal AES functionality. Availability may vary depending
+> on the Net-SNMP version and build options provided by the target operating system.
 The `authtype` parameter supports `MD5`, `SHA`, and `SHA-256`. The default remains `SHA`.
 
 ### Access Control
