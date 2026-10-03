@@ -49,4 +49,14 @@ describe 'snmp::snmpv3_usm_hash' do
                         .and_return('0x8982e0e549e866db361a6b625d84cccc')
     }
   end
+
+  describe 'with SHA-256 hash and truncated to 256 bits' do
+    it {
+      is_expected.to run.with_params('SHA-256',
+                                     '0x000000000000000000000002',
+                                     'maplesyrup',
+                                     256)
+                        .and_return('0x8982e0e549e866db361a6b625d84cccc11162d453ee8ce3a6445c2d6776f0f8b')
+    }
+  end
 end

@@ -18,7 +18,7 @@
 #   Encryption password for the user.
 #
 # @param privtype
-#   Encryption type for the user.  AES or DES
+#   Encryption type for the user. AES, AES-256 or DES
 #
 # @param daemon
 #   Which daemon file in which to write the user.  snmpd or snmptrapd
@@ -27,7 +27,7 @@ define snmp::snmpv3_user (
   String[8]                 $authpass,
   Enum['SHA','SHA-256','MD5'] $authtype = 'SHA',
   Optional[String[8]]       $privpass = undef,
-  Enum['AES','DES']         $privtype = 'AES',
+  Enum['AES','AES-256','DES'] $privtype = 'AES',
   Enum['snmpd','snmptrapd'] $daemon   = 'snmpd'
 ) {
   include snmp
@@ -49,10 +49,19 @@ define snmp::snmpv3_user (
 
     $authhash = snmp::snmpv3_usm_hash($authtype, $usm_user['engine'], $authpass)
 
-    # privacy protocol key may be empty; truncate to 128 bits if used
+# privacy protocol key may be empty; truncate to the required key length
+# AES-256 requires a 256-bit localized key, while AES and DES use 128 bits.
     $privhash = empty($privpass) ? {
       true    => '',
-      default => snmp::snmpv3_usm_hash($authtype, $usm_user['engine'], $privpass, 128)
+      default => snmp::snmpv3_usm_hash(
+        $authtype,
+        $usm_user['engine'],
+        $privpass,
+        $privtype == 'AES-256' ? {
+          true    => 256,
+          default => 128,
+        }
+      )
     }
 
     # (re)create the user if at least one of the hashes is different
