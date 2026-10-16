@@ -204,6 +204,9 @@
 # @param service_hasrestart
 #   Service has restart command.
 #
+# @param service_restart
+#   Restart command for service.
+#
 # @param snmptrapd_options
 #   Commandline options passed to snmptrapd via init script.
 #
@@ -328,6 +331,7 @@ class snmp (
   Boolean                    $trap_service_enable          = false,
   Boolean                    $trap_service_hasstatus       = true,
   Boolean                    $trap_service_hasrestart      = true,
+  String[1]                  $service_restart              = "/bin/systemctl reload ${service_name}",
   Boolean                    $openmanage_enable            = false,
   Boolean                    $master                       = false,
   Optional[Stdlib::Filemode] $agentx_perms                 = undef,
@@ -567,6 +571,7 @@ class snmp (
     enable     => $service_enable_real,
     hasstatus  => $service_hasstatus,
     hasrestart => $service_hasrestart,
+    restart    => $service_restart,
     require    => File['var-net-snmp'],
     subscribe  => File['snmpd.conf'],
   }
