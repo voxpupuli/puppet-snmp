@@ -29,7 +29,7 @@ configuration.
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 class { 'snmp':
@@ -747,7 +747,7 @@ Manage the Net-SNMP client package and configuration.
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 class { 'snmp::client':
@@ -819,7 +819,7 @@ Creates a SNMPv3 user with authentication and encryption paswords.
 
 #### Examples
 
-##### 
+#####
 
 ```puppet
 snmp::snmpv3_user { 'myuser':
@@ -876,4 +876,3 @@ Data type: `Enum['snmpd','snmptrapd']`
 Which daemon file in which to write the user.  snmpd or snmptrapd
 
 Default value: `'snmpd'`
-
